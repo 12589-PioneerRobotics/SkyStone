@@ -20,6 +20,8 @@ public class FoundationDetection extends OpenCVPipeline {
 
     public double[] centerImageValues;
     public int centerX, centerY;
+    public boolean blue = true;
+
 
     public Mat processFrame(Mat rgba, Mat gray) {
         // rgba is 480x640
@@ -30,7 +32,18 @@ public class FoundationDetection extends OpenCVPipeline {
         Imgproc.cvtColor(cropped, hls, Imgproc.COLOR_RGB2HLS); // create an HLS version of cropped
 
         Mat bw = new Mat();
-        Core.inRange(hls, new Scalar(110, 0, 100), new Scalar(122, 175, 255), bw); // filter the given image through the given colors
+        // filter the given image through the given colors. Based on which side we are on, will use either range.
+        if(blue) {
+            Core.inRange(hls, new Scalar(110, 0, 100), new Scalar(122, 175, 255), bw);
+        }
+        else {//The spectrum of red hues on the HSV scale is split on the edges (0-5, 350-360). So, we need to take inRange() twice and combine the resulting Mat objects.
+            Mat bw1 = new Mat();
+            Mat bw2 = new Mat();
+            Core.inRange(hls, new Scalar(0, 0, 100), new Scalar(5, 175, 255), bw1);
+            Core.inRange(hls, new Scalar(350, 0, 100), new Scalar(360, 175, 255), bw2);
+            Core.add(bw1, bw2, bw);//UNTESTED. not sure if will work. Kept S and L values same as blue side.
+        }
+
         Mat structuringElement = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(10, 10));
         ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Imgproc.erode(bw, bw, structuringElement);
@@ -107,6 +120,14 @@ public class FoundationDetection extends OpenCVPipeline {
         return results;
     }
 
+    /*public void colorRange(boolean blue) {
+        if(blue) {
+            Core.inRange(hls, new Scalar(110, 0, 100), new Scalar(122, 175, 255), bw);
+        }
+        else {
+
+        }
+    }*/
 
 
 
