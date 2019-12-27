@@ -1,15 +1,16 @@
-package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
+package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Toggle;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 
 @TeleOp(name = "Controller")
 public class Controller extends OpMode {
     private Driving drive;
     private Toggle.OneShot strafeOneShot;
     //7355608
+    MoacV_2 moac;
     float power;
 
     double startAngle;
@@ -25,7 +26,7 @@ public class Controller extends OpMode {
     }
 
     public void init() {
-
+        moac = new MoacV_2(this.hardwareMap);
         drive = new Driving(this);
         strafeOneShot = new Toggle.OneShot();
     }
@@ -47,6 +48,17 @@ public class Controller extends OpMode {
             }
             drive.correctStrafe(-0.6, startAngle);
         }
+        if(gamepad1.a) {
+            moac.intake.takeIn();
+        }
+
+        if(gamepad1.b) {
+            moac.intake.spitOut();
+        }
+        if(gamepad1.y) {
+
+        }
+        moac.linearSlideConfig.lifterPosition(1000);
 
         //drive.servoControl.setServoPairs(ServoControl.SERVOS.TOP, gamepad2.left_stick_x);
         //drive.servoControl.setServoPairs(ServoControl.SERVOS.BOTTOM, gamepad2.right_stick_x);

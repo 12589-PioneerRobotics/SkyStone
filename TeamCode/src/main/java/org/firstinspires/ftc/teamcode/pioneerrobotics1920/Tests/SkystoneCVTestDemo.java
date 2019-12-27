@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.SkystoneCVTest;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 @Autonomous(name = "SkystoneCVTestDemo", group = "Test")
 public class SkystoneCVTestDemo extends LinearOpMode {

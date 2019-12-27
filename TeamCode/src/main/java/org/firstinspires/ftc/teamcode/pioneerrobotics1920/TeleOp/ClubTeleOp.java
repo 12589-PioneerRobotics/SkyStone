@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pioneerrobotics1920;
+package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

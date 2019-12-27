@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.SamplingCV;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SamplingCV;
 
 @Autonomous(name = "TestOpenCV", group = "Test")
 

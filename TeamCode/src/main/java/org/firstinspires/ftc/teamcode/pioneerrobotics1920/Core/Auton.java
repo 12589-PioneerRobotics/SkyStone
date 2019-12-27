@@ -5,8 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.FoundationDetection;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.SkystoneCVTest;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.FoundationDetection;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.MoacV_2;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,7 @@ public class Auton extends LinearOpMode {
     public boolean left = true;
     private int round = 0;
     private int gap = 5;
+    MoacV_2 moac;
 
 
     FoundationDetection foundationDetection;
@@ -29,7 +31,6 @@ public class Auton extends LinearOpMode {
     Driving drive;
     SkystoneCVTest.Position skystonePos;
     Navigation nav;
-    //MoacV_2 moac;
     ArrayList<Stones> blueStones = new ArrayList<>();
     ArrayList<Stones> redStones = new ArrayList<>();
 
@@ -42,8 +43,7 @@ public class Auton extends LinearOpMode {
         detector.changeCrop(blue);
         drive = new Driving(this);
         nav = new Navigation(drive);
-
-        //moac = new MoacV_2(true, this.hardwareMap);
+        moac = new MoacV_2(this.hardwareMap);
 
         //all coordinate positions of skystones on blue side
         blueStones.add(new Stones(37,8));
@@ -61,7 +61,15 @@ public class Auton extends LinearOpMode {
         redStones.add(new Stones(110,40)); //center
         redStones.add(new Stones(110,32)); //left
 
+        while(!drive.gyro.isGyroReady()) {
+            telemetry.addData("Sensors not calibrated", null);
+            telemetry.update();
+        }
 
+        if(drive.gyro.isGyroReady()) {
+            telemetry.addData("Sensors calibrated", null);
+        }
+        telemetry.update();
 
 
         //servo.setServo(ServoControl.SERVOS.PIVOT,);
@@ -70,15 +78,6 @@ public class Auton extends LinearOpMode {
         if (blue) {
             if (startBuilding){
                 nav.currPos(9,108, 270);
-
-                while(!drive.gyro.isGyroReady()) {
-                    telemetry.addData("Sensors not calibrated", null);
-                    telemetry.update();
-                }
-                if(drive.gyro.isGyroReady()) {
-                    telemetry.addData("Sensors calibrated", null);
-                }
-                telemetry.update();
 
                 waitForStart();
 
@@ -92,21 +91,7 @@ public class Auton extends LinearOpMode {
                 detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
                 detector.enable();
 
-                while(!drive.gyro.isGyroReady()) {
-                    telemetry.addData("Sensors not calibrated", null);
-                    telemetry.update();
-                }
-
-                if(drive.gyro.isGyroReady()) {
-                    telemetry.addData("Sensors calibrated", null);
-                }
-                telemetry.update();
-
                 waitForStart();
-
-//                detector.disable();
-
-                //moac.autoGrab.blueInitialize();
 
                 skystonePos = detector.getSkystonePos();
 
@@ -132,34 +117,18 @@ public class Auton extends LinearOpMode {
                 getBlueSkystone(skystonePos);
                 nav.moveToX(12);
                 park();
-
             }
         }
         else { //starting red
             if (startBuilding){
                 nav.currPos(135,108,90);
-
-                telemetry.addData("init finished", null);
-                telemetry.update();
-
                 waitForStart();
-
                 nav.backToX(130);
                 park();
             }
             else {
                 //red loading
                 nav.currPos(135, 36, 90);
-
-
-                while(!drive.gyro.isGyroReady()) {
-                    telemetry.addData("Sensors not calibrated", null);
-                    telemetry.update();
-                }
-                if(drive.gyro.isGyroReady()) {
-                    telemetry.addData("Sensors calibrated", null);
-                }
-                telemetry.update();
 
                 detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
                 detector.enable();
@@ -186,7 +155,6 @@ public class Auton extends LinearOpMode {
                 getRedSkystone(skystonePos); //
                 nav.moveToX(122);
                 park();
-
             }
         }
     }
@@ -206,7 +174,6 @@ public class Auton extends LinearOpMode {
         }
         else
             nav.moveToY(72);
-
     }
 
     public void goToFoundationBlue() {
@@ -242,8 +209,6 @@ public class Auton extends LinearOpMode {
                 } else {
                     //nav.moveTo(blueStones.get(2).x-gap, blueStones.get(2).y);
                     nav.backToY(blueStones.get(2).y);
-
-//                    nav.turnTo(270, 1);
                     sleep(200);
 
                     drive.moveClose("left", 14.6, .45, 3.5f);
@@ -252,8 +217,8 @@ public class Auton extends LinearOpMode {
                     nav.turnTo(270);
 
                     nav.currPos(drive.frontDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(2).y, 270);
-
                     blueStones.remove(2);
+
                 }break;
 
             case CENTER:

@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.FoundationDetection;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 
 @Autonomous(name = "AutonPlanB")

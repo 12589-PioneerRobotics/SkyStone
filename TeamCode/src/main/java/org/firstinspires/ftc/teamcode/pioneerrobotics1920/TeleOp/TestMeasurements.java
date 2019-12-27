@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pioneerrobotics1920;
+package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Coordinates;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.MoacV_2;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 @Autonomous(name = "Autonomous Test")
 @Disabled
@@ -14,11 +16,16 @@ public class TestMeasurements extends LinearOpMode {
 
     Driving drive;
     Navigation navigation;
+    MoacV_2.LinearSlideConfig linearSlide;
+    MoacV_2 moac;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new Driving(this);
         navigation = new Navigation(drive);
-        LinearSlideConfig linearSlide = new LinearSlideConfig(hardwareMap);
+        moac = new MoacV_2(this.hardwareMap);
+
+        //linearSlide = new MoacV_2.LinearSlideConfig(this.hardwareMap);
+
 
         int[] encoders = {100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000};
         Toggle.OneShot dpad_upOneShot = new Toggle.OneShot();
@@ -56,8 +63,8 @@ public class TestMeasurements extends LinearOpMode {
                 telemetry.addData("Angle turning to", angles[curIndex]);
                 telemetry.addData("turn angle", navigation.turnAngle);
             }
-            telemetry.update();*/
-            /*if(count == 0) {
+            telemetry.update();
+            if(count == 0) {
                 if (dpad_upOneShot.update(gamepad1.dpad_up) && curIndex < encoders.length - 1)
                     curIndex++;
                 if (dpad_downOneShot.update(gamepad1.dpad_down) && curIndex > 0)

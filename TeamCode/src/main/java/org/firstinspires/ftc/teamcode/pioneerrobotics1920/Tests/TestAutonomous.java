@@ -5,11 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Toggle;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.MoacV_2;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 @Autonomous(name = "Test Measurements", group = "Test")
 public class TestAutonomous extends LinearOpMode {
-
+    MoacV_2 moac;
     public Driving driving;
     Navigation nav;
     @Override
@@ -17,6 +18,7 @@ public class TestAutonomous extends LinearOpMode {
 
         driving = new Driving(this);
         nav = new Navigation(driving);
+        moac = new MoacV_2(this.hardwareMap);
 
 
         int[] distances = {6, 12, 18, 24, 30, 36}; //inches

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pioneerrobotics1920;
+package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -69,6 +69,8 @@ public class TeleopSkyStone extends OpMode {
         moac.autoGrab.teleBlueArmDown(gamepad2.left_stick_y);
 
         moac.teleGrabber.grab(gamepad2.right_bumper);
+
+        //TODO: Remove Auto/TeleGrabber to accommodate new hardware.
     }
 
     public double function(double power){

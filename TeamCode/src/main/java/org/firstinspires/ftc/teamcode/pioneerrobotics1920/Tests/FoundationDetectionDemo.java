@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.FoundationDetection;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.FoundationDetection;
 
 @Autonomous(name = "FoundationDetectionDemo", group = "Test")
 public class FoundationDetectionDemo extends LinearOpMode {

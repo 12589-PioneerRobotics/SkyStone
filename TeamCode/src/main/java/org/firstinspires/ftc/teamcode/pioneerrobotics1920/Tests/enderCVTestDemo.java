@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.SamplingCV;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SamplingCV;
 
 @TeleOp(name="Example: EnderCVTestDemo")
 @Disabled

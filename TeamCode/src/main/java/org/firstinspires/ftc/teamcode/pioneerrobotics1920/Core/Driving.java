@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.GyroWrapper;
 
 public class Driving {
     //instantiations
