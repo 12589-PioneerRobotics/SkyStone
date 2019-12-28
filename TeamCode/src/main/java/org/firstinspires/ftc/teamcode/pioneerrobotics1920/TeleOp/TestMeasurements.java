@@ -24,9 +24,6 @@ public class TestMeasurements extends LinearOpMode {
         navigation = new Navigation(drive);
         moac = new MoacV_2(this.hardwareMap);
 
-        //linearSlide = new MoacV_2.LinearSlideConfig(this.hardwareMap);
-
-
         int[] encoders = {100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000};
         Toggle.OneShot dpad_upOneShot = new Toggle.OneShot();
         Toggle.OneShot dpad_downOneShot = new Toggle.OneShot();

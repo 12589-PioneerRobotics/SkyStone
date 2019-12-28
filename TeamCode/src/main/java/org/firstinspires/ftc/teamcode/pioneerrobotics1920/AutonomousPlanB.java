@@ -14,18 +14,18 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 public class AutonomousPlanB extends LinearOpMode {
     final double angleLeft = 72.2553282;
 
-    FoundationDetection foundationDetection;
-    SkystoneCVTest detector;
-    Driving drive;
-    SkystoneCVTest.Position skystonePos;
-    ServoControl servo;
+    private FoundationDetection foundationDetection;
+    private SkystoneCVTest detector;
+    private Driving drive;
+    private SkystoneCVTest.Position skystonePos;
+    private ServoControl servo;
     private int round = 1;
     //private int skyStoneY = 0;
     //final private int skyStoneRedX = 34;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        foundationDetection = new FoundationDetection();
+        foundationDetection = new FoundationDetection(true);
         detector = new SkystoneCVTest();
         drive = new Driving(this);
 
@@ -48,7 +48,7 @@ public class AutonomousPlanB extends LinearOpMode {
         goToFoundation(SkystoneCVTest.Position.UNKNOWN);
     }
 
-    public void getSkyStone(SkystoneCVTest.Position pos) {
+    private void getSkyStone(SkystoneCVTest.Position pos) {
         // backwards method used - phone facing the back ... nice job builders
         // not anymore, we switched the
         switch (pos) {
@@ -77,7 +77,7 @@ public class AutonomousPlanB extends LinearOpMode {
         round++;
     }
 
-    public void goToFoundation(SkystoneCVTest.Position pos) {
+    private void goToFoundation(SkystoneCVTest.Position pos) {
         // backwards method used - phone facing the back ... nice job builders
         // not anymore, we switched the
         switch (pos) {
@@ -122,11 +122,11 @@ public class AutonomousPlanB extends LinearOpMode {
     }
 
 
-    public void getStones(){
+    private void getStones(){
 
     }
 
-    public void dropStones(){
+    private void dropStones(){
 
     }
 

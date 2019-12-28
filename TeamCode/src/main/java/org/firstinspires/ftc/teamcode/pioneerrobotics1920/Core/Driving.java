@@ -5,6 +5,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
@@ -17,10 +18,11 @@ public class Driving {
     private DcMotor frontRight;
     private DcMotor backLeft;
     private DcMotor backRight;
+    private DcMotor stacker;
 
     public GyroWrapper gyro;
 
-    final double CLICKS_PER_INCH = 30.6748466; // for Direct Drive as of 10/8/19 used the data for power = 0.4, R^2=1
+    private final double CLICKS_PER_INCH = 30.6748466; // for Direct Drive as of 10/8/19 used the data for power = 0.4, R^2=1
 
     DcMotor[] drivingMotors;
 
@@ -32,12 +34,15 @@ public class Driving {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
+        stacker = hardwareMap.dcMotor.get("stacker");
+
 
         gyro = new GyroWrapper(hardwareMap.get(BNO055IMU.class, "imu"));
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+        stacker.setDirection((DcMotor.Direction.FORWARD));
 
         drivingMotors = new DcMotor[]{frontRight, frontLeft, backRight, backLeft};
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -214,6 +219,12 @@ public class Driving {
         linearOpMode.idle();
     }
 
+    public void stackerUp(int power){
+        stacker.setPower(power);
+
+        stacker.setPower(0);
+    }
+
     public void angleCorrection(double target) {
         double power = .2;
         double turnSign = Math.signum(target - gyro.getValueContinuous());
@@ -239,14 +250,12 @@ public class Driving {
     public boolean motorsBusy() {
         boolean busy = true;
         for (DcMotor motor : drivingMotors) {
-            if (motor.isBusy()) {
-                busy = true;
-            } else busy = false;
+            busy = motor.isBusy();
         }
         return busy;
     }
 
-    public final void sleep(long milliseconds) {
+     final void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -303,7 +312,7 @@ public class Driving {
         linearOpMode.sleep(1000);
     }
 
-    public int sgn(double x) {
+     int sgn(double x) {
         if (x < 0) return -1;
         return 1;
     }
@@ -471,7 +480,7 @@ public class Driving {
         return 1;
     }
 
-    public void moveClose(String direction, double distance, double power, float thresh){
+     void moveClose(String direction, double distance, double power, float thresh){
         if (direction.equals("back")) {
             double diff = backDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(backDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {

@@ -1,7 +1,10 @@
 
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.corningrobotics.enderbots.endercv.OpenCVPipeline;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -23,6 +26,11 @@ public class FoundationDetection extends OpenCVPipeline {
     public boolean blue = true;
 
 
+    public FoundationDetection(boolean blue) {
+        this.blue = blue;
+    }
+
+
     public Mat processFrame(Mat rgba, Mat gray) {
         // rgba is 480x640
         Rect cropRect = new Rect(0, 0, 480, 640); // x, y, width, height
@@ -39,9 +47,9 @@ public class FoundationDetection extends OpenCVPipeline {
         else {//The spectrum of red hues on the HSV scale is split on the edges (0-5, 350-360). So, we need to take inRange() twice and combine the resulting Mat objects.
             Mat bw1 = new Mat();
             Mat bw2 = new Mat();
-            Core.inRange(hls, new Scalar(0, 0, 100), new Scalar(5, 175, 255), bw1);
-            Core.inRange(hls, new Scalar(350, 0, 100), new Scalar(360, 175, 255), bw2);
-            Core.add(bw1, bw2, bw);//UNTESTED. not sure if will work. Kept S and L values same as blue side.
+            Core.inRange(hls, new Scalar(0, 20, 50), new Scalar(10, 255, 255), bw1);
+            Core.inRange(hls, new Scalar(245, 0, 50), new Scalar(255, 255, 255), bw2);
+            Core.add(bw1, bw2, bw);
         }
 
         Mat structuringElement = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(10, 10));
@@ -59,30 +67,34 @@ public class FoundationDetection extends OpenCVPipeline {
                 if (Imgproc.contourArea(contours.get(i)) > Imgproc.contourArea(contours.get(maxIndex)))
                     maxIndex = i;
             }
+            if(blue) {
+                Imgproc.drawContours(cropped, contours, maxIndex, new Scalar(255, 0, 0));
+            }
+            else {
+                Imgproc.drawContours(cropped, contours, maxIndex, new Scalar(0, 255, 0));
+            }
+
+            Point center = new Point();
+            org.opencv.imgproc.Moments moments = Imgproc.moments(contours.get(maxIndex));
+            center = new Point(moments.get_m10() / moments.get_m00(),
+                    moments.get_m01() / moments.get_m00());
+
+            centerX = (int) center.x;
+            centerY = (int) center.y;
+
+            Imgproc.rectangle(cropped, center, new Point(center.x + 5, center.y + 5), new Scalar(0, 255, 0, 0));
+
+            Rect cropCenter = new Rect(237, 317, 6, 6);
+            Mat centerCropped = new Mat(rgba, cropCenter);
+            Mat centerHls = new Mat();
+            Imgproc.cvtColor(centerCropped, centerHls, Imgproc.COLOR_RGB2HLS);
+
+            Imgproc.rectangle(rgba, new Point(237, 317),
+                    new Point(243, 323),
+                    new Scalar(0, 255, 0, 0));
+
+            centerImageValues = calcValueOfPoints(centerHls);
         }
-        Imgproc.drawContours(cropped, contours, maxIndex, new Scalar(255, 0, 0));
-
-        Point center = new Point();
-        org.opencv.imgproc.Moments moments = Imgproc.moments(contours.get(maxIndex));
-        center = new Point(moments.get_m10()/moments.get_m00(),
-                moments.get_m01()/moments.get_m00());
-
-        centerX = (int)center.x;
-        centerY = (int)center.y;
-
-        Imgproc.rectangle(cropped, center, new Point(center.x + 5, center.y + 5), new Scalar(0, 255, 0, 0));
-
-        Rect cropCenter = new Rect(237, 317 , 6, 6);
-        Mat centerCropped = new Mat(rgba, cropCenter);
-        Mat centerHls = new Mat();
-        Imgproc.cvtColor(centerCropped, centerHls, Imgproc.COLOR_RGB2HLS);
-
-        Imgproc.rectangle(rgba, new Point(237, 317),
-                new Point(243, 323),
-                new Scalar(0, 255, 0, 0));
-
-        centerImageValues = calcValueOfPoints(centerHls);
-
         return rgba;
     }
 
@@ -119,36 +131,4 @@ public class FoundationDetection extends OpenCVPipeline {
         }
         return results;
     }
-
-    /*public void colorRange(boolean blue) {
-        if(blue) {
-            Core.inRange(hls, new Scalar(110, 0, 100), new Scalar(122, 175, 255), bw);
-        }
-        else {
-
-        }
-    }*/
-
-
-
-/*
-    public static Point[] detect(Mat hls, Scalar minHLS, Scalar maxHLS) {
-        Mat bw = new Mat();
-        Core.inRange(hls, minHLS, maxHLS, bw); // filter the given image through the given colors
-        Mat structuringElement = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(10, 10));
-        Imgproc.erode(bw, bw, structuringElement);
-        Imgproc.dilate(bw, bw, structuringElement);
-        ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-        Mat hierarchy = new Mat();
-        Imgproc.findContours(bw, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-        int n = contours.size();
-        Point[] centers = new Point[n];
-        for (int i = 0; i < n; i++) {
-            org.opencv.imgproc.Moments moments = Imgproc.moments(contours.get(i));
-            centers[i] = new Point(moments.get_m10() / moments.get_m00(),
-                    moments.get_m01() / moments.get_m00());
-        }
-        return centers;
-    }
-*/
 }

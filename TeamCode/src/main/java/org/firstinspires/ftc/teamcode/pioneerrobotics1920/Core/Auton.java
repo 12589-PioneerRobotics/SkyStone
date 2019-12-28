@@ -38,7 +38,8 @@ public class Auton extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //servo = new ServoControl(this);
-        foundationDetection = new FoundationDetection();
+        foundationDetection = new FoundationDetection(blue);
+        foundationDetection = new FoundationDetection(blue);
         detector = new SkystoneCVTest();
         detector.changeCrop(blue);
         drive = new Driving(this);

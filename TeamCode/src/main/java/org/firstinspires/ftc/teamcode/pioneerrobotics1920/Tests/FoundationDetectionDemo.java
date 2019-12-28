@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.FoundationDetection
 public class FoundationDetectionDemo extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        FoundationDetection algorithm = new FoundationDetection();
+        FoundationDetection algorithm = new FoundationDetection(false);
         algorithm.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
 
         algorithm.enable();
