@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
+package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;

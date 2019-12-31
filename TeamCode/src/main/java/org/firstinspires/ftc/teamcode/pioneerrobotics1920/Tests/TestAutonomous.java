@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.MoacV_2;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 @Autonomous(name = "Test Measurements", group = "Test")
