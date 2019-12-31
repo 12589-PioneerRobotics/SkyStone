@@ -24,9 +24,7 @@ public class Auton extends LinearOpMode {
     private int gap = 5;
     MoacV_2 moac;
 
-
     FoundationDetection foundationDetection;
-    //ServoControl servo;
     SkystoneCVTest detector;
     Driving drive;
     SkystoneCVTest.Position skystonePos;
@@ -34,10 +32,8 @@ public class Auton extends LinearOpMode {
     ArrayList<Stones> blueStones = new ArrayList<>();
     ArrayList<Stones> redStones = new ArrayList<>();
 
-
     @Override
     public void runOpMode() throws InterruptedException {
-        //servo = new ServoControl(this);
         foundationDetection = new FoundationDetection(blue);
         foundationDetection = new FoundationDetection(blue);
         detector = new SkystoneCVTest();
@@ -71,9 +67,6 @@ public class Auton extends LinearOpMode {
             telemetry.addData("Sensors calibrated", null);
         }
         telemetry.update();
-
-
-        //servo.setServo(ServoControl.SERVOS.PIVOT,);
 
         //*******************THE PART THAT RUNS*************************
         if (blue) {

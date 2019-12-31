@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Coordinates;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.MoacV_2;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 @Autonomous(name = "Autonomous Test")
 @Disabled
@@ -16,7 +14,7 @@ public class TestMeasurements extends LinearOpMode {
 
     Driving drive;
     Navigation navigation;
-    MoacV_2.LinearSlideConfig linearSlide;
+    MoacV_2.LinearSlide linearSlide;
     MoacV_2 moac;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -30,7 +28,7 @@ public class TestMeasurements extends LinearOpMode {
         Toggle.OneShot aOneShot = new Toggle.OneShot();
 
         int curIndex = 0;
-        //int count = 0;
+        int count = 0;
 
         Coordinates[] coordinates = {new Coordinates(9, 36),
                                      new Coordinates(34, 45),
@@ -44,7 +42,7 @@ public class TestMeasurements extends LinearOpMode {
         waitForStart();
 
         while(this.opModeIsActive()) {
-            /*if (count == 0) {
+            if (count == 0) {
                 if (dpad_upOneShot.update(gamepad1.dpad_up) && curIndex < coordinates.length - 1)
                     curIndex++;
                 if (dpad_downOneShot.update(gamepad1.dpad_down) && curIndex > 0)
@@ -67,11 +65,9 @@ public class TestMeasurements extends LinearOpMode {
                 if (dpad_downOneShot.update(gamepad1.dpad_down) && curIndex > 0)
                     curIndex--;
                 if (aOneShot.update(gamepad1.a)) {
-                   //linearSlide.goEncoder(encoders[curIndex], 1);
+                   //slideVertical.goEncoder(encoders[curIndex], 1);
                 }
-
-            }*/
-
+            }
 
             telemetry.addData("Encoder unit set to: ", encoders[curIndex]);
             telemetry.addData("Current encoder distance: " , 0);

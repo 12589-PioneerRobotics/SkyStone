@@ -12,15 +12,16 @@ public class Controller extends OpMode {
     //7355608
     MoacV_2 moac;
     float power;
+    int countVertical, countHoriz = 0;
 
     double startAngle;
 
     public double function(double power){
         if (power<=1) {
             if (power < 0)
-                return -(0.5 * power * power + 0.1);
+                return -(0.5 * power * power);
             else
-                return 0.5 * power * power + 0.1;
+                return 0.5 * power * power;
         }
         return 1;
     }
@@ -55,21 +56,19 @@ public class Controller extends OpMode {
         if(gamepad1.b) {
             moac.intake.spitOut();
         }
-        if(gamepad1.y) {
-
+        if(gamepad1.left_bumper) {
+            if(countVertical == 0) {
+                countVertical = 4;//4 is highest position for now
+            }
+            countVertical--;
+            moac.linearSlide.setVerticalPosition(countVertical);
         }
-        moac.linearSlideConfig.lifterPosition(1000);
 
-        //drive.servoControl.setServoPairs(ServoControl.SERVOS.TOP, gamepad2.left_stick_x);
-        //drive.servoControl.setServoPairs(ServoControl.SERVOS.BOTTOM, gamepad2.right_stick_x);
-        //telemetry.addData("Pivot servo: ", servo.getServoPosition(ServoControl.SERVOS.PIVOT));
-        //telemetry.addData("Bottom Servo: ", servo.getServoPosition(ServoControl.SERVOS.BOTTOM));
-        //telemetry.addData("Top Servo: ", servo.getServoPosition(ServoControl.SERVOS.TOP));
         telemetry.addData("Left Stick y: ", -gamepad1.left_stick_y);
         telemetry.addData("Left Stick x: ", gamepad1.left_stick_x);
         telemetry.addData("angle",drive.gyro.getValueContinuous());
         telemetry.update();
-        //drive.getPowers();
+        drive.getPowers();
     }
 
 }

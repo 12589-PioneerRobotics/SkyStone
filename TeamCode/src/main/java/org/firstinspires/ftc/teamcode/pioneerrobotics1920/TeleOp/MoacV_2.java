@@ -3,33 +3,33 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
 
 public class MoacV_2 {
-    public AutoGrab autoGrab;
-    public LinearSlideConfig linearSlideConfig;
-    public FoundationGrabber foundationGrabber;
-    public TeleGrabber teleGrabber;
+    //TODO: Add these back once hardware map is complete
+    //public AutoGrab autoGrab;
+    public LinearSlide linearSlide;
+//    public FoundationGrabber foundationGrabber;
+//    public TeleGrabber teleGrabber;
     public Intake intake;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
-        autoGrab = new AutoGrab(blue, hardwareMap);
-        foundationGrabber = new FoundationGrabber(hardwareMap);
+        //autoGrab = new AutoGrab(blue, hardwareMap);
+        //foundationGrabber = new FoundationGrabber(hardwareMap);
     }
 
     public MoacV_2(HardwareMap hardwareMap) { //TeleOp Constructor
         intake = new Intake(hardwareMap);
-        linearSlideConfig = new LinearSlideConfig(hardwareMap);
-        foundationGrabber = new FoundationGrabber(hardwareMap);
-        teleGrabber = new TeleGrabber(hardwareMap);
-        autoGrab = new AutoGrab(true, hardwareMap);//temporary
+        linearSlide = new LinearSlide(hardwareMap);
+//        foundationGrabber = new FoundationGrabber(hardwareMap);
+//        teleGrabber = new TeleGrabber(hardwareMap);
+        //autoGrab = new AutoGrab(true, hardwareMap);//temporary
     }
 
 
-    public class AutoGrab {
+    /*public class AutoGrab {
 
         private Servo pivot, innerGrabber, outerGrabber;
         boolean switcher = true; //use for temporary teleop
@@ -48,12 +48,12 @@ public class MoacV_2 {
             innerGrabber = hardwareMap.servo.get("blueInnerGrabber");
             outerGrabber = hardwareMap.servo.get("blueOuterGrabber");
             blueInitialize();
-        /*else {
+        *//*else {
             pivot = hardwareMap.servo.get("redPivot");
             innerGrabber = hardwareMap.servo.get("redInnerGrabber");
             outerGrabber = hardwareMap.servo.get("redOuterGrabber");
             redInitialize();
-        }*/
+        }*//*
             innerGrabber.setPosition(INNERGRABBER_POSITION);
         }
 
@@ -109,31 +109,40 @@ public class MoacV_2 {
             else if (stick > .5)
                 pivot.setPosition((pivotPos[0][1]));
         }
-    }
+    }*/
 
-    public class LinearSlideConfig {
-        DcMotor linearSlide;
+    public class LinearSlide {
+        DcMotor slideVertical;
+        DcMotor slideHoriz;
+        int[] horizPositions = {};//TODO: Figure out positions for x stones stacked
+        int[] verticalPositions = {};
 
-        public LinearSlideConfig(HardwareMap hardwareMap) {
-            linearSlide = hardwareMap.dcMotor.get("linearSlide");
-            linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        public LinearSlide(HardwareMap hardwareMap) {
+            slideVertical = hardwareMap.dcMotor.get("slideVertical");
+            slideVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideVertical.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         public void lifterPower(double power) {
-            linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            linearSlide.setPower(power);
+            slideVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideVertical.setPower(power);
         }
 
         public void lifterPosition(int clicks) {
-            linearSlide.setTargetPosition(clicks);
-            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlide.setPower(.3);
+            slideVertical.setTargetPosition(clicks);
+            slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideVertical.setPower(.3);
+        }
+        public void setHorizPosition(int count) {
+            slideVertical.setTargetPosition(verticalPositions[count]);
+        }
+        public void setVerticalPosition(int count) {
+            slideHoriz.setTargetPosition(horizPositions[count]);
         }
     }
 
-    public class FoundationGrabber {
+    /*public class FoundationGrabber {
         public Servo leftFoundationGrabber, rightFoundationGrabber;
 
         public FoundationGrabber(HardwareMap hardwareMap) {
@@ -148,9 +157,9 @@ public class MoacV_2 {
         public void rightGrab(boolean lift) {
             rightFoundationGrabber.setPosition((lift) ? .08 : 0.567);
         }
-    }
+    }*/
 
-    public class TeleGrabber {
+    /*public class TeleGrabber {
 
         Servo telePivot, teleInnerGrabber, teleOuterGrabber;
 
@@ -191,10 +200,9 @@ public class MoacV_2 {
         public void release() {
             teleOuterGrabber.setPosition(0.521); //outer 0 degree
         }
-    }
+    }*/
 
     public class Intake {
-
         public DcMotor leftIntake;
         public DcMotor rightIntake;
 
@@ -229,6 +237,7 @@ public class MoacV_2 {
             nav.moveTo(nav.getX() + 5,nav.getY() + 5);
             stopIntake();
         }
+
     }
 
 }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -80,7 +81,6 @@ public class Driving {
     public LinearOpMode linearOpMode;
 
     public Driving(OpMode opMode) {
-        //  servoControl = new ServoControl(opMode);
         initHardware(opMode.hardwareMap);
     }
 

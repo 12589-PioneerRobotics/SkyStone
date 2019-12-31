@@ -18,10 +18,7 @@ public class AutonomousPlanB extends LinearOpMode {
     private SkystoneCVTest detector;
     private Driving drive;
     private SkystoneCVTest.Position skystonePos;
-    private ServoControl servo;
     private int round = 1;
-    //private int skyStoneY = 0;
-    //final private int skyStoneRedX = 34;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,11 +26,8 @@ public class AutonomousPlanB extends LinearOpMode {
         detector = new SkystoneCVTest();
         drive = new Driving(this);
 
-
-
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.enable();
-
 
         waitForStart();
 
@@ -120,7 +114,6 @@ public class AutonomousPlanB extends LinearOpMode {
         }
         round++;
     }
-
 
     private void getStones(){
 

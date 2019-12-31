@@ -27,7 +27,6 @@ public class TestServo extends OpMode {
         //servo 2 and servo 3 have to be vertical for no gravity issue
         servo1.setPosition(servo1.getPosition() + gamepad1.left_stick_y * 0.001);
         servo2.setPosition(servo2.getPosition() + gamepad1.right_stick_x * 0.001);
-
         servo3.setPosition(servo3.getPosition() + gamepad1.right_stick_y * 0.001);
 /*
         if(gamepad1.a)

@@ -22,10 +22,13 @@ public class TeleopSkyStone extends OpMode {
         // GamePad 1 - Main Controller
         POWER *= (1-gamepad1.right_trigger);
 
-        drive.libertyDrive( -POWER*function(gamepad1.right_stick_y),  POWER*function(gamepad1.right_stick_x), -gamepad1.left_stick_x*POWER);
+//        drive.libertyDrive( -POWER*function(gamepad1.right_stick_y),  POWER*function(gamepad1.right_stick_x), -gamepad1.left_stick_x*POWER);
 
-        moac.foundationGrabber.leftGrab(!gamepad1.left_bumper);
-        moac.foundationGrabber.rightGrab(!gamepad1.right_bumper);
+        drive.libertyDrive(gamepad1.right_stick_y, gamepad1.right_stick_x, -gamepad1.left_stick_x);
+
+//TODO:Add this back once Foundation Grabbers are hardware mapped
+//        moac.foundationGrabber.leftGrab(!gamepad1.left_bumper);
+//        moac.foundationGrabber.rightGrab(!gamepad1.right_bumper);
 
         if (gamepad1.dpad_down)
             drive.libertyDrive(POWER*-.5, 0,0);
@@ -42,33 +45,33 @@ public class TeleopSkyStone extends OpMode {
         if (gamepad2.dpad_up) {
             units += 50;
 
-            moac.linearSlideConfig.goEncoder(units, POWER-.5);
+            moac.slideVertical.goEncoder(units, POWER-.5);
         }
         if (gamepad2.dpad_down) {
             units -= 50;
 
-            moac.linearSlideConfig.goEncoder(units, POWER-.5);
+            moac.slideVertical.goEncoder(units, POWER-.5);
         }
 
         if(gamepad2.a)
-            moac.linearSlideConfig.goEncoder(0, POWER);
+            moac.slideVertical.goEncoder(0, POWER);
 */
         if (gamepad2.dpad_up)
-            moac.linearSlideConfig.lifterPower(0.4);
+            moac.linearSlide.lifterPower(0.4);
         else if (gamepad2.dpad_down)
-            moac.linearSlideConfig.lifterPower(-0.1);
+            moac.linearSlide.lifterPower(-0.1);
         if (lifterOneShot.update(!(gamepad2.dpad_up || gamepad2.dpad_down)))
-            moac.linearSlideConfig.lifterPower(0);
+            moac.linearSlide.lifterPower(0);
 
-        //if (gamepad2.a)
-          //  moac.linearSlideConfig.lifterPosition(0)-
-        moac.teleGrabber.setTelePivot(gamepad2.right_stick_y);
+
+
+        /*moac.teleGrabber.setTelePivot(gamepad2.right_stick_y);
 
         moac.autoGrab.teleBlueGrab(gamepad2.left_bumper);
 
         moac.autoGrab.teleBlueArmDown(gamepad2.left_stick_y);
 
-        moac.teleGrabber.grab(gamepad2.right_bumper);
+        moac.teleGrabber.grab(gamepad2.right_bumper);*/
 
         //TODO: Remove Auto/TeleGrabber to accommodate new hardware.
     }
