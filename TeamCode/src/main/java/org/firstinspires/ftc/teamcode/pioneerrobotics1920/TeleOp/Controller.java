@@ -35,7 +35,7 @@ public class Controller extends OpMode {
 
     public void loop() {
 
-        drive.libertyDrive(-function(gamepad1.right_stick_y), function(gamepad1.right_stick_x), -function(gamepad1.left_stick_x));
+        drive.libertyDrive(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
 
 
         if (gamepad1.dpad_left) {
@@ -53,10 +53,13 @@ public class Controller extends OpMode {
         if(gamepad1.a) {
             moac.intake.takeIn();
         }
+        else moac.intake.stopIntake();
 
         if(gamepad1.b) {
             moac.intake.spitOut();
         }
+        else moac.intake.stopIntake();
+
         if(gamepad1.left_bumper) {
             if(countVertical == 0) {
                 countVertical = 4;//4 is highest position for now
@@ -65,11 +68,12 @@ public class Controller extends OpMode {
             moac.linearSlide.setVerticalPosition(countVertical);
         }
 
-        telemetry.addData("Left Stick y: ", -gamepad1.left_stick_y);
+/*        telemetry.addData("Left Stick y: ", -gamepad1.left_stick_y);
         telemetry.addData("Left Stick x: ", gamepad1.left_stick_x);
         telemetry.addData("angle",drive.gyro.getValueContinuous());
         telemetry.update();
-        drive.getPowers();
+        drive.getPowers();*/
+    telemetry.addData("Current vertical slide position: ", moac.linearSlide.verticalPositions[countVertical]);
     }
 
 }

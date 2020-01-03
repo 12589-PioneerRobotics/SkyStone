@@ -35,7 +35,7 @@ public class Driving {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
-        stacker = hardwareMap.dcMotor.get("stacker");
+        //stacker = hardwareMap.dcMotor.get("stacker");
 
 
         gyro = new GyroWrapper(hardwareMap.get(BNO055IMU.class, "imu"));
@@ -43,7 +43,7 @@ public class Driving {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-        stacker.setDirection((DcMotor.Direction.FORWARD));
+        //stacker.setDirection((DcMotor.Direction.FORWARD));
 
         drivingMotors = new DcMotor[]{frontRight, frontLeft, backRight, backLeft};
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -219,11 +219,11 @@ public class Driving {
         linearOpMode.idle();
     }
 
-    public void stackerUp(int power){
+ /*   public void stackerUp(int power){
         stacker.setPower(power);
 
         stacker.setPower(0);
-    }
+    }*/
 
     public void angleCorrection(double target) {
         double power = .2;

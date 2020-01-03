@@ -1,6 +1,8 @@
 
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV;
 
+import android.provider.ContactsContract;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.OpenCVPipeline;
@@ -8,8 +10,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -47,8 +51,8 @@ public class FoundationDetection extends OpenCVPipeline {
         else {//The spectrum of red hues on the HSV scale is split on the edges (0-5, 350-360). So, we need to take inRange() twice and combine the resulting Mat objects.
             Mat bw1 = new Mat();
             Mat bw2 = new Mat();
-            Core.inRange(hls, new Scalar(0, 20, 50), new Scalar(10, 255, 255), bw1);
-            Core.inRange(hls, new Scalar(245, 0, 50), new Scalar(255, 255, 255), bw2);
+            Core.inRange(hls, new Scalar(0, 20, 50), new Scalar(15, 255, 255), bw1);
+            Core.inRange(hls, new Scalar(240, 0, 25), new Scalar(255, 255, 255), bw2);
             Core.add(bw1, bw2, bw);
         }
 
@@ -79,6 +83,14 @@ public class FoundationDetection extends OpenCVPipeline {
             center = new Point(moments.get_m10() / moments.get_m00(),
                     moments.get_m01() / moments.get_m00());
 
+
+           /* MatOfPoint2f convertBoi = new MatOfPoint2f(contours.get(maxIndex).toArray());
+            Imgproc.rectangle(Imgproc.minAreaRect(convertBoi), , , new Scalar(0,0,255,0));
+            RotatedRect rect = Imgproc.minAreaRect(convertBoi);
+            test stuff
+            */
+
+
             centerX = (int) center.x;
             centerY = (int) center.y;
 
@@ -100,7 +112,10 @@ public class FoundationDetection extends OpenCVPipeline {
 
     public int calcFieldX (int centerY) {
         double x = 0.0748*centerY + 9.24;
-        return (int)x;
+        if(blue) {
+            return (int) x;
+        }
+        else return 144 - (int)x;
     }
 
     public double[] calcValueOfPoints(Mat hls) {

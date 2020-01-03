@@ -74,7 +74,7 @@ public class TeleopSkyStone extends OpMode {
 
         moac.teleGrabber.grab(gamepad2.right_bumper);*/
 
-        //TODO: Remove Auto/TeleGrabber to accommodate new hardware.
+        //TODO: Remove Auto/Stacker to accommodate new hardware.
     }
 
     public double function(double power){
