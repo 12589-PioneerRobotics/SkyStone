@@ -59,26 +59,19 @@ public class MoacV_2 {
             slideHoriz.setTargetPosition(horizPositions[count]);
         }
     }
-   /*public class FoundationGrabber {
+   public class FoundationGrabber {
         public Servo leftFoundationGrabber, rightFoundationGrabber;
 
         public FoundationGrabber(HardwareMap hardwareMap) {
-            leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber");
+            leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
         }
 
-        *//*public void leftGrab(boolean lift) {
-            leftFoundationGrabber.setPosition((lift) ? .95 : .45);
-        }
-
-        public void rightGrab(boolean lift) {
-            rightFoundationGrabber.setPosition((lift) ? .08 : 0.567);
-        }*//*
         public void grab(boolean lift) {
             leftFoundationGrabber.setPosition((lift) ? .95 : .45);
             rightFoundationGrabber.setPosition((lift) ? .08 : 0.567);
         }
-    }*/
+    }
 
     /*public class Stacker {
 
@@ -133,7 +126,6 @@ public class MoacV_2 {
 
             leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         }
 
         public void takeIn() {

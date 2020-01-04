@@ -27,7 +27,7 @@ public class Driving {
 
     DcMotor[] drivingMotors;
 
-    public ModernRoboticsI2cRangeSensor frontDistance, backDistance, leftDistance, rightDistance;
+    public ModernRoboticsI2cRangeSensor backDistance, leftDistance, rightDistance;
 
     private void initHardware(HardwareMap hardwareMap) {
 
@@ -39,10 +39,10 @@ public class Driving {
 
 
         gyro = new GyroWrapper(hardwareMap.get(BNO055IMU.class, "imu"));
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
         //stacker.setDirection((DcMotor.Direction.FORWARD));
 
         drivingMotors = new DcMotor[]{frontRight, frontLeft, backRight, backLeft};
@@ -72,7 +72,7 @@ public class Driving {
 
     //if distance sensors are going to be used
     public void initDistanceSensors(HardwareMap hardwareMap) {
-        frontDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
+
         backDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "backDistance");
         leftDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");
         rightDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
@@ -107,7 +107,6 @@ public class Driving {
         double target = angle + gyro.getValueContinuous(); //need getValueContinuous in case start position is not 0
         PIDCoefficients pidCoefficients = new PIDCoefficients(.4, .45, .7); //.5, .45, .7
 
-
         setDrivingModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeft.setPower(power * turnSign);
         backLeft.setPower(power * turnSign);
@@ -124,7 +123,6 @@ public class Driving {
             backRight.setPower(-0.1 * turnSign);
         }
         sleep(100);
-
 
         while (Math.abs(gyro.getValueContinuous() - target) > THRESHOLD && linearOpMode.opModeIsActive()) {
             correctSign = Math.signum(target - gyro.getValueContinuous());
@@ -265,51 +263,6 @@ public class Driving {
 
     public Position getPosition() {
         return gyro.reportPosition();
-    }
-
-    public void PIDTurn(double Kp, double Ki, double Kd, int angle) {
-        stopDriving();
-        double target = angle + gyro.getValueContinuous();
-        //error needs to be scaled
-        double control;
-        double error;
-        double scaled_error;
-        double summed_error = 0;
-        double previous_error = 0;
-        double delta_error;
-        linearOpMode.telemetry.addData("not in the loop", null);
-        while (linearOpMode.opModeIsActive() && Math.abs(target - gyro.getValueContinuous()) > 0.5) {
-            linearOpMode.telemetry.addData("in the loop", null);
-            //setting up Kp
-            error = target - gyro.getValueContinuous();
-            scaled_error = error / angle;
-            //if(scaled_error > 1)scaled_error = 1;
-            //if(scaled_error < -1)scaled_error = -1;
-            //setting up Ki
-            summed_error = summed_error + scaled_error;
-            if (summed_error > 1) summed_error = 1;
-            if (summed_error < -1) summed_error = -1;
-
-            //setting up Kd
-            delta_error = (previous_error - error);
-            if (delta_error > 1) delta_error = 1;
-            if (delta_error < -1) delta_error = -1;
-
-            control = ((Kp * scaled_error) + (Ki * summed_error) + (Kd * delta_error));
-            // make sure control is scaled
-            if (control > 1) control = 1;
-            if (control < -1) control = -1;
-
-            frontLeft.setPower(control);
-            backLeft.setPower(control);
-            frontRight.setPower(-control);
-            backRight.setPower(-control);
-
-            previous_error = error;
-        }
-        linearOpMode.telemetry.addData("exit the loop", null);
-        stopDriving();
-        linearOpMode.sleep(1000);
     }
 
      int sgn(double x) {
@@ -460,25 +413,7 @@ public class Driving {
         linearOpMode.telemetry.addData("backRight", backRight.getCurrentPosition() / CLICKS_PER_INCH);
     }
 
-    public int sweepCheck(Coordinates coordinates) { //For smarter parking
-        //TODO: Find angle to start at. Find turn increment (should roughly be length of 22 in)
-        final int START_ANGLE = 30;
-        final int BRIDGE_Y = 99;
-        final int VERTICAL_DIST = (int) coordinates.y - BRIDGE_Y; //should be around 30-40 in away
-        final int MARGIN_OF_ERROR = 4;
-        turn(START_ANGLE);
-        int turnCounts = 0;
 
-        while (turnCounts < 4) { // there was an && here
-            int a = (int) frontDistance.getDistance(DistanceUnit.INCH);
-            turn((int) gyro.getValueContinuous() + 30); //width of robot is approx 22 inches, counting mechanum wheels
-            if (a > VERTICAL_DIST / MARGIN_OF_ERROR + Math.sin(gyro.getValueContinuous()) && turnCounts % 2 == 0) {
-                turn((int) gyro.getValueContinuous() - 15);
-                turnCounts++;
-            }
-        }
-        return 1;
-    }
 
      void moveClose(String direction, double distance, double power, float thresh){
         if (direction.equals("back")) {
@@ -490,7 +425,7 @@ public class Driving {
                     libertyDrive(power, 0, 0);
             }
         }
-        if (direction.equals("front")) {
+        /*if (direction.equals("front")) {
             double diff = frontDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(frontDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
                 if (diff >= 0)
@@ -498,7 +433,7 @@ public class Driving {
                 else
                     libertyDrive(-power, 0, 0);
             }
-        }
+        }*/
         if (direction.equals("left")) {
             double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(leftDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {

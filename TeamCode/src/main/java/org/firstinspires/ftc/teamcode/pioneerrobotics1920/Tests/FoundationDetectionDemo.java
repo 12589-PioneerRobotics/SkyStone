@@ -21,6 +21,11 @@ public class FoundationDetectionDemo extends LinearOpMode {
             telemetry.addData("Center Values", algorithm.value2Str(algorithm.centerImageValues));
             telemetry.addData("center", "("+algorithm.centerX+","+algorithm.centerY+")");
             telemetry.addData("foundation pos", algorithm.calcFieldX(algorithm.centerY));
+            if(algorithm.angle < 20) {
+                telemetry.addData("Foundation Orientation: ", algorithm.horiz ? "Horizontally aligned" : "Vertically aligned");
+            }
+            else telemetry.addData("Foundation angle: ", algorithm.angle);
+            telemetry.addData("Estimated Coordinates: ","(" + algorithm.position.x + ", " + algorithm.position.y + ")");
             telemetry.update();
             idle();
         }

@@ -26,7 +26,7 @@ public class SkystoneCVTest extends OpenCVPipeline {
     public double[] centerImageValues;
     public double[] rightImageValues;
     // constants used in the formation of the rectangular images to check position of skystone
-    private int X = 300;
+    private int X = 500;
     private int Y = 175;
     final private int WIDTH_AND_HEIGHT = 30;
     final private int GAP_BETWEEN_BOXES = 125;

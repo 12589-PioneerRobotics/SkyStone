@@ -35,7 +35,7 @@ public class Controller extends OpMode {
 
     public void loop() {
 
-        drive.libertyDrive(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
+        drive.libertyDrive(-function(gamepad1.right_stick_y), function(gamepad1.right_stick_x), -function(gamepad1.left_stick_x));
 
 
         if (gamepad1.dpad_left) {

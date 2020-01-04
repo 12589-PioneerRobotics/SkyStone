@@ -193,7 +193,11 @@ public class Auton extends LinearOpMode {
 
                     drive.moveClose("front", 26, .25,3.5f);//move up to the block.
 
-                    nav.currPos(drive.frontDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(5).y, 270);
+                    moac.intake.takeIn();
+                    sleep(5000);
+                    moac.intake.stopIntake();
+
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(5).y, 270);
 
                     //moac.autoGrab.blueClose();
                     sleep(1000);
@@ -209,7 +213,7 @@ public class Auton extends LinearOpMode {
                     drive.moveClose("front", 26, .4,3.5f);
                     nav.turnTo(270);
 
-                    nav.currPos(drive.frontDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(2).y, 270);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(2).y, 270);
                     blueStones.remove(2);
 
                 }break;
@@ -225,7 +229,7 @@ public class Auton extends LinearOpMode {
                     drive.moveClose("front", 26, .25,3.5f);
                     nav.turnTo(270);
 
-                    nav.currPos(drive.frontDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(4).y, 270);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(4).y, 270);
 
                     //moac.autoGrab.blueClose();
                     sleep(1000);
@@ -243,7 +247,7 @@ public class Auton extends LinearOpMode {
                     drive.moveClose("front", 26, .4,3.5f);
                     nav.turnTo(270);
 
-                    nav.currPos(drive.frontDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(1).y, 270);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(1).y, 270);
 
                     blueStones.remove(1);
                 }break;
@@ -258,7 +262,7 @@ public class Auton extends LinearOpMode {
                     drive.moveClose("front", 26, .25,3);
                     nav.turnTo(270);
 
-                    nav.currPos(drive.frontDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(3).y, 270);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(3).y, 270);
 
                     //moac.autoGrab.blueClose();
                     sleep(1000);
@@ -276,7 +280,7 @@ public class Auton extends LinearOpMode {
                     drive.moveClose("front", 26, .4, 3);
                     nav.turnTo(270);
 
-                    nav.currPos(drive.frontDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(0).y, 270);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(0).y, 270);
 
                     blueStones.remove(0);
                 }break;
@@ -297,7 +301,7 @@ public class Auton extends LinearOpMode {
 
                     drive.moveClose("front", 26, .25,3.5f);
 
-                    nav.currPos(144 - drive.frontDistance.getDistance(DistanceUnit.INCH), redStones.get(5).y, 90);
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(5).y, 90);
 
                     //moac.autoGrab.blueClose();
                     sleep(1000);
@@ -314,7 +318,7 @@ public class Auton extends LinearOpMode {
 
                     sleep(1000);
 
-                    nav.currPos(144- drive.frontDistance.getDistance(DistanceUnit.INCH), redStones.get(2).y, 90);
+                    nav.currPos(144- drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(2).y, 90);
 
                     redStones.remove(2);
                 }break;
@@ -330,7 +334,7 @@ public class Auton extends LinearOpMode {
                     drive.moveClose("front", 26, .25,3.5f);
                     nav.turnTo(90);
 
-                    nav.currPos(144-drive.frontDistance.getDistance(DistanceUnit.INCH), redStones.get(4).y, 90);
+                    nav.currPos(144-drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(4).y, 90);
 
                     //moac.autoGrab.blueClose();
                     sleep(1000);
@@ -350,7 +354,7 @@ public class Auton extends LinearOpMode {
 
                     sleep(1000);
 
-                    nav.currPos(144 - drive.frontDistance.getDistance(DistanceUnit.INCH), redStones.get(1).y, 90);
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(1).y, 90);
 
                     redStones.remove(1);
                 }break;
@@ -365,7 +369,7 @@ public class Auton extends LinearOpMode {
                     drive.moveClose("front", 26, .25,3);
                     nav.turnTo(90);
 
-                    nav.currPos(144 - drive.frontDistance.getDistance(DistanceUnit.INCH), redStones.get(3).y, 90);
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(3).y, 90);
 
                     //moac.autoGrab.blueClose();
                     sleep(1000);
@@ -387,7 +391,7 @@ public class Auton extends LinearOpMode {
 
                     sleep(1000);
 
-                    nav.currPos(144 - drive.frontDistance.getDistance(DistanceUnit.INCH), redStones.get(0).y, 90);
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(0).y, 90);
 
                     redStones.remove(0);
                 }break;

@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.OpenCVPipeline;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Coordinates;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -28,7 +30,9 @@ public class FoundationDetection extends OpenCVPipeline {
     public double[] centerImageValues;
     public int centerX, centerY;
     public boolean blue = true;
-
+    public double angle;
+    public boolean horiz;
+    public Coordinates position = new Coordinates(0.0,0.0);
 
     public FoundationDetection(boolean blue) {
         this.blue = blue;
@@ -51,8 +55,8 @@ public class FoundationDetection extends OpenCVPipeline {
         else {//The spectrum of red hues on the HSV scale is split on the edges (0-5, 350-360). So, we need to take inRange() twice and combine the resulting Mat objects.
             Mat bw1 = new Mat();
             Mat bw2 = new Mat();
-            Core.inRange(hls, new Scalar(0, 20, 50), new Scalar(15, 255, 255), bw1);
-            Core.inRange(hls, new Scalar(240, 0, 25), new Scalar(255, 255, 255), bw2);
+            Core.inRange(hls, new Scalar(0, 15,40), new Scalar(12, 255, 255), bw1);
+            Core.inRange(hls, new Scalar(170, 70, 50), new Scalar(180, 255, 255), bw2);
             Core.add(bw1, bw2, bw);
         }
 
@@ -83,12 +87,22 @@ public class FoundationDetection extends OpenCVPipeline {
             center = new Point(moments.get_m10() / moments.get_m00(),
                     moments.get_m01() / moments.get_m00());
 
-
-           /* MatOfPoint2f convertBoi = new MatOfPoint2f(contours.get(maxIndex).toArray());
-            Imgproc.rectangle(Imgproc.minAreaRect(convertBoi), , , new Scalar(0,0,255,0));
+            //experimental code for finding orientation
+            MatOfPoint2f convertBoi = new MatOfPoint2f(contours.get(maxIndex).toArray());
             RotatedRect rect = Imgproc.minAreaRect(convertBoi);
-            test stuff
-            */
+
+            if(rect.angle < 20) {
+                if (rect.size.height > rect.size.width) {
+                    horiz  = false;
+                    position.setY(96);
+                }
+                else {
+                    horiz = true;
+                    position.setY(122);
+                }
+            }
+            else angle = rect.angle;
+            position.setX(calcFieldX((int)center.y));
 
 
             centerX = (int) center.x;
