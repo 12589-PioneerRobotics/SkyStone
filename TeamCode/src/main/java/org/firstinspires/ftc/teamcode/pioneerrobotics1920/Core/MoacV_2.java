@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,19 +13,19 @@ public class MoacV_2 {
     //TODO: Add these back once hardware map is complete
     //public AutoGrab autoGrab;
     public LinearSlide linearSlide;
-//    public FoundationGrabber foundationGrabber;
+    public FoundationGrabber foundationGrabber;
 //    public Stacker teleGrabber;
     public Intake intake;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
         //autoGrab = new AutoGrab(blue, hardwareMap);
-        //foundationGrabber = new FoundationGrabber(hardwareMap);
+        foundationGrabber = new FoundationGrabber(hardwareMap);
     }
 
     public MoacV_2(HardwareMap hardwareMap) { //TeleOp Constructor
         intake = new Intake(hardwareMap);
         linearSlide = new LinearSlide(hardwareMap);
-//        foundationGrabber = new FoundationGrabber(hardwareMap);
+        foundationGrabber = new FoundationGrabber(hardwareMap);
 //        teleGrabber = new Stacker(hardwareMap);
         //autoGrab = new AutoGrab(true, hardwareMap);//temporary
     }
@@ -65,9 +66,11 @@ public class MoacV_2 {
         public FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
+            leftFoundationGrabber.setPosition(.45);
+            rightFoundationGrabber.setPosition(.567);
         }
 
-        public void grab(boolean lift) {
+        public void grabFoundation(boolean lift) {
             leftFoundationGrabber.setPosition((lift) ? .95 : .45);
             rightFoundationGrabber.setPosition((lift) ? .08 : 0.567);
         }
@@ -142,10 +145,13 @@ public class MoacV_2 {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
         }
-        public void takeStone(Driving driving, Navigation nav) { //experimental method for autonomous grabbing stone
+        public void takeStone(Driving driving, Navigation nav, LinearOpMode opMode) { //experimental method for autonomous grabbing stone
+            int go = 10;
             takeIn();
-            nav.moveTo(nav.getX() + 5,nav.getY() + 5);
+            nav.moveToX(nav.getX() + go);
+            opMode.sleep(3000);
             stopIntake();
+            nav.moveToX(nav.getX() - go);
         }
 
     }

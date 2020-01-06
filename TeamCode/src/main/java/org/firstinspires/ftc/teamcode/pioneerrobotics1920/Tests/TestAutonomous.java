@@ -21,9 +21,10 @@ public class TestAutonomous extends LinearOpMode {
         nav = new Navigation(driving);
         moac = new MoacV_2(this.hardwareMap);
 
+        int[] clicks = {300, 600, 900, 1200, 1500, 1800, 2100, 2400}; // clicks
         int[] distances = {6, 12, 18, 24, 30, 36, 48, 60}; //inches
         int[] angles = {0, 30, 90, 135, 180, 270, 330}; //actually angles
-
+        int[] inches = {5,10,15,20,25,30,35,40};
         //Coordinates[] coordinates = {new Coordinates(0,0), new Coordinates(0,12), new Coordinates(12,12), new Coordinates(12,0)};
         double power = 0.6;
 
@@ -48,9 +49,10 @@ public class TestAutonomous extends LinearOpMode {
                     curIndex2++;
                 if (dpad_downOneShot.update(gamepad1.dpad_left) && curIndex2 > 0)
                     curIndex2--;
+
                 if (aOneShot.update(gamepad1.a)) {
                     driving.autoStrafe(distances[curIndex], 0.6);
-
+                    //driving.autoStrafe(clicks[curIndex], 0.6);
                     //driving.moveClose("front", 8, .25, 3.5f);
                     //nav.turnToP(angles[curIndex2],0.75,0.000025);
                 }
@@ -67,6 +69,7 @@ public class TestAutonomous extends LinearOpMode {
                 }
 
                 telemetry.addData("distance going", distances[curIndex]);
+                telemetry.addData("clicks going", clicks[curIndex]);
                 //telemetry.addData("go to angle", angles[curIndex2]);
                 //telemetry.addData("nav angle", nav.getAngle());
                 telemetry.addData("Turn angle set to: ", angles[curIndex2]);

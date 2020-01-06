@@ -357,6 +357,37 @@ public class Driving {
     //48 inches from wall to stones
 
 //    public
+    public void autoStrafe(int clicks, double power) {
+        final double THRESH = 1;
+        double startAngle = gyro.getValueContinuous();
+
+        frontLeft.setTargetPosition(clicks);
+        frontRight.setTargetPosition(-clicks);
+        backLeft.setTargetPosition(-clicks);
+        backRight.setTargetPosition(clicks);
+
+        setDrivingModes(DcMotor.RunMode.RUN_TO_POSITION);
+
+        final double POWER_CHANGE = power*0.2;
+        while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
+            linearOpMode.idle();
+
+            if (gyro.getValueContinuous() > startAngle + THRESH) {
+                frontRight.setPower(power+POWER_CHANGE);
+                frontLeft.setPower(power+POWER_CHANGE);
+                backRight.setPower(power-POWER_CHANGE);
+                backLeft.setPower(power-POWER_CHANGE);
+            } else if (gyro.getValueContinuous() < startAngle - THRESH) {
+                frontRight.setPower(power-POWER_CHANGE);
+                frontLeft.setPower(power-POWER_CHANGE);
+                backRight.setPower(power+POWER_CHANGE);
+                backLeft.setPower(power+POWER_CHANGE);
+            } else {
+                setAllDrivingPowers(power);
+            }
+        }
+        stopDriving();
+    }
 
     public void autoStrafe(double inches, double power) {
         final double THRESH = 1;
@@ -415,7 +446,7 @@ public class Driving {
 
 
 
-     void moveClose(String direction, double distance, double power, float thresh){
+    public void moveClose(String direction, double distance, double power, float thresh){
         if (direction.equals("back")) {
             double diff = backDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(backDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
@@ -438,18 +469,18 @@ public class Driving {
             double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(leftDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
                 if (diff >= 0)
-                    libertyDrive(0, 0, power);
-                else
                     libertyDrive(0, 0, -power);
+                else
+                    libertyDrive(0, 0, power);
             }
         }
         if (direction.equals("right")) {
             double diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(rightDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
                 if (diff >= 0)
-                    libertyDrive(0, 0, -power);
-                else
                     libertyDrive(0, 0, power);
+                else
+                    libertyDrive(0, 0, -power);
             }
         }
         stopDriving();

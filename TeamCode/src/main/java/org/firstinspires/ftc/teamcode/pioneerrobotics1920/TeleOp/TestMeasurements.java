@@ -4,13 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Coordinates;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
 
 @Autonomous(name = "Test Measurements")
-@Disabled
 public class TestMeasurements extends LinearOpMode {
 
     Driving drive;
@@ -24,6 +24,7 @@ public class TestMeasurements extends LinearOpMode {
         moac = new MoacV_2(this.hardwareMap);
 
         int[] encoders = {100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000};
+        int[] inches = {5,10,15,20,25,30,35,40};
         Toggle.OneShot dpad_upOneShot = new Toggle.OneShot();
         Toggle.OneShot dpad_downOneShot = new Toggle.OneShot();
         Toggle.OneShot aOneShot = new Toggle.OneShot();
@@ -44,34 +45,30 @@ public class TestMeasurements extends LinearOpMode {
 
         while(this.opModeIsActive()) {
             if (count == 0) {
-                if (dpad_upOneShot.update(gamepad1.dpad_up) && curIndex < coordinates.length - 1)
+                if (dpad_upOneShot.update(gamepad1.dpad_up) && curIndex < inches.length - 1)
                     curIndex++;
                 if (dpad_downOneShot.update(gamepad1.dpad_down) && curIndex > 0)
                     curIndex--;
                 if (aOneShot.update(gamepad1.a)) {
-                    navigation.backTo(coordinates[curIndex].x, coordinates[curIndex].y);
+                    drive.moveClose("right", inches[curIndex], 0.5, 3);
                 }
                 if (aOneShot.update(gamepad1.b)) {
-                    navigation.moveTo(coordinates[curIndex].x, coordinates[curIndex].y);
+                    drive.moveClose("back", inches[curIndex], 0.5, 3);
                 }
-                telemetry.addData("Current location", "("+navigation.getX()+","+navigation.getY()+")");
+                /*telemetry.addData("Current location", "("+navigation.getX()+","+navigation.getY()+")");
                 telemetry.addData("Location going to", coordinates[curIndex]);
                 telemetry.addData("Angle turning to", angles[curIndex]);
-                telemetry.addData("turn angle", navigation.turnAngle);
+                telemetry.addData("turn angle", navigation.turnAngle);*/
+                telemetry.addData("Press a for moveClose(right), b for moveClose(back)", null);
+                telemetry.addData("Going to: ", inches[curIndex]);
+                telemetry.addData("Right Distance: ", drive.rightDistance.getDistance(DistanceUnit.INCH));
+                telemetry.addData("Back distance: ", drive.backDistance.getDistance(DistanceUnit.INCH));
+
             }
             telemetry.update();
-            if(count == 0) {
-                if (dpad_upOneShot.update(gamepad1.dpad_up) && curIndex < encoders.length - 1)
-                    curIndex++;
-                if (dpad_downOneShot.update(gamepad1.dpad_down) && curIndex > 0)
-                    curIndex--;
-                if (aOneShot.update(gamepad1.a)) {
-                   //slideVertical.goEncoder(encoders[curIndex], 1);
-                }
-            }
 
-            telemetry.addData("Encoder unit set to: ", encoders[curIndex]);
-            telemetry.addData("Current encoder distance: " , 0);
+            /*telemetry.addData("Encoder unit set to: ", encoders[curIndex]);
+            telemetry.addData("Current encoder distance: " , 0);*/
 
         }
     }
