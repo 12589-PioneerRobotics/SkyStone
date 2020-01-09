@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 public class Navigation {
     private double x, y, angleDiff;
     private Driving driving;
-    public double power = 0.6;
+    public double power = 1;
     public Navigation(Driving driver) {
         driving = driver;
     }
@@ -38,9 +38,11 @@ public class Navigation {
         y = y1;
         driving.linearOpMode.telemetry.update();
     }
-
     public void moveToX(double x1) {
         moveTo(x1,y);
+    }
+    public void moveToX(double x1, double power) {
+        moveTo(x1,y,power);
     }
 
     public void moveToY(double y1) {
@@ -68,8 +70,8 @@ public class Navigation {
         backTo(x1,y);
     }
 
-    public void backToY(double y1) {
-        backTo(x,y1);
+    public void backToY(double y1,double power) {
+        backTo(x,y1,power);
     }
 
     public void turnTo(double angle1) { turnTo(angle1, 1); }

@@ -16,6 +16,7 @@ public class MoacV_2 {
     public FoundationGrabber foundationGrabber;
 //    public Stacker teleGrabber;
     public Intake intake;
+    public Driving drive;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
         //autoGrab = new AutoGrab(blue, hardwareMap);
@@ -66,40 +67,41 @@ public class MoacV_2 {
         public FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(.45);
-            rightFoundationGrabber.setPosition(.567);
+            leftFoundationGrabber.setPosition(.567);
+            rightFoundationGrabber.setPosition(.46);
         }
 
         public void grabFoundation(boolean lift) {
-            leftFoundationGrabber.setPosition((lift) ? .95 : .45);
-            rightFoundationGrabber.setPosition((lift) ? .08 : 0.567);
+            leftFoundationGrabber.setPosition((lift) ? .08 : .567);
+            rightFoundationGrabber.setPosition((lift) ? .95 : 0.46);
         }
+
     }
 
-    /*public class Stacker {
+    public class Stacker {
 
         Servo grabber, rotate;
         boolean switcher = true;
 
         public Stacker(HardwareMap hardwareMap) {
-            grabber = hardwareMap.servo.get("grabber");
+            grabber = hardwareMap.servo.get("stacker");
             rotate = hardwareMap.servo.get("rotate");
             initialize();
         }
 
         public void initialize() {
-            grabber.setPosition();
-            rotate.setPosition();
+            grabber.setPosition(0);
+            rotate.setPosition(0);
         }
 
-        *//*public void setTelePivot(float stickPos) {
+        /*public void setTelePivot(float stickPos) {
             if (stickPos < -0.5) {
                 telePivot.setPosition(0.393); //pivot up
             } else if (stickPos > 0.5) {
                 telePivot.setPosition(0.848); //pivot down
                 teleInnerGrabber.setPosition(0.0439); //inner grabber 90 degree
             }
-        }*//*
+        }
 
         public void grab(boolean grab) {
             grabber.setPosition((grab) ? 0 : 0.521);
@@ -109,12 +111,12 @@ public class MoacV_2 {
             if (switcher) teleOuterGrabber.setPosition(0);//outer 90 degree
             else teleOuterGrabber.setPosition(0.521);//outer 0 degree
             switcher = !switcher;
-        }
+        }*/
 
         public void release() {
             grabber.setPosition(0.521); //outer 0 degree
         }
-    }*/
+    }
 
     public class Intake {
         public DcMotor leftIntake;
@@ -124,8 +126,8 @@ public class MoacV_2 {
             leftIntake = hardwareMap.dcMotor.get("leftIntake");
             rightIntake = hardwareMap.dcMotor.get("rightIntake");
 
-            leftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
-            rightIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+            leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+            rightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
             leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -146,12 +148,13 @@ public class MoacV_2 {
             rightIntake.setPower(0);
         }
         public void takeStone(Driving driving, Navigation nav, LinearOpMode opMode) { //experimental method for autonomous grabbing stone
-            int go = 10;
+            int vert = 11;
             takeIn();
-            nav.moveToX(nav.getX() + go);
-            opMode.sleep(3000);
+            nav.moveToX(nav.getX() + vert,0.15);
+//            opMode.sleep(500);
+            //linearSlide.setVerticalPosition(50);
             stopIntake();
-            nav.moveToX(nav.getX() - go);
+            nav.backToX(nav.getX() - vert + 2);
         }
 
     }

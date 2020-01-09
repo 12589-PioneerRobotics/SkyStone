@@ -187,7 +187,7 @@ public class Driving {
         //wait while opmode is active and left motor is busy running to position.
         while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
             linearOpMode.idle();
-            double factor = Math.abs(clicks - frontLeft.getCurrentPosition()) / 1800;
+            double factor = Math.abs(clicks - frontLeft.getCurrentPosition()) / 1000;
             double newPower = power * factor * factor;
             setAllDrivingPowers((newPower<0.25)? 0.25:newPower);
         }
@@ -197,6 +197,7 @@ public class Driving {
     //main drive method
     public void libertyDrive(double drive, double turn, double strafe) {
         setDrivingModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turn += strafe*-0.05;
         double factor = Math.abs(drive) + Math.abs(turn) + Math.abs(strafe);
         if (factor <= 1)
             factor = 1;
@@ -477,6 +478,8 @@ public class Driving {
         if (direction.equals("right")) {
             double diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(rightDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
+                linearOpMode.telemetry.addData( "Right Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
+                linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(0, 0, power);
                 else

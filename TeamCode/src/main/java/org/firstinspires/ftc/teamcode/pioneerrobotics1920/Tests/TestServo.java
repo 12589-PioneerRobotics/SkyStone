@@ -9,9 +9,9 @@ public class TestServo extends OpMode {
     private Servo servo1, servo2, servo3;
     @Override
     public void init() {
-        servo1 = hardwareMap.servo.get("rightFoundationGrabber");
-        servo2 = hardwareMap.servo.get("leftFoundationGrabber");
-        //servo3 = hardwareMap.servo.get("blueOuterGrabber");
+        servo1 = hardwareMap.servo.get("stacker");
+        servo2 = hardwareMap.servo.get("rotate");
+//        servo3 = hardwareMap.servo.get("stacker");
         //servo1 = hardwareMap.servo.get("redPivot");
         //servo2 = hardwareMap.servo.get("redInnerGrabber");
         //servo3 = hardwareMap.servo.get("redOuterGrabber");

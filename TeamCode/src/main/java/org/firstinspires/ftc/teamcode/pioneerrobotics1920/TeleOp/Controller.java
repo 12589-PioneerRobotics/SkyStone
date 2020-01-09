@@ -18,11 +18,14 @@ public class Controller extends OpMode {
     double startAngle;
 
     public double function(double power){
+        return function(power, 1);
+    }
+    public double function(double power, double scale){
         if (power<=1) {
             if (power < 0)
-                return -(0.5 * power * power);
+                return -(scale * power * power);
             else
-                return 0.5 * power * power;
+                return scale * power * power;
         }
         return 1;
     }
@@ -35,7 +38,7 @@ public class Controller extends OpMode {
 
     public void loop() {
 
-        drive.libertyDrive(-function(gamepad1.right_stick_y), function(gamepad1.right_stick_x), function(gamepad1.left_stick_x));
+        drive.libertyDrive(-function(gamepad1.right_stick_y), function(gamepad1.right_stick_x, 0.6), function(gamepad1.left_stick_x));
 
 
         if (gamepad1.dpad_left) {
@@ -50,6 +53,7 @@ public class Controller extends OpMode {
             }
             drive.correctStrafe(-0.6, startAngle);
         }
+
         if(gamepad1.a) {
             moac.intake.takeIn();
         }
@@ -68,12 +72,15 @@ public class Controller extends OpMode {
             moac.linearSlide.setVerticalPosition(countVertical);
         }
 
-/*        telemetry.addData("Left Stick y: ", -gamepad1.left_stick_y);
+        moac.foundationGrabber.grabFoundation(!gamepad1.left_bumper);
+/*
+        telemetry.addData("Left Stick y: ", -gamepad1.left_stick_y);
         telemetry.addData("Left Stick x: ", gamepad1.left_stick_x);
         telemetry.addData("angle",drive.gyro.getValueContinuous());
         telemetry.update();
-        drive.getPowers();*/
-    telemetry.addData("Current vertical slide position: ", moac.linearSlide.verticalPositions[countVertical]);
+        drive.getPowers();
+*/
+        telemetry.addData("Current vertical slide position: ", moac.linearSlide.verticalPositions[countVertical]);
     }
 
 }
