@@ -92,7 +92,7 @@ public class FoundationDetection extends OpenCVPipeline {
             RotatedRect rect = Imgproc.minAreaRect(convertBoi);
 
             if(rect.angle < 20) {
-                if (rect.size.height > rect.size.width) {
+                if (rect.size.height * 1.4 > rect.size.width * 1.05) {
                     horiz  = false;
                     position.setY(96);
                 }

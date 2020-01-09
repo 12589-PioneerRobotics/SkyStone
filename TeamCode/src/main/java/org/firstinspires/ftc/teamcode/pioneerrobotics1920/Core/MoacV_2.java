@@ -14,12 +14,12 @@ public class MoacV_2 {
     //public AutoGrab autoGrab;
     public LinearSlide linearSlide;
     public FoundationGrabber foundationGrabber;
-//    public Stacker teleGrabber;
+    public Stacker stacker;
     public Intake intake;
     public Driving drive;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
-        //autoGrab = new AutoGrab(blue, hardwareMap);
+
         foundationGrabber = new FoundationGrabber(hardwareMap);
     }
 
@@ -27,14 +27,13 @@ public class MoacV_2 {
         intake = new Intake(hardwareMap);
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
-//        teleGrabber = new Stacker(hardwareMap);
-        //autoGrab = new AutoGrab(true, hardwareMap);//temporary
+        stacker = new Stacker(hardwareMap);
     }
 
     public class LinearSlide {
         DcMotor slideVertical;
         DcMotor slideHoriz;
-        int[] horizPositions = {50,100,200,300,400};//TODO: Figure out positions for x stones stacked
+        public int[] horizPositions = {50,100,200,300,400};//TODO: Figure out positions for x stones stacked
         public int[] verticalPositions = {50,100,200,300,400};
 
        public LinearSlide(HardwareMap hardwareMap) {
@@ -94,27 +93,12 @@ public class MoacV_2 {
             rotate.setPosition(0);
         }
 
-        /*public void setTelePivot(float stickPos) {
-            if (stickPos < -0.5) {
-                telePivot.setPosition(0.393); //pivot up
-            } else if (stickPos > 0.5) {
-                telePivot.setPosition(0.848); //pivot down
-                teleInnerGrabber.setPosition(0.0439); //inner grabber 90 degree
-            }
-        }
-
-        public void grab(boolean grab) {
+        public void grabStacker(boolean grab) {
             grabber.setPosition((grab) ? 0 : 0.521);
         }
 
-        public void grab() {
-            if (switcher) teleOuterGrabber.setPosition(0);//outer 90 degree
-            else teleOuterGrabber.setPosition(0.521);//outer 0 degree
-            switcher = !switcher;
-        }*/
-
-        public void release() {
-            grabber.setPosition(0.521); //outer 0 degree
+        public void flip(boolean in) {
+            grabber.setPosition((in) ? 0.521 : .9); //find degrees
         }
     }
 

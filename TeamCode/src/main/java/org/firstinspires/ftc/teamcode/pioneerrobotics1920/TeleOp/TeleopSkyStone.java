@@ -10,8 +10,9 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 public class TeleopSkyStone extends OpMode {
     Driving drive;
     MoacV_2 moac;
-    double POWER = .6;
     Toggle.OneShot lifterOneShot;
+    int countVertical, countHoriz = 0;
+    final double SCALE = .2;
 
     public void init(){
         drive = new Driving(this);
@@ -20,69 +21,62 @@ public class TeleopSkyStone extends OpMode {
     }
 
     public void loop(){
-        // GamePad 1 - Main Controller
-        POWER *= (1-gamepad1.right_trigger);
-
-//        drive.libertyDrive( -POWER*function(gamepad1.right_stick_y),  POWER*function(gamepad1.right_stick_x), -gamepad1.left_stick_x*POWER);
-
-        drive.libertyDrive(gamepad1.right_stick_y, gamepad1.right_stick_x, -gamepad1.left_stick_x);
-
-//TODO:Add this back once Foundation Grabbers are hardware mapped
-//        moac.foundationGrabber.leftGrab(!gamepad1.left_bumper);
-//        moac.foundationGrabber.rightGrab(!gamepad1.right_bumper);
-
-        if (gamepad1.dpad_down)
-            drive.libertyDrive(POWER*-.5, 0,0);
-        if (gamepad1.dpad_left)
-            drive.libertyDrive(0,0,POWER*-.5);
-        if (gamepad1.dpad_right)
-            drive.libertyDrive(0,0,POWER*.5);
-        if (gamepad1.dpad_up)
-            drive.libertyDrive(POWER*.5,0,0);
-
-        //GamePad 2 - Secondary
-        /*
-        int units = 0;
-        if (gamepad2.dpad_up) {
-            units += 50;
-
-            moac.slideVertical.goEncoder(units, POWER-.5);
+        // Movement:
+        if(gamepad1.left_bumper) {
+            drive.libertyDrive( -function(gamepad1.right_stick_y, SCALE),  function(gamepad1.right_stick_x, SCALE), -gamepad1.left_stick_x);
         }
-        if (gamepad2.dpad_down) {
-            units -= 50;
+        else drive.libertyDrive( -function(gamepad1.right_stick_y),  function(gamepad1.right_stick_x), -gamepad1.left_stick_x);
 
-            moac.slideVertical.goEncoder(units, POWER-.5);
+
+
+        //Triggers
+        if(gamepad1.left_trigger > .5) {
+            moac.intake.spitOut();
+        }
+        else if(gamepad1.right_trigger > .5) {
+            moac.intake.takeIn();
+        }
+        else moac.intake.stopIntake();
+
+        moac.foundationGrabber.grabFoundation(gamepad1.b);
+        moac.stacker.flip(gamepad1.a);
+        moac.stacker.grabStacker(gamepad1.right_bumper);
+
+
+        //Horizontal + Vertical slide controls
+        if (lifterOneShot.update(gamepad1.dpad_down) && countVertical > 0) {
+            countVertical--;
+            moac.linearSlide.setVerticalPosition(countVertical);
         }
 
-        if(gamepad2.a)
-            moac.slideVertical.goEncoder(0, POWER);
-*/
-        if (gamepad2.dpad_up)
-            moac.linearSlide.lifterPower(0.4);
-        else if (gamepad2.dpad_down)
-            moac.linearSlide.lifterPower(-0.1);
-        if (lifterOneShot.update(!(gamepad2.dpad_up || gamepad2.dpad_down)))
-            moac.linearSlide.lifterPower(0);
+        if (lifterOneShot.update(gamepad1.dpad_left) && countHoriz > 0) {
+            countHoriz--;
+            moac.linearSlide.setHorizPosition(countHoriz);
+        }
 
+        if (lifterOneShot.update(gamepad1.dpad_right) && countHoriz < moac.linearSlide.horizPositions.length - 1) {
+            countHoriz++;
+            moac.linearSlide.setHorizPosition(countHoriz);
+        }
 
-
-        /*moac.teleGrabber.setTelePivot(gamepad2.right_stick_y);
-
-        moac.autoGrab.teleBlueGrab(gamepad2.left_bumper);
-
-        moac.autoGrab.teleBlueArmDown(gamepad2.left_stick_y);
-
-        moac.teleGrabber.grab(gamepad2.right_bumper);*/
-
-        //TODO: Remove Auto/Stacker to accommodate new hardware.
+        if (lifterOneShot.update(gamepad1.dpad_up) && countVertical < moac.linearSlide.verticalPositions.length - 1) {
+            countVertical++;
+            moac.linearSlide.setVerticalPosition(countVertical);
+        }
     }
 
     public double function(double power){
+        return function(power, 1);
+    }
+    public double function(double power, double scale){
+//        if(power < .3 || power > -.3 ) {
+//            return 0;
+//        }
         if (power<=1) {
             if (power < 0)
-                return power * power * -1;
+                return -(scale * power * power);
             else
-                return power * power;
+                return scale * power * power;
         }
         return 1;
     }
