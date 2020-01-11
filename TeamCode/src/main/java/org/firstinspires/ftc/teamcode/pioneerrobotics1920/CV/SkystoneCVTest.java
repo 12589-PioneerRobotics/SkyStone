@@ -165,8 +165,8 @@ public class SkystoneCVTest extends OpenCVPipeline {
 
     public void changeCrop(boolean blue){
         if (!blue) {
-            X = 300;
-            Y = 200;
+            X = 175;
+            Y = 100;
         }
     }
 }

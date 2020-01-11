@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 public class Navigation {
     private double x, y, angleDiff;
     private Driving driving;
-    public double power = 1;
+    public double power = .8;
     public Navigation(Driving driver) {
         driving = driver;
     }

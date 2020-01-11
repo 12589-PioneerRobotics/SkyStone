@@ -14,7 +14,7 @@ public class MoacV_2 {
     //public AutoGrab autoGrab;
     public LinearSlide linearSlide;
     public FoundationGrabber foundationGrabber;
-    public Stacker stacker;
+//    public Stacker stacker;
     public Intake intake;
     public Driving drive;
 
@@ -27,7 +27,7 @@ public class MoacV_2 {
         intake = new Intake(hardwareMap);
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
-        stacker = new Stacker(hardwareMap);
+//        stacker = new Stacker(hardwareMap);
     }
 
     public class LinearSlide {
@@ -39,19 +39,23 @@ public class MoacV_2 {
        public LinearSlide(HardwareMap hardwareMap) {
             slideVertical = hardwareMap.dcMotor.get("slideVertical");
             slideVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            slideVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             slideVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+            slideHoriz = hardwareMap.dcMotor.get("slideHoriz");
+            slideHoriz.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            slideHoriz.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         public void lifterPower(double power) {
-            slideVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+           slideVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
            slideVertical.setPower(power);
         }
 
         public void lifterPosition(int clicks) {
            slideVertical.setTargetPosition(clicks);
-            slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slideVertical.setPower(.3);
+           slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           slideVertical.setPower(.3);
         }
         public void setHorizPosition(int count) {
             slideVertical.setTargetPosition(verticalPositions[count]);
@@ -60,24 +64,25 @@ public class MoacV_2 {
             slideHoriz.setTargetPosition(horizPositions[count]);
         }
     }
+
    public class FoundationGrabber {
         public Servo leftFoundationGrabber, rightFoundationGrabber;
 
         public FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(.567);
-            rightFoundationGrabber.setPosition(.46);
+            leftFoundationGrabber.setPosition(.4);//previous: .567
+            rightFoundationGrabber.setPosition(0);//previous: .46
         }
 
         public void grabFoundation(boolean lift) {
-            leftFoundationGrabber.setPosition((lift) ? .08 : .567);
-            rightFoundationGrabber.setPosition((lift) ? .95 : 0.46);
+            leftFoundationGrabber.setPosition((lift) ? 0 : .4);//locked in: 0, open:.4
+            rightFoundationGrabber.setPosition((lift) ? .34 : 0); //locked in:.34 , open:0
         }
 
     }
 
-    public class Stacker {
+    /*public class Stacker {
 
         Servo grabber, rotate;
         boolean switcher = true;
@@ -100,7 +105,7 @@ public class MoacV_2 {
         public void flip(boolean in) {
             grabber.setPosition((in) ? 0.521 : .9); //find degrees
         }
-    }
+    }*/
 
     public class Intake {
         public DcMotor leftIntake;
@@ -132,7 +137,7 @@ public class MoacV_2 {
             rightIntake.setPower(0);
         }
         public void takeStone(Driving driving, Navigation nav, LinearOpMode opMode) { //experimental method for autonomous grabbing stone
-            int vert = 11;
+            int vert = 12;
             takeIn();
             nav.moveToX(nav.getX() + vert,0.15);
 //            opMode.sleep(500);

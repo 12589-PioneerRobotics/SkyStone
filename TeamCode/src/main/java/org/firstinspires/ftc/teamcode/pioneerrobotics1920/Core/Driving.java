@@ -19,7 +19,7 @@ public class Driving {
     private DcMotor frontRight;
     private DcMotor backLeft;
     private DcMotor backRight;
-    private DcMotor stacker;
+    //private DcMotor stacker;
 
     public GyroWrapper gyro;
 
@@ -45,7 +45,7 @@ public class Driving {
         backRight.setDirection(DcMotor.Direction.FORWARD);
         //stacker.setDirection((DcMotor.Direction.FORWARD));
 
-        drivingMotors = new DcMotor[]{frontRight, frontLeft, backRight, backLeft};
+        drivingMotors = new DcMotor[]{frontRight, frontLeft, backLeft, backRight};
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -187,7 +187,8 @@ public class Driving {
         //wait while opmode is active and left motor is busy running to position.
         while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
             linearOpMode.idle();
-            double factor = Math.abs(clicks - frontLeft.getCurrentPosition()) / 1000;
+
+            double factor = Math.abs(clicks - frontLeft.getCurrentPosition()) / 800;
             double newPower = power * factor * factor;
             setAllDrivingPowers((newPower<0.25)? 0.25:newPower);
         }
@@ -468,22 +469,26 @@ public class Driving {
         }*/
         if (direction.equals("left")) {
             double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
-            while(Math.abs(leftDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
+            while(Math.abs(diff) > thresh) {
+                linearOpMode.telemetry.addData( "Left Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
+                linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(0, 0, -power);
                 else
                     libertyDrive(0, 0, power);
+                diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
             }
         }
         if (direction.equals("right")) {
             double diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
-            while(Math.abs(rightDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
+            while(Math.abs(diff) > thresh) {
                 linearOpMode.telemetry.addData( "Right Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
                 linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(0, 0, power);
                 else
                     libertyDrive(0, 0, -power);
+                diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
             }
         }
         stopDriving();

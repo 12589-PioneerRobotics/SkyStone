@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
@@ -10,8 +11,8 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "Auton blue loading")
-
+@Autonomous(name = "Autonomous")
+//@Disabled
 public class Auton extends LinearOpMode {
     //instantiations
     //final double angleLeft = 72.2553282;
@@ -21,10 +22,8 @@ public class Auton extends LinearOpMode {
     public boolean left = true;
     public boolean useDistanceSensors = true;
     private int round = 0;
-    private int gap = 5;
     MoacV_2 moac;
 
-    FoundationDetection foundationDetection;
     SkystoneCVTest detector;
     Driving drive;
     SkystoneCVTest.Position skystonePos;
@@ -34,8 +33,6 @@ public class Auton extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        foundationDetection = new FoundationDetection(blue);
-        foundationDetection = new FoundationDetection(blue);
         detector = new SkystoneCVTest();
         detector.changeCrop(blue);
         drive = new Driving(this);
@@ -43,42 +40,42 @@ public class Auton extends LinearOpMode {
         moac = new MoacV_2(this.hardwareMap);
 
         //all coordinate positions of skystones on blue side
-        blueStones.add(new Stones(37,8));
-        blueStones.add(new Stones(37,15));
-        blueStones.add(new Stones(37,24));
-        blueStones.add(new Stones(37,32));
-        blueStones.add(new Stones(37,40));
-        blueStones.add(new Stones(37,48));
+        blueStones.add(new Stones(37, 8));
+        blueStones.add(new Stones(37, 15));
+        blueStones.add(new Stones(37, 24));
+        blueStones.add(new Stones(37, 32));
+        blueStones.add(new Stones(37, 40));
+        blueStones.add(new Stones(37, 48));
         //red: left = 5, center = 4, right = 3
         //all coordinate positions of skystones on red side
-        redStones.add(new Stones(110,21)); //Change the values so that we align the collector with the blocks for red like we did in blue
-        redStones.add(new Stones(110,12));
-        redStones.add(new Stones(110,8));
-        redStones.add(new Stones(110,48)); //right
-        redStones.add(new Stones(110,40)); //center
-        redStones.add(new Stones(110,32)); //left
+        redStones.add(new Stones(110, 21)); //Change the values so that we align the collector with the blocks for red like we did in blue
+        redStones.add(new Stones(110, 12));
+        redStones.add(new Stones(110, 8));
+        redStones.add(new Stones(110, 48)); //right
+        redStones.add(new Stones(110, 40)); //center
+        redStones.add(new Stones(110, 32)); //left
 
-        while(!drive.gyro.isGyroReady()) {
+        while (!drive.gyro.isGyroReady()) {
             telemetry.addData("Sensors not calibrated", null);
             telemetry.update();
         }
 
-        if(drive.gyro.isGyroReady()) {
+        if (drive.gyro.isGyroReady()) {
             telemetry.addData("Sensors calibrated", null);
         }
         telemetry.update();
 
         //*******************THE PART THAT RUNS*************************
         if (blue) {
-            if (startBuilding){
-                nav.currPos(9,108, 90);
+            if (startBuilding) {
+                nav.currPos(9, 108, 90);
 
                 waitForStart();
 
-                nav.moveToX(14,0.5);
+                getFoundation(blue);
+                nav.moveToX(14, 0.5);
                 park();
-            }
-            else {
+            } else {
                 //start blue loading autonomous
                 nav.currPos(9, 36, 90);
 
@@ -95,49 +92,41 @@ public class Auton extends LinearOpMode {
                 telemetry.update();
 
                 //first movement
-                nav.moveToX(14,0.6);
+                nav.moveToX(14, 0.6);
 
                 //detect skystone, includes all movements for getting stones
                 getBlueSkystone(skystonePos);
 
-                nav.backToX(20);
+                nav.backToX(28);
                 nav.turnTo(0);
-
-                moac.intake.spitOut();
-                sleep(300);
-                moac.intake.stopIntake();
-
 
                 //next movement
-                //nav.backToX(12);
-                nav.moveTo(20,85);
+                nav.moveToY(85);
 
-                moac.intake.spitOut();
-                sleep(500);
-                moac.intake.stopIntake();
 
-                drive.sleep(500);
+                takeStoneOut();
+
+                sleep(200);
+
                 getBlueSkystone(skystonePos);
-                nav.backToX(20);
+                nav.backToX(28);
                 nav.turnTo(0);
-                moac.intake.spitOut();
-                sleep(500);
-                moac.intake.stopIntake();
-                nav.moveToY(90);
-                moac.intake.spitOut();
-                sleep(1000);
-                moac.intake.stopIntake();
+
+                nav.moveToY(85);
+
+                takeStoneOut();
+
                 park();
             }
-        }
-        else { //starting red
-            if (startBuilding){
-                nav.currPos(135,108,270);
+        } else { //starting red
+            if (startBuilding) {
+                nav.currPos(135, 108, 270);
                 waitForStart();
+
+                getFoundation(blue);
                 nav.moveToX(130, 0.5);
                 park();
-            }
-            else {
+            } else {
                 //red loading
                 nav.currPos(135, 36, 270);
 
@@ -146,6 +135,7 @@ public class Auton extends LinearOpMode {
 
                 telemetry.addData("init finished", null);
                 telemetry.update();
+
                 waitForStart();
 
                 skystonePos = detector.getSkystonePos();
@@ -155,15 +145,23 @@ public class Auton extends LinearOpMode {
                 telemetry.addData("Skystone Pos", detector.getPosition());
                 telemetry.update();
 
-                nav.moveToX(126,0.5);
+                nav.moveToX(126, 0.5);
 
                 getRedSkystone(skystonePos);
-                nav.backToX(125);
+
+                nav.backToX(135);
 
                 nav.moveToY(85);
 
-                getRedSkystone(skystonePos); //
+                takeStoneOut();
+
+                getRedSkystone(skystonePos);
+
                 nav.backToX(125);
+
+                nav.moveToY(85);
+                takeStoneOut();
+
                 park();
             }
         }
@@ -171,22 +169,19 @@ public class Auton extends LinearOpMode {
 
     //*********************END OF PART THAT RUNS**************************
 
-    public void park(){
+    public void park() {
         if (!startBuilding) {
-            if(left) {
-                nav.turnTo(180);
-                if (blue) nav.moveTo(20, 80);
-                else nav.moveTo(120, 72);
-
+            if (left) {
+                if (blue) nav.backTo(24, 72);
+                else nav.backTo(120, 72);
+                nav.turnTo(0);
+            } else {
+                if (blue) nav.backTo(32, 72);
+                else nav.backTo(110, 72);
+                nav.turnTo(0);
             }
-            else{
-                if(blue) nav.moveTo(36, 72);
-                else nav.moveTo(110, 72);
-                nav.turnTo(180);
-            }
-        }
-        else
-            nav.moveToY(72);
+        } else
+            nav.backTo(24, 72);
     }
 
     public void getBlueSkystone(SkystoneCVTest.Position pos) {
@@ -194,281 +189,289 @@ public class Auton extends LinearOpMode {
         switch (pos) {
             case LEFT:
                 if (round == 0) {
-                    //moac.autoGrab.blueArmDown();
-                    //nav.moveto(blueStones.get(5).x - gap, blueStones.get(5).y);
-                    if(useDistanceSensors) {
+                    if (useDistanceSensors) {
                         drive.moveClose("right", 36, .5, 2f);//move parallel to the block
-                    }
-                    else nav.moveToY(36);
+                    } else nav.moveToY(36);
                     nav.turnTo(facingBlue);
 
-                    if(useDistanceSensors) {
-                        drive.moveClose("back", 28, .3, 3.5f);//move up to the block.
-                    }
-                    else {
+                    if (useDistanceSensors) {
+                        drive.moveClose("back", 26, .5, 3.5f);//move up to the block.
+                    } else {
                         nav.moveToX(28);
                         nav.turnTo(facingBlue);
                     }
+                    nav.turnTo(facingBlue);
                     takeStone();
 
-                    //moac.intake.takeStone(drive,nav, this);
 
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH), blueStones.get(5).y, facingBlue);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(5).y, facingBlue);
 
                     blueStones.remove(5);
                     round++;
                 } else {
-                    //nav.moveTo(blueStones.get(2).x-gap, blueStones.get(2).y);
-                    nav.backToY(blueStones.get(2).y+10,1);
+                    nav.backTo(24, blueStones.get(2).y + 10);
+
                     nav.turnTo(facingBlue);
 
-                    if(useDistanceSensors) {
-                        drive.moveClose("right", 15, .4, 2f);
-
-                        drive.moveClose("back", 30, .4, 3.5f);
-                    }
-                    else {
+                    if (useDistanceSensors) {
+                        drive.moveClose("right", 15.5, .4, 1f);
+                        nav.turnTo(facingBlue);
+                        drive.moveClose("back", 26, .4, 3.5f);
+                    } else {
                         nav.moveToY(15);
                         nav.moveToX(30);
-//                        nav.moveTo(30,15);
                     }
 
                     nav.turnTo(facingBlue);
 
                     takeStone();
-
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH), blueStones.get(2).y, facingBlue);
+                    nav.turnTo(facingBlue);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(2).y, facingBlue);
                     blueStones.remove(2);
 
-                }break;
+                }
+                break;
 
             case CENTER:
                 if (round == 0) {
-                    //nav.moveto(blueStones.get(4).x-gap, blueStones.get(4).y);
-                    if(useDistanceSensors) {
-                        drive.moveClose("right", 28, .4, 2f);
-
-                        drive.moveClose("back", 26, .25, 3.5f);
-                    }
-                    else {
+                    if (useDistanceSensors) {
+                        drive.moveClose("right", 28, .4, 1f);//move this far away from the right wall
+                        nav.turnTo(facingBlue);
+                        drive.moveClose("back", 26, .4, 3.5f);//move forward
+                    } else {
                         nav.moveToY(28);
                         nav.moveToX(26);
-//                        nav.moveTo(26,28);
                     }
 
                     nav.turnTo(facingBlue);//added to straighten out
-                    moac.intake.takeStone(drive, nav, this);
-
+                    takeStone();
                     nav.turnTo(facingBlue);
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(4).y, facingBlue);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(4).y, facingBlue);
 
-                    sleep(1000);
                     blueStones.remove(4);
                     round++;
                 } else {
-                    //nav.moveTo(blueStones.get(1).x-gap, blueStones.get(1).y);
-                    nav.backToY(blueStones.get(1).y,0.5);
-
+                    nav.backTo(24, blueStones.get(1).y + 6);
                     nav.turnTo(facingBlue);
-                    sleep(200);
 
-                    if(useDistanceSensors) {
-                        drive.moveClose("right", 8.5, .4, 2f);
-
-                        drive.moveClose("back", 26, .4, 3.5f);
-                    }
-                    else {
+                    if (useDistanceSensors) {
+                        drive.moveClose("right", 7, .4, 1f);//moves to within 6 inches from the right wall
+                        nav.turnTo(facingBlue);
+                        drive.moveClose("back", 26, .4, 3.5f);//moves to 28 inches forward
+                    } else {
                         nav.moveToY(8.5);
                         nav.moveToX(26);
-                        nav.moveTo(8.5,26);
+                        nav.moveTo(8.5, 26);
                     }
                     nav.turnTo(facingBlue);//added to straighten out
 
-                    moac.intake.takeStone(drive, nav, this);
+                    takeStone();
 
                     nav.turnTo(facingBlue);
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(1).y, facingBlue);
+
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(1).y, facingBlue);
 
                     blueStones.remove(1);
-                }break;
+                }
+                break;
 
             case RIGHT:
                 if (round == 0) {
-                    if(useDistanceSensors) {
-                        drive.moveClose("right", 22.5, .4, 2f);
+                    if (useDistanceSensors) {
+                        drive.moveClose("right", 19, .4, 2f);
                         nav.turnTo(facingBlue);
-
-                        drive.moveClose("back", 26, .25, 3);
-                    }
-                    else {
+                        drive.moveClose("back", 26, .4, 3);
+                    } else {
                         nav.moveToY(22.5);
                         nav.moveToX(26);
-//                        nav.moveTo(22.5,26);
                     }
                     nav.turnTo(facingBlue);//added to straighten out. May or may not be necessary
 
                     moac.intake.takeStone(drive, nav, this);
+
                     nav.turnTo(facingBlue);
 
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH)+8, blueStones.get(3).y, facingBlue);
+                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(3).y, facingBlue);
 
-                    //moac.autoGrab.blueClose();
                     sleep(1000);
                     blueStones.remove(3);
                     round++;
                 } else {
 
-                    nav.backToY(blueStones.get(0).y,0.5);
+                    nav.backToY(blueStones.get(0).y, 0.5);
                     nav.turnTo(facingBlue);
 
                     //there is no moveClose strafe correction for this case because it is so close to the wall that the
                     //sensor may go through the transparent wall
-                    if(useDistanceSensors) {
-                        drive.moveClose("right", 21.6, .4, 3.5f);
+                    if (useDistanceSensors) {
+                        drive.moveClose("right", 10, .4, 2f);
                         nav.turnTo(facingBlue);
-                        drive.moveClose("back", 26, .4, 3);
-                    }
-                    else {
+                        drive.moveClose("back", 20, .4, 3f);
+                    } else {
                         nav.moveToY(21.6);
                         nav.moveToX(26);
-//                        nav.moveTo(26,21.6);
                     }
 
                     nav.turnTo(135);
 
-                    moac.intake.takeStone(drive, nav, this);
+                    takeStone();
 
                     nav.turnTo(facingBlue);
 
                     nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 8, blueStones.get(0).y, facingBlue);//angle should be nav.getAngle()
 
                     blueStones.remove(0);
-                }break;
-            default: break;
+                }
+                break;
+            default:
+                break;
         }
         round++;
     }
 
     public void getRedSkystone(SkystoneCVTest.Position pos) {
         int facingRed = 270;
+        useDistanceSensors = true;
         switch (pos) {
             case LEFT:
                 if (round == 0) {
-                    //moac.autoGrab.blueArmDown();
-                    //nav.moveto(redStones.get(5).x - gap, redStones.get(5).y);
-                    drive.moveClose("left", 21.6, .35, 3.5f);
+                    drive.moveClose("left", 22.5, .4, 2f);
 
-                    nav.turnTo(facingRed, 1);
+                    nav.turnTo(facingRed);
 
-                    drive.moveClose("back", 26, .25,3.5f);
-                    moac.intake.takeStone(drive,nav, this);
-                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(5).y, facingRed);
+                    drive.moveClose("back", 26, .25, 3.5f);
 
-                    //moac.autoGrab.blueClose();
-                    sleep(1000);
+                    takeStone();
+
+                    nav.turnTo(facingRed);
+
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH) - 8, redStones.get(5).y, facingRed);
 
                     redStones.remove(5);
 
                     round++;
                 } else {
-                    //nav.moveTo(redStones.get(2).x-gap, redStones.get(2).y);
-                    nav.backToY(redStones.get(2).y, 0.5);
+                    nav.backToY(redStones.get(2).y, 0.8);
 
                     nav.turnTo(facingRed);
-                    drive.moveClose("left", 39,.4,3.5f);
-                    nav.turnTo(facingRed );
-                    drive.moveClose("back", 26, .4,3.5f);
 
-                    moac.intake.takeStone(drive,nav,this);
+                    drive.moveClose("left", 12, .4, 2f);
+
                     nav.turnTo(facingRed);
 
-                    nav.currPos(144- drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(2).y, facingRed);
+                    drive.moveClose("back", 24, .4, 3.5f);
+
+                    nav.turnTo(225);
+
+//                    moac.intake.takeStone(drive,nav,this);
+                    takeStone();
+                    nav.turnTo(facingRed);
+
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH) - 8, redStones.get(2).y, facingRed);
 
                     redStones.remove(2);
-                }break;
+                }
+                break;
 
             case CENTER:
                 if (round == 0) {
-                    //nav.moveto(redStones.get(4).x-gap, redStones.get(4).y);
-                    drive.moveClose("left", 28.7, .4, 3.5f);
+                    drive.moveClose("left", 28, .4, 2f);
 
-                    nav.turnTo(facingRed, 1);
-                    //moac.autoGrab.blueArmDown();
-
-                    drive.moveClose("back", 26, .25,3.5f);
-
-                    moac.intake.takeStone(drive,nav,this);
                     nav.turnTo(facingRed);
 
-                    nav.currPos(144-drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(4).y, 90);
+                    drive.moveClose("back", 26, .4, 3.5f);
 
-                    //moac.autoGrab.blueClose();
-                    sleep(1000);
+//                    moac.intake.takeStone(drive,nav,this);
+                    takeStone();
+                    nav.turnTo(facingRed);
+
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH) - 8, redStones.get(4).y, facingRed);
+
                     redStones.remove(4);
+
                     round++;
                 } else {
-                    //nav.moveTo(redStones.get(1).x-gap, redStones.get(1).y);
-                    nav.moveToY(redStones.get(1).y);
+                    nav.backToY(redStones.get(1).y, .8);
 
                     nav.turnTo(facingRed);
-                    sleep(200);
 
-                    drive.moveClose("left", 7.8,.4, 3.5f);
+                    drive.moveClose("left", 7, .4, 2f);
 
-                    drive.moveClose("back", 26, .4,3.5f);
-                    nav.turnTo(225);
-                    moac.intake.takeStone(drive,nav,this);
-
-                    sleep(1000);
                     nav.turnTo(facingRed);
-                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(1).y, 90);
+
+                    drive.moveClose("back", 26, .4, 3.5f);
+
+//                    moac.intake.takeStone(drive,nav,this);
+                    takeStone();
+                    nav.turnTo(facingRed);
+
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH) - 8, redStones.get(1).y, facingRed);
 
                     redStones.remove(1);
-                }break;
+                }
+                break;
 
             case RIGHT:
                 if (round == 0) {
-                    //nav.moveto(redStones.get(3).x-gap, redStones.get(3).y);
-                    drive.moveClose("left", 37.4, .4, 3.5f);
+                    if(useDistanceSensors) {
+                        drive.moveClose("left", 36, .4, 3f);
+
+                        nav.turnTo(facingRed);
+
+                        drive.moveClose("back", 26, .4, 3);
+                    }
+                    else {//lol this doesnt even work
+                        nav.moveToY(36);
+                        nav.moveToX(118);
+                    }
+
                     nav.turnTo(facingRed);
 
-                    drive.moveClose("back", 26, .25,3);
-                    nav.turnTo(facingRed);
-                    moac.intake.takeStone(drive,nav,this);
+//                    moac.intake.takeStone(drive,nav,this);
+                    takeStone();
 
-                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(3).y, 90);
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH) - 8, redStones.get(3).y, facingRed);
 
-                    //moac.autoGrab.blueClose();
-                    sleep(1000);
                     redStones.remove(3);
+
                     round++;
                 } else {
-                    //nav.moveTo(redStones.get(0).x-gap, redStones.get(0).y);
-                    nav.moveToY(redStones.get(0).y);
+                    nav.backToY(redStones.get(0).y, .8);
 
                     nav.turnTo(facingRed);
-                    sleep(200);
-
                     //there is no moveClose strafe correction for this case because it is so close to the wall that the
                     //sensor may go through the transparent wall
-                    drive.moveClose("left", 14.4, .4, 3.5f);
-//                    nav.turnTo(90);
-                    drive.moveClose("back", 26, .25, 3);
-                    nav.turnTo(facingRed);
-                    moac.intake.takeStone(drive,nav,this);
-                    sleep(1000);
+                    if (useDistanceSensors) {
+                        drive.moveClose("left", 15.5, .4, 3f);
 
-                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH), redStones.get(0).y, facingRed);
+                        nav.turnTo(facingRed);
+
+                        drive.moveClose("back", 26, .4, 3);
+                    }
+                    else {
+                        nav.moveToY(15.5);
+                        nav.moveToX(118);
+                    }
+
+                    nav.turnTo(facingRed);
+
+//                    moac.intake.takeStone(drive,nav,this);
+                    takeStone();
+                    nav.turnTo(facingRed);
+
+                    nav.currPos(144 - drive.backDistance.getDistance(DistanceUnit.INCH) - 8, redStones.get(0).y, facingRed);
 
                     redStones.remove(0);
 
-                }break;
-            default: break;
+                }
+                break;
+            default:
+                break;
         }
         round++;
     }
 
-    public void getFoundation(boolean blue){
+    public void getFoundation(boolean blue) {
         if (blue) {
             nav.moveToY(120);
             nav.turnTo(270);
@@ -477,8 +480,7 @@ public class Auton extends LinearOpMode {
             sleep(500);
             nav.moveToX(16);
             moac.foundationGrabber.grabFoundation(true);
-        }
-        else {
+        } else {
             nav.moveToY(120);
             nav.turnTo(90);
             nav.backToX(100);
@@ -489,18 +491,33 @@ public class Auton extends LinearOpMode {
         }
     }
 
-    public void takeStone(){
+    public void takeStone() {
         moac.intake.takeIn();
-        nav.moveToX(nav.getX()+10);
-        moac.intake.stopIntake();;
-
+        drive.forward(15, 0.8);
+        moac.intake.stopIntake();
+        drive.forward(-15, 0.8);
     }
+
+    public void takeStoneOut() {
+        moac.intake.spitOut();
+        sleep(600);
+        moac.intake.stopIntake();
+    }
+
+    /*public boolean distanceSensorFine(String sensor) {
+        switch (sensor) {
+            case "back":
+        }
+        return Math.abs(nav.getX() -  drive.backDistance.getDistance(DistanceUnit.INCH) > 5;
+
+    }*/
 }
 
 
 class Stones {
     public int x, y;
-    public Stones (int x, int y) {
+
+    public Stones(int x, int y) {
         this.x = x;
         this.y = y;
     }

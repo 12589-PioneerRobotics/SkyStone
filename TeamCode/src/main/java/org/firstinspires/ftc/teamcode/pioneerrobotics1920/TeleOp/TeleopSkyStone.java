@@ -23,13 +23,13 @@ public class TeleopSkyStone extends OpMode {
     public void loop(){
         // Movement:
         if(gamepad1.left_bumper) {
-            drive.libertyDrive( -function(gamepad1.right_stick_y, SCALE),  function(gamepad1.right_stick_x, SCALE), -gamepad1.left_stick_x);
+            drive.libertyDrive( -function(gamepad1.right_stick_y, SCALE),  function(gamepad1.right_stick_x, SCALE), gamepad1.left_stick_x);
         }
-        else drive.libertyDrive( -function(gamepad1.right_stick_y),  function(gamepad1.right_stick_x), -gamepad1.left_stick_x);
+        else drive.libertyDrive( -function(gamepad1.right_stick_y),  function(gamepad1.right_stick_x), gamepad1.left_stick_x);
 
 
 
-        //Triggers
+        //Triggers (Intake)
         if(gamepad1.left_trigger > .5) {
             moac.intake.spitOut();
         }
@@ -39,15 +39,24 @@ public class TeleopSkyStone extends OpMode {
         else moac.intake.stopIntake();
 
         moac.foundationGrabber.grabFoundation(gamepad1.b);
-        moac.stacker.flip(gamepad1.a);
-        moac.stacker.grabStacker(gamepad1.right_bumper);
+//        moac.stacker.flip(gamepad1.a);
+//        moac.stacker.grabStacker(gamepad1.right_bumper);
 
 
         //Horizontal + Vertical slide controls
-        if (lifterOneShot.update(gamepad1.dpad_down) && countVertical > 0) {
+        /*if (lifterOneShot.update(gamepad1.dpad_down) && countVertical > 0) {
             countVertical--;
             moac.linearSlide.setVerticalPosition(countVertical);
         }
+        if (lifterOneShot.update(gamepad1.dpad_up) && countVertical < moac.linearSlide.verticalPositions.length - 1) {
+            countVertical++;
+            moac.linearSlide.setVerticalPosition(countVertical);
+        }*/
+        if (gamepad1.dpad_down) moac.linearSlide.lifterPower(.2);
+        else moac.linearSlide.lifterPower(0);
+
+        if (gamepad1.dpad_up) moac.linearSlide.lifterPower(.6);
+        else moac.linearSlide.lifterPower(0);
 
         if (lifterOneShot.update(gamepad1.dpad_left) && countHoriz > 0) {
             countHoriz--;
@@ -59,10 +68,7 @@ public class TeleopSkyStone extends OpMode {
             moac.linearSlide.setHorizPosition(countHoriz);
         }
 
-        if (lifterOneShot.update(gamepad1.dpad_up) && countVertical < moac.linearSlide.verticalPositions.length - 1) {
-            countVertical++;
-            moac.linearSlide.setVerticalPosition(countVertical);
-        }
+
     }
 
     public double function(double power){
