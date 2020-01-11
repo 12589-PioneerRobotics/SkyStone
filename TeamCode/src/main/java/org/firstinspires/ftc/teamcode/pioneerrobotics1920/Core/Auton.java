@@ -214,7 +214,7 @@ public class Auton extends LinearOpMode {
                     nav.turnTo(facingBlue);
 
                     if (useDistanceSensors) {
-                        drive.moveClose("right", 15.5, .4, 1f);
+                        drive.moveClose("right", 15.5, .4, 2f);
                         nav.turnTo(facingBlue);
                         drive.moveClose("back", 26, .4, 3.5f);
                     } else {
@@ -235,7 +235,7 @@ public class Auton extends LinearOpMode {
             case CENTER:
                 if (round == 0) {
                     if (useDistanceSensors) {
-                        drive.moveClose("right", 28, .4, 1f);//move this far away from the right wall
+                        drive.moveClose("right", 28, .4, 2f);//move this far away from the right wall
                         nav.turnTo(facingBlue);
                         drive.moveClose("back", 26, .4, 3.5f);//move forward
                     } else {
@@ -255,7 +255,7 @@ public class Auton extends LinearOpMode {
                     nav.turnTo(facingBlue);
 
                     if (useDistanceSensors) {
-                        drive.moveClose("right", 7, .4, 1f);//moves to within 6 inches from the right wall
+                        drive.moveClose("right", 7, .4, 2f);//moves to within 6 inches from the right wall
                         nav.turnTo(facingBlue);
                         drive.moveClose("back", 26, .4, 3.5f);//moves to 28 inches forward
                     } else {
@@ -473,7 +473,8 @@ public class Auton extends LinearOpMode {
 
     public void getFoundation(boolean blue) {
         if (blue) {
-            nav.moveToY(120);
+            nav.moveToX(nav.getX() + 5);
+            drive.moveClose("left", 20, .4, 2);
             nav.turnTo(270);
             nav.backToX(40);
             moac.foundationGrabber.grabFoundation(false);
@@ -481,9 +482,10 @@ public class Auton extends LinearOpMode {
             nav.moveToX(16);
             moac.foundationGrabber.grabFoundation(true);
         } else {
-            nav.moveToY(120);
+            nav.moveToX(nav.getX() - 5);
+            drive.moveClose("right", 20, .4, 2);
             nav.turnTo(90);
-            nav.backToX(100);
+            nav.backToX(104);
             moac.foundationGrabber.grabFoundation(false);
             sleep(500);
             nav.moveToX(128);

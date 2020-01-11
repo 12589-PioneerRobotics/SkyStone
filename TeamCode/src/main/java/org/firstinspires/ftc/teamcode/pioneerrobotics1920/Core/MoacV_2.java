@@ -17,6 +17,7 @@ public class MoacV_2 {
 //    public Stacker stacker;
     public Intake intake;
     public Driving drive;
+    public Stacker stacker;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
 
@@ -27,7 +28,7 @@ public class MoacV_2 {
         intake = new Intake(hardwareMap);
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
-//        stacker = new Stacker(hardwareMap);
+        stacker = new Stacker(hardwareMap);
     }
 
     public class LinearSlide {
@@ -39,12 +40,13 @@ public class MoacV_2 {
        public LinearSlide(HardwareMap hardwareMap) {
             slideVertical = hardwareMap.dcMotor.get("slideVertical");
             slideVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            slideVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             slideVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+            lifterPosition(0);
             slideHoriz = hardwareMap.dcMotor.get("slideHoriz");
             slideHoriz.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            slideHoriz.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            horizPosition(0);
         }
 
         public void lifterPower(double power) {
@@ -57,10 +59,22 @@ public class MoacV_2 {
            slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
            slideVertical.setPower(.3);
         }
+
+        public void horizSlidePower(double power){
+           slideHoriz.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+           slideHoriz.setPower(power);
+        }
+
+        public void horizPosition(int clicks) {
+            slideHoriz.setTargetPosition(clicks);
+            slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideHoriz.setPower(.3);
+        }
+
         public void setHorizPosition(int count) {
             slideVertical.setTargetPosition(verticalPositions[count]);
-     }
-      public void setVerticalPosition(int count) {
+        }
+        public void setVerticalPosition(int count) {
             slideHoriz.setTargetPosition(horizPositions[count]);
         }
     }
@@ -76,36 +90,41 @@ public class MoacV_2 {
         }
 
         public void grabFoundation(boolean lift) {
-            leftFoundationGrabber.setPosition((lift) ? 0 : .4);//locked in: 0, open:.4
-            rightFoundationGrabber.setPosition((lift) ? .34 : 0); //locked in:.34 , open:0
+            leftFoundationGrabber.setPosition((lift) ? .045 : .4);//locked in: 0, open:.4
+            rightFoundationGrabber.setPosition((lift) ? .46 : 0); //locked in:.34 , open:0
         }
 
     }
 
-    /*public class Stacker {
+    public class Stacker {
 
         Servo grabber, rotate;
-        boolean switcher = true;
+        boolean grabberSwitcher = true;
+        boolean rotateSwitcher = true;
 
         public Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("stacker");
             rotate = hardwareMap.servo.get("rotate");
-            initialize();
+            //initialize();
         }
 
         public void initialize() {
-            grabber.setPosition(0);
-            rotate.setPosition(0);
+            grabber.setPosition(.7);
+            rotate.setPosition(1);
         }
 
-        public void grabStacker(boolean grab) {
-            grabber.setPosition((grab) ? 0 : 0.521);
+        public void grab(){
+            if (grabberSwitcher) grabber.setPosition(0.7);
+            else grabber.setPosition(0.23);
+            grabberSwitcher = (grabberSwitcher)? false:true;
         }
 
-        public void flip(boolean in) {
-            grabber.setPosition((in) ? 0.521 : .9); //find degrees
+        public void rotate(){
+            if (rotateSwitcher) rotate.setPosition(0.05);
+            else rotate.setPosition(0.95);
+            rotateSwitcher = (rotateSwitcher)? false:true;
         }
-    }*/
+    }
 
     public class Intake {
         public DcMotor leftIntake;
