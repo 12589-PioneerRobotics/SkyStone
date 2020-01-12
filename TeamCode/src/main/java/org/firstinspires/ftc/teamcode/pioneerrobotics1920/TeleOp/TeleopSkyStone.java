@@ -38,7 +38,7 @@ public class TeleopSkyStone extends OpMode {
         }
         else moac.intake.stopIntake();
 
-        moac.foundationGrabber.grabFoundation(gamepad1.b);
+        moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 //        moac.stacker.flip(gamepad1.a);
 //        moac.stacker.grabStacker(gamepad1.right_bumper);
 
@@ -52,6 +52,8 @@ public class TeleopSkyStone extends OpMode {
             countVertical++;
             moac.linearSlide.setVerticalPosition(countVertical);
         }*/
+
+        /*
         if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-.2);
         else if (gamepad1.dpad_up) moac.linearSlide.lifterPower(.6);
         else moac.linearSlide.lifterPower(0);
@@ -59,10 +61,11 @@ public class TeleopSkyStone extends OpMode {
         if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
         else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.6);
         else moac.linearSlide.horizSlidePower(0);
+*/
 
         if (lifterOneShot.update(gamepad1.x)) moac.stacker.grab();
-        if (lifterOneShot.update(gamepad1.y)) moac.stacker.rotate();
-
+        //if (lifterOneShot.update(gamepad1.y)) moac.stacker.rotate();
+        //moac.stacker.rotateHold(gamepad1.y);
         /*
         if (lifterOneShot.update(gamepad1.dpad_left) && countHoriz > 0) {
             countHoriz--;

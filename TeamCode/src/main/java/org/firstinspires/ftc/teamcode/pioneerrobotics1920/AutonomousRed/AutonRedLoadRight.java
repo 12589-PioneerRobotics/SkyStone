@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Auton;
 
-@Autonomous(name = "Red loading right")
+@Autonomous(name = "Red loading right", group = "Red")
 public class AutonRedLoadRight extends Auton {
     public AutonRedLoadRight(){
         super();

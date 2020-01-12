@@ -470,13 +470,13 @@ public class Driving {
         if (direction.equals("left")) {
             double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(diff) > thresh) {
-                linearOpMode.telemetry.addData( "Left Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
+                linearOpMode.telemetry.addData( "Left Distance: ",leftDistance.getDistance(DistanceUnit.INCH));
                 linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(0, 0, -power);
                 else
                     libertyDrive(0, 0, power);
-                diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
+                diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
             }
         }
         if (direction.equals("right")) {

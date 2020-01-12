@@ -20,13 +20,13 @@ public class MoacV_2 {
     public Stacker stacker;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
-
+        //linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
     }
 
     public MoacV_2(HardwareMap hardwareMap) { //TeleOp Constructor
         intake = new Intake(hardwareMap);
-        linearSlide = new LinearSlide(hardwareMap);
+//        linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
         stacker = new Stacker(hardwareMap);
     }
@@ -116,13 +116,17 @@ public class MoacV_2 {
         public void grab(){
             if (grabberSwitcher) grabber.setPosition(0.7);
             else grabber.setPosition(0.23);
-            grabberSwitcher = (grabberSwitcher)? false:true;
+            grabberSwitcher = !grabberSwitcher;
+        }
+
+        public void rotateHold(boolean out){
+            rotate.setPosition((out)? 0:1);
         }
 
         public void rotate(){
-            if (rotateSwitcher) rotate.setPosition(0.05);
-            else rotate.setPosition(0.95);
-            rotateSwitcher = (rotateSwitcher)? false:true;
+            if (rotateSwitcher) rotate.setPosition(0.1);
+            else rotate.setPosition(0.9);
+            rotateSwitcher = !rotateSwitcher;
         }
     }
 
@@ -143,7 +147,7 @@ public class MoacV_2 {
 
         public void takeIn() {
             leftIntake.setPower(1);
-            rightIntake.setPower(-1); //set powers to 1 if everything goes fine
+            rightIntake.setPower(-1);
         }
 
         public void spitOut() {
