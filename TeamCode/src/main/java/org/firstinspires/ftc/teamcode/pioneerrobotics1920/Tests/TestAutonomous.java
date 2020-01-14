@@ -21,12 +21,12 @@ public class TestAutonomous extends LinearOpMode {
         nav = new Navigation(driving);
         moac = new MoacV_2(this.hardwareMap);
 
-        int[] clicks = {300, 600, 900, 1200, 1500, 1800, 2100, 2400}; // clicks
+        int[] clicks = {150, 300, 600, 900, 1200, 1500, 1800, 2100, 2400}; // clicks
         int[] distances = {6, 12, 18, 24, 30, 36, 48, 60}; //inches
-        int[] angles = {0, 30, 90, 135, 180, 270, 330}; //actually angles
+        int[] angles = {0, 5 ,10 ,15 ,20 ,25 ,30, 90, 135, 180, 270, 330}; //actually angles
         int[] inches = {5,10,15,20,25,30,35,40};
         //Coordinates[] coordinates = {new Coordinates(0,0), new Coordinates(0,12), new Coordinates(12,12), new Coordinates(12,0)};
-        double power = 0.6;
+        double power = 0.8;
 
         int curIndex = 0;
         int curIndex2 = 0;
@@ -51,21 +51,25 @@ public class TestAutonomous extends LinearOpMode {
                     curIndex2--;
 
                 if (aOneShot.update(gamepad1.a)) {
-                    driving.autoStrafe(distances[curIndex], 0.6);
+                    //driving.autoStrafe(distances[curIndex], 0.6);
                     //driving.autoStrafe(clicks[curIndex], 0.6);
                     //driving.moveClose("front", 8, .25, 3.5f);
                     //nav.turnToP(angles[curIndex2],0.75,0.000025);
+                    driving.forward(clicks[curIndex], .8);
                 }
                 if (aOneShot.update(gamepad1.b)) {
                     //driving.moveClose("front", 8, .25, 3.5f);
-                    driving.autoStrafe(-distances[curIndex], 0.6);
+//                    driving.autoStrafe(-distances[curIndex], 0.6);
+                    driving.forward(-clicks[curIndex],.8);
+
                 }
                 if(aOneShot.update(gamepad1.x)) {
 //                    nav.turnToP(angles[curIndex2],.75,0.00001);
-                    nav.turnTo(angles[curIndex2],5);
+                    nav.turnTo(angles[curIndex2],1);
                 }
                 if(aOneShot.update(gamepad1.y)) {
-                    driving.forward(distances[curIndex],.2);
+                    nav.turnToP(angles[curIndex2],.75,0.00001);
+//                    driving.forward(distances[curIndex],.2);
                 }
 
                 telemetry.addData("distance going", distances[curIndex]);
@@ -73,7 +77,7 @@ public class TestAutonomous extends LinearOpMode {
                 //telemetry.addData("go to angle", angles[curIndex2]);
                 //telemetry.addData("nav angle", nav.getAngle());
                 telemetry.addData("Turn angle set to: ", angles[curIndex2]);
-                telemetry.addData("Distance set to: ", distances[curIndex]);
+                //telemetry.addData("Distance set to: ", distances[curIndex]);
                 telemetry.addData("drive angle", driving.gyro.getValueContinuous());
                 telemetry.update();
         }

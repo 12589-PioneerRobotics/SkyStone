@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
@@ -23,7 +24,7 @@ public class Driving {
 
     public GyroWrapper gyro;
 
-    private final double CLICKS_PER_INCH = 30.6748466; // for Direct Drive as of 10/8/19 used the data for power = 0.4, R^2=1
+    private final double CLICKS_PER_INCH = 1; // for Direct Drive as of 10/8/19 used the data for power = 0.4, R^2=1 30.6748466
 
     DcMotor[] drivingMotors;
 
@@ -188,11 +189,22 @@ public class Driving {
         while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
             linearOpMode.idle();
 
-            double factor = Math.abs(clicks - frontLeft.getCurrentPosition()) / 800;
-            double newPower = power * factor * factor;
+            double factor = Math.min(Math.abs(Math.pow(1.8,.02 * Math.abs(averageEncoderPositions()))) / 200 + .35, Math.pow(Math.abs(clicks - averageEncoderPositions()) / 800,2));
+            if (factor>1) factor=1;
+            double newPower = power * factor;
             setAllDrivingPowers((newPower<0.25)? 0.25:newPower);
+
+            linearOpMode.telemetry.addData("factor", factor);
+            getPowers();
+            getEncoderPosition();
+            linearOpMode.telemetry.update();
         }
         stopDriving();
+    }
+
+    public int averageEncoderPositions() {
+        return (frontLeft.getCurrentPosition() + frontRight.getCurrentPosition() +
+                backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
     }
 
     //main drive method

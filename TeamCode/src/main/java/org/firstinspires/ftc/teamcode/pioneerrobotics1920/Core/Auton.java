@@ -106,19 +106,29 @@ public class Auton extends LinearOpMode {
                 nav.moveToY(90);
 
 
-                takeStoneOut();
+                //takeStoneOut();
+                moac.intake.spitOut();
 
                 sleep(200);
 
                 getBlueSkystone(skystonePos);
+
+                moac.intake.stopIntake();
+
                 nav.backToX(28);
                 nav.turnTo(0);
 
                 nav.moveToY(90);
 
-                takeStoneOut();
+                //takeStoneOut();
+
+                moac.intake.spitOut();
+
+                sleep(200);
 
                 park();
+
+                moac.intake.stopIntake();
             }
         } else { //starting red
             if (startBuilding) {
@@ -157,9 +167,14 @@ public class Auton extends LinearOpMode {
                 nav.turnTo(0);
                 nav.moveToY(90);
 
-                takeStoneOut();
+                //takeStoneOut();
+                moac.intake.spitOut();
+
+                sleep(200);
 
                 getRedSkystone(skystonePos);
+
+                moac.intake.stopIntake();
 
 //                nav.backToX(110);
                 nav.turnTo(0);
@@ -168,8 +183,14 @@ public class Auton extends LinearOpMode {
                 }
                 else nav.moveTo(nav.getX() - 5, 85);
 
-                takeStoneOut();
+                //takeStoneOut();
+
+                moac.intake.spitOut();
+
+                sleep(200);
                 nav.backTo(nav.getX()-5, 72);
+
+                moac.intake.stopIntake();
 //                park();
             }
         }
@@ -524,9 +545,9 @@ public class Auton extends LinearOpMode {
 
     public void takeStone() {
         moac.intake.takeIn();
-        drive.forward(15, 0.8);
+        drive.forward(15, 0.6);
         moac.intake.stopIntake();
-        drive.forward(-15, 0.8);
+        drive.forward(-15, 0.6);
     }
 
     public void takeStoneOut() {
