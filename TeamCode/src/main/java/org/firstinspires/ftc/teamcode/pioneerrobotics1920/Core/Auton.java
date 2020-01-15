@@ -100,7 +100,7 @@ public class Auton extends LinearOpMode {
                 getBlueSkystone(skystonePos);
 
                 ///nav.backToX(28);
-                nav.turnTo(0);
+
 
                 //next movement
                 nav.moveToY(90);
@@ -109,14 +109,10 @@ public class Auton extends LinearOpMode {
                 //takeStoneOut();
                 moac.intake.spitOut();
 
-                sleep(200);
-
                 getBlueSkystone(skystonePos);
 
-                moac.intake.stopIntake();
 
                 nav.backToX(28);
-                nav.turnTo(0);
 
                 nav.moveToY(90);
 
@@ -124,7 +120,6 @@ public class Auton extends LinearOpMode {
 
                 moac.intake.spitOut();
 
-                sleep(200);
 
                 park();
 
@@ -307,18 +302,16 @@ public class Auton extends LinearOpMode {
             case RIGHT:
                 if (round == 0) {
                     if (useDistanceSensors) {
-                        drive.moveClose("right", 21, .4, 2f);
+                        drive.moveClose("right", 21, .5, 2f);
                         nav.turnTo(facingBlue);
-                        drive.moveClose("back", 26, .4, 3);
+                        drive.moveClose("back", 26, .5, 3);
                     } else {
                         nav.moveToY(22.5);
                         nav.moveToX(26);
                     }
                     nav.turnTo(facingBlue);//added to straighten out. May or may not be necessary
 
-                    moac.intake.takeStone(drive, nav, this);
-
-                    nav.turnTo(facingBlue);
+                    takeStone();
 
                     nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH)+7, facingBlue);
 
@@ -556,11 +549,17 @@ public class Auton extends LinearOpMode {
         moac.intake.stopIntake();
     }
 
-    /*public boolean distanceSensorFine(String sensor) {
+   /* public boolean distanceSensorFine(String sensor) {
         switch (sensor) {
             case "back":
+                return Math.abs(nav.getX() - drive.backDistance.getDistance(DistanceUnit.INCH) > 5;
+                break;
+            case "right":
+                return Math.abs(nav.getX() - drive.rightDistance.getDistance(DistanceUnit.INCH) > 5;
+            break;
+
         }
-        return Math.abs(nav.getX() -  drive.backDistance.getDistance(DistanceUnit.INCH) > 5;
+        return Math.abs(nav.getX() - drive.backDistance.getDistance(DistanceUnit.INCH) > 5;
 
     }*/
 }

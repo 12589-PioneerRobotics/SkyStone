@@ -55,12 +55,12 @@ public class TestAutonomous extends LinearOpMode {
                     //driving.autoStrafe(clicks[curIndex], 0.6);
                     //driving.moveClose("front", 8, .25, 3.5f);
                     //nav.turnToP(angles[curIndex2],0.75,0.000025);
-                    driving.forward(clicks[curIndex], .8);
+                    driving.forward(distances[curIndex], .8);
                 }
                 if (aOneShot.update(gamepad1.b)) {
                     //driving.moveClose("front", 8, .25, 3.5f);
 //                    driving.autoStrafe(-distances[curIndex], 0.6);
-                    driving.forward(-clicks[curIndex],.8);
+                    driving.forward(-distances[curIndex],.8);
 
                 }
                 if(aOneShot.update(gamepad1.x)) {
@@ -73,7 +73,7 @@ public class TestAutonomous extends LinearOpMode {
                 }
 
                 telemetry.addData("distance going", distances[curIndex]);
-                telemetry.addData("clicks going", clicks[curIndex]);
+                //telemetry.addData("clicks going", clicks[curIndex]);
                 //telemetry.addData("go to angle", angles[curIndex2]);
                 //telemetry.addData("nav angle", nav.getAngle());
                 telemetry.addData("Turn angle set to: ", angles[curIndex2]);
