@@ -470,7 +470,6 @@ public class Driving {
                     libertyDrive(power, 0, 0);
             }
         }
-
         if (direction.equals("left")) {
             double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(diff) > thresh) {
