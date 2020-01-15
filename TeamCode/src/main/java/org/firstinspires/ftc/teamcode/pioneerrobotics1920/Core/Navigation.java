@@ -125,7 +125,6 @@ public class Navigation {
         // no updating of member variables necessary
 
         // precise turn
-
         while ((getDiff(angle1) > thresh || getDiff(angle1) < -thresh) && driving.linearOpMode.opModeIsActive()) {
             //driving.opMode.telemetry.addData("getDiff", getDiff(angle1));
             diff = getDiff(angle1);
