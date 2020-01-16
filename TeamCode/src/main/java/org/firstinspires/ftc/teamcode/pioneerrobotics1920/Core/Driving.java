@@ -189,7 +189,7 @@ public class Driving {
         while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
             linearOpMode.idle();
             double absPos = Math.abs(averageEncoderPositions());
-            double factor = Math.min(/*Math.pow(1.8,.02 * absPos) / 200 + .35*/1-300/(2*absPos+400), Math.pow(Math.abs(clicks - absPos) / 1000,2));
+            double factor = Math.min(/*Math.pow(1.8,.02 * absPos) / 200 + .35*/1-300/(4*absPos+300), Math.pow(Math.abs(clicks - absPos) / 1000,2));
             if (factor>1) factor=1;
             double newPower = power * factor;
             setAllDrivingPowers((newPower<0.25)? 0.25:newPower);
@@ -484,7 +484,9 @@ public class Driving {
         }
         if (direction.equals("right")) {
             double diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
-            while(Math.abs(diff) > thresh || (rightDistance.getDistance(DistanceUnit.INCH) >= 1.7 && rightDistance.getDistance(DistanceUnit.INCH) <= 1.8)) {
+            while(rightDistance.getDistance(DistanceUnit.INCH) >= 1.7 && rightDistance.getDistance(DistanceUnit.INCH) <= 1.8)
+                diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
+            while(Math.abs(diff) > thresh) {
                 linearOpMode.telemetry.addData( "Right Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
                 linearOpMode.telemetry.update();
                 if (diff >= 0)

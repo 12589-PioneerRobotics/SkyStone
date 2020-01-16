@@ -153,6 +153,7 @@ public class MoacV_2 {
         public void spitOut() {
             leftIntake.setPower(-1);
             rightIntake.setPower(1);
+
         }
 
         public void stopIntake() {

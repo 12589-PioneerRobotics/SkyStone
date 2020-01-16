@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
+import android.util.Log;
+
 /** Todo: Revamp the navigaton class -> a lot of it's capabilities are met in the Driving class, we need something to seperate it */
 public class Navigation {
     private double x, y, angleDiff;
     private Driving driving;
-    public double power = .8;
+    public double power = 1;
     public Navigation(Driving driver) {
         driving = driver;
     }
@@ -31,12 +33,15 @@ public class Navigation {
 
         turnAngle = 90 - Math.toDegrees(Math.atan2(diffY, diffX));
         turnTo(turnAngle);
+        driving.linearOpMode.telemetry.addData("Turn Angle", turnAngle);
+        driving.linearOpMode.telemetry.update();
+        Log.v("TurnAngle",""+turnAngle);
 
         driving.forward(distance, power);
 
         x = x1;
         y = y1;
-        driving.linearOpMode.telemetry.update();
+        //driving.linearOpMode.telemetry.update();
     }
     public void moveToX(double x1) {
         moveTo(x1,y);
@@ -131,7 +136,7 @@ public class Navigation {
             driving.libertyDrive(0, driving.sgn(diff) * CORRECT_POWER, 0);
             driving.linearOpMode.idle();
             driving.linearOpMode.telemetry.addData("difference", diff);
-            driving.linearOpMode.telemetry.update();
+            //driving.linearOpMode.telemetry.update();
         }
         driving.stopDriving();
     }
