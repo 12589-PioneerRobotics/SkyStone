@@ -31,7 +31,7 @@ public class Navigation {
         double diffY = y1 - y;
         double distance = Math.sqrt(diffX * diffX + diffY * diffY);
 
-        turnAngle = 90 - Math.toDegrees(Math.atan2(diffY, diffX));
+        turnAngle = 90 - Math.abs(Math.toDegrees(Math.atan2(diffY, diffX)));
         turnTo(turnAngle);
         driving.linearOpMode.telemetry.addData("Turn Angle", turnAngle);
         driving.linearOpMode.telemetry.update();
@@ -109,7 +109,7 @@ public class Navigation {
         // now, diff is the angle we would pass to the old ActuatorLibrary.turn method
 
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
-            double factor = Math.abs(getDiff(angle1))/180;
+            double factor = Math.abs(getDiff(angle1))/90;
             factor = (Math.abs(factor)<0.4)? ((factor<0)? -0.4:0.4):factor;//this is ugly but oh well
             //if (factor<1) {
                 if (diff > 0)
@@ -125,7 +125,7 @@ public class Navigation {
         driving.stopDriving();
 
         if (Math.abs(diff)>90){
-            driving.sleep(500);
+
         }
         // no updating of member variables necessary
 
