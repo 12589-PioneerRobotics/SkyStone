@@ -189,7 +189,7 @@ public class Driving {
         while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
             linearOpMode.idle();
             double absPos = Math.abs(averageEncoderPositions());
-            double factor = Math.min(/*Math.pow(1.8,.02 * absPos) / 200 + .35*/1-300/(5*absPos+300), Math.pow(Math.abs(clicks - absPos) / 800,2));
+            double factor = Math.min(/*Math.pow(1.8,.02 * absPos) / 200 + .35*/1-300/(5*absPos+300), Math.pow(Math.abs(clicks - absPos) / 1000,2));
             if (factor>1) factor=1;
             double newPower = power * factor;
             setAllDrivingPowers((newPower<0.25)? 0.25:newPower);

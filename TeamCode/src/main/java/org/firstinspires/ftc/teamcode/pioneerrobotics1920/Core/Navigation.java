@@ -109,8 +109,8 @@ public class Navigation {
         // now, diff is the angle we would pass to the old ActuatorLibrary.turn method
 
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
-            double factor = Math.abs(getDiff(angle1))/90;
-            factor = (Math.abs(factor)<0.4)? ((factor<0)? -0.4:0.4):factor;//this is ugly but oh well
+            double factor = Math.abs(getDiff(angle1))/135;
+            factor = (Math.abs(factor)<0.45)? ((factor<0)? -0.45:0.45):factor;//this is ugly but oh well
             //if (factor<1) {
                 if (diff > 0)
                     driving.libertyDrive(0, TURN_POWER*factor, 0);
