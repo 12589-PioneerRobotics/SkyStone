@@ -28,7 +28,7 @@ public class MoacV_2 {
         intake = new Intake(hardwareMap);
 //        linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
-        stacker = new Stacker(hardwareMap);
+        //stacker = new Stacker(hardwareMap);
     }
 
     public class LinearSlide {
@@ -85,13 +85,13 @@ public class MoacV_2 {
         public FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(.4);//previous: .567
-            rightFoundationGrabber.setPosition(0);//previous: .46
+            leftFoundationGrabber.setPosition(.191111111);//previous: .567
+            rightFoundationGrabber.setPosition(.01);//previous: .46
         }
 
-        public void grabFoundation(boolean lift) {
-            leftFoundationGrabber.setPosition((lift) ? .045 : .4);//locked in: 0, open:.4
-            rightFoundationGrabber.setPosition((lift) ? .46 : 0); //locked in:.34 , open:0
+        public void grabFoundation(boolean grab) {
+            leftFoundationGrabber.setPosition((grab) ? .885 : .191111);//locked in: 0, open:.4
+            rightFoundationGrabber.setPosition((grab) ? .75 : .01); //locked in:.34 , open:0
         }
 
     }
@@ -160,6 +160,8 @@ public class MoacV_2 {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
         }
+
+
         public void takeStone(Driving driving, Navigation nav, LinearOpMode opMode) { //experimental method for autonomous grabbing stone
             int vert = 12;
             takeIn();

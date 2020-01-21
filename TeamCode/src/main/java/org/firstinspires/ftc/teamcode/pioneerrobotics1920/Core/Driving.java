@@ -484,7 +484,7 @@ public class Driving {
         }
         if (direction.equals("right")) {
             double diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
-            while(rightDistance.getDistance(DistanceUnit.INCH) >= 1.7 && rightDistance.getDistance(DistanceUnit.INCH) <= 1.8)
+            while(rightDistance.getDistance(DistanceUnit.INCH) == DistanceUnit.infinity)
                 diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(diff) > thresh) {
                 linearOpMode.telemetry.addData( "Right Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
@@ -493,9 +493,18 @@ public class Driving {
                     libertyDrive(0, 0, power);
                 else
                     libertyDrive(0, 0, -power);
-                diff = (rightDistance.getDistance(DistanceUnit.INCH) >= 1.7 && rightDistance.getDistance(DistanceUnit.INCH) <= 1.8)? diff: rightDistance.getDistance(DistanceUnit.INCH) - distance;
+                diff = (rightDistance.getDistance(DistanceUnit.INCH) == DistanceUnit.infinity)? diff: rightDistance.getDistance(DistanceUnit.INCH) - distance;
             }
         }
         stopDriving();
+    }
+
+    public class Operations {
+
+        public double cmToInch(double cm) {
+            return cm / 2.54;
+        }
+
+
     }
 }
