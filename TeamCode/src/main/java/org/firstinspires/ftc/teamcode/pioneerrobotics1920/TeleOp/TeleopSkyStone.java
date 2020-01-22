@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 @TeleOp(name = "TeleOp SkyStone")
 public class TeleopSkyStone extends OpMode {
@@ -18,16 +19,15 @@ public class TeleopSkyStone extends OpMode {
         drive = new Driving(this);
         moac = new MoacV_2(hardwareMap);
         lifterOneShot = new Toggle.OneShot();
+        telemetry.addData("init finished", null);
     }
 
     public void loop(){
         // Movement:
         if(gamepad1.left_bumper) {
-            drive.libertyDrive( -function(gamepad1.right_stick_y, SCALE),  function(gamepad1.right_stick_x, SCALE), gamepad1.left_stick_x);
+            drive.libertyDrive( -Operations.powerScale(gamepad1.right_stick_y, SCALE),  Operations.powerScale(gamepad1.right_stick_x, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE));
         }
-        else drive.libertyDrive( -function(gamepad1.right_stick_y),  function(gamepad1.right_stick_x), gamepad1.left_stick_x);
-
-
+        else drive.libertyDrive( -Operations.powerScale(gamepad1.right_stick_y),  Operations.powerScale(gamepad1.right_stick_x), gamepad1.left_stick_x);
 
         //Triggers (Intake)
         if(gamepad1.left_trigger > .5) {
@@ -78,22 +78,6 @@ public class TeleopSkyStone extends OpMode {
         }
 */
 
-    }
-
-    public double function(double power){
-        return function(power, 1);
-    }
-    public double function(double power, double scale){
-//        if(power < .3 || power > -.3 ) {
-//            return 0;
-//        }
-        if (power<=1) {
-            if (power < 0)
-                return -(scale * power * power);
-            else
-                return scale * power * power;
-        }
-        return 1;
     }
 }
 

@@ -18,7 +18,6 @@ public class GyroWrapper {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
-
     }
 
     public float getValueContinuous () {

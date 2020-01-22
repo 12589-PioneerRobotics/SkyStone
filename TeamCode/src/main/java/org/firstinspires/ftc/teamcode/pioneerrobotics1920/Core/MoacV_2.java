@@ -26,7 +26,7 @@ public class MoacV_2 {
 
     public MoacV_2(HardwareMap hardwareMap) { //TeleOp Constructor
         intake = new Intake(hardwareMap);
-//        linearSlide = new LinearSlide(hardwareMap);
+        //linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
         //stacker = new Stacker(hardwareMap);
     }
@@ -93,7 +93,6 @@ public class MoacV_2 {
             leftFoundationGrabber.setPosition((grab) ? .885 : .191111);//locked in: 0, open:.4
             rightFoundationGrabber.setPosition((grab) ? .75 : .01); //locked in:.34 , open:0
         }
-
     }
 
     public class Stacker {
@@ -160,18 +159,5 @@ public class MoacV_2 {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
         }
-
-
-        public void takeStone(Driving driving, Navigation nav, LinearOpMode opMode) { //experimental method for autonomous grabbing stone
-            int vert = 12;
-            takeIn();
-            nav.moveToX(nav.getX() + vert,0.15);
-//            opMode.sleep(500);
-            //linearSlide.setVerticalPosition(50);
-            stopIntake();
-            nav.backToX(nav.getX() - vert + 2);
-        }
-
     }
-
 }

@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV;
 
 import android.provider.ContactsContract;
@@ -22,6 +21,10 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
+
+/**
+ * @author Ningrui
+ */
 
 //Start position: (36, 72, 0)
 
