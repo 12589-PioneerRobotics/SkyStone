@@ -114,6 +114,10 @@ public class Driving {
         return gyro.reportPosition();
     }
 
+    public boolean motorsBusy() {
+        return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
+    }
+
     //move forward method based on inches
     public void forward(double inches, double power) {
         int clicks = (int) (inches * CLICKS_PER_INCH);
@@ -121,7 +125,7 @@ public class Driving {
         setAllDrivingPositions(clicks);
         setDrivingModes(DcMotor.RunMode.RUN_TO_POSITION);
         //wait while opmode is active and left motor is busy running to position.
-        while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
+        while (linearOpMode.opModeIsActive() && motorsBusy()) {
             linearOpMode.idle();
             double factor = Operations.chooseAlgorithm(Operations.AccelerationAlgorithms.EXPONENTIAL, Operations.DeccelerationAlgorithms.PARABOLIC, clicks, averageEncoderPositions());
             if (factor>1) factor = 1;
@@ -213,14 +217,6 @@ public class Driving {
     }
 
     //UNUSED METHODS********************************************************************************
-    public boolean motorsBusy() {
-        boolean busy = true;
-        for (DcMotor motor : drivingMotors) {
-            busy = motor.isBusy();
-        }
-        return busy;
-    }
-
     public void brake() {
         frontLeft.setPower(0);
         frontRight.setPower(0);

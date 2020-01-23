@@ -15,10 +15,10 @@ public class Operations {
             case LINEAR:
                 accelFactor = curPos / 400;
                 break;
-            case EXPONENTIAL:
+            case RATIONAL:
                 accelFactor = 1 - 300 / (5 * curPos + 300);
                 break;
-            case RATIONAL:
+            case EXPONENTIAL:
                 accelFactor = Math.pow(1.8, .02 * curPos) / 200 + .35;
                 break;
         }
