@@ -64,13 +64,6 @@ public class Controller extends OpMode {
         }
         else moac.intake.stopIntake();
 
-        if(gamepad1.left_bumper) {
-            if(countVertical == 0) {
-                countVertical = 4;//4 is highest position for now
-            }
-            countVertical--;
-            moac.linearSlide.setVerticalPosition(countVertical);
-        }
 
         moac.foundationGrabber.grabFoundation(!gamepad1.left_bumper);
 /*
@@ -80,7 +73,6 @@ public class Controller extends OpMode {
         telemetry.update();
         drive.getPowers();
 */
-        telemetry.addData("Current vertical slide position: ", moac.linearSlide.verticalPositions[countVertical]);
     }
 
 }
