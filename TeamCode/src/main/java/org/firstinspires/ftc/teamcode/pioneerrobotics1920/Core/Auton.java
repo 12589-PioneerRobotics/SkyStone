@@ -509,7 +509,9 @@ public class Auton extends LinearOpMode {
     }
 
     public void takeStone() {
+        moac.stacker.open();
         moac.intake.takeIn();
+
         drive.forward(17, 0.8);
         moac.intake.stopIntake();
         drive.forward(-17, 1);

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 public class TestMotorBehavior extends LinearOpMode {
 
     DcMotor testMotor;
-    Toggle.OneShot aOneShot;
+    Toggle.OneShot motorOneShot;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -19,20 +19,25 @@ public class TestMotorBehavior extends LinearOpMode {
         testMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorPos(0);
 
-        aOneShot = new Toggle.OneShot();
+        motorOneShot = new Toggle.OneShot();
+
 
         waitForStart();
 
         while(this.opModeIsActive()){
-            if (aOneShot.update(gamepad1.a))
-                motorPos(1000);
-            else if (aOneShot.update(gamepad1.b))
-                motorPos(0);
-            else if (gamepad1.dpad_up)
+
+            if (gamepad1.dpad_up)
                 motorPower(0.5);
             else if (gamepad1.dpad_down)
                 motorPower(-0.5);
-            else
+            else{
+                if (gamepad1.a)
+                    motorPos(1000);
+                else if (gamepad1.b)
+                    motorPos(0);
+            }
+
+            if (motorOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down)))
                 testMotor.setPower(0);
 
             telemetry.addData("motorPos", testMotor.getCurrentPosition());

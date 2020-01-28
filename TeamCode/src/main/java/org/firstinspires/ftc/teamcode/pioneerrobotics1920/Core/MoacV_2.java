@@ -112,28 +112,29 @@ public class MoacV_2 {
     }
 
     public class Stacker {
-
         Servo grabber;
         boolean grabberSwitcher = false;
+        final private double OPEN_POS = .41;
+        final private double CLOSE_POS = .33;
 
 
         public Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");
-            grabber.setPosition(0.22);
+            grabber.setPosition(CLOSE_POS);
         }
 
         public void grab(){
-            if (grabberSwitcher) grabber.setPosition(0.22);
-            else grabber.setPosition(0.05);
+            if (grabberSwitcher) grabber.setPosition(OPEN_POS);
+            else grabber.setPosition(CLOSE_POS);
             grabberSwitcher = !grabberSwitcher;
         }
 
         public void open(){
-            grabber.setPosition(0.06);
+            grabber.setPosition(OPEN_POS);
         }
 
         public void close(){
-            grabber.setPosition(0.22);
+            grabber.setPosition(CLOSE_POS);
         }
     }
 
@@ -155,7 +156,6 @@ public class MoacV_2 {
         public void takeIn() {
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
-            stacker.open();
         }
 
         public void spitOut() {
@@ -167,7 +167,6 @@ public class MoacV_2 {
         public void stopIntake() {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
-            stacker.close();
         }
     }
 }
