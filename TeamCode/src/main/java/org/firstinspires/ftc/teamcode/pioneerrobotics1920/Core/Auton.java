@@ -120,14 +120,18 @@ public class Auton extends LinearOpMode {
                     nav.moveToY(85);
                 }
 
-                moac.intake.spitOut();
+                nav.turnTo(180);
 
-                nav.turnTo(0);
+                moac.linearSlide.drop();
+
+
                 getBlueSkystone(skystonePos);
 
                 nav.moveToY(85);
 
-                moac.intake.spitOut();
+                nav.turnTo(180);
+
+                moac.linearSlide.drop();
 
                 park();
 
@@ -239,7 +243,7 @@ public class Auton extends LinearOpMode {
                     blueStones.remove(5);
                     round++;
                 } else {
-                    nav.backTo(nav.getX()-5, blueStones.get(2).y);
+                    nav.moveTo(nav.getX()-5, blueStones.get(2).y);
 
                     moac.intake.stopIntake();
                     nav.turnTo(facingBlue);

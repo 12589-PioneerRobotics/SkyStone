@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class MoacV_2 {
     //TODO: Add these back once hardware map is complete
 
@@ -32,20 +34,27 @@ public class MoacV_2 {
     public class LinearSlide {
         public DcMotor slideVertical;
         public DcMotor slideHoriz;
+        private boolean horizSwitcher;
 
         public LinearSlide(HardwareMap hardwareMap) {
             slideVertical = hardwareMap.dcMotor.get("slideVertical");
             slideVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            slideVertical.setDirection(DcMotorSimple.Direction.REVERSE);
             lifterPosition(0);
             slideHoriz = hardwareMap.dcMotor.get("slideHorizontal");
             slideHoriz.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             slideHoriz.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             horizPosition(0);
+            horizSwitcher = true;
         }
         public double getPos(DcMotor noYou){
             return noYou.getCurrentPosition();
+        }
+
+        public void drop(){
+            lifterPosition(500);
+            horizPosition(2000);
+            stacker.open();
         }
 
         public void lifterPower(double power) {
@@ -56,7 +65,7 @@ public class MoacV_2 {
         public void lifterPosition(int clicks) {
            slideVertical.setTargetPosition(clicks);
            slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-           slideVertical.setPower(.3);
+           slideVertical.setPower(1);
         }
 
         public void horizSlidePower(double power){
@@ -68,6 +77,13 @@ public class MoacV_2 {
             slideHoriz.setTargetPosition(clicks);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
+        }
+
+        public void horiz() {
+            slideHoriz.setTargetPosition((horizSwitcher) ? 2000: 0);
+            slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideHoriz.setPower(1);
+            horizSwitcher = !horizSwitcher;
         }
 /*
         public void setHorizPosition(int count) {
@@ -85,13 +101,13 @@ public class MoacV_2 {
         public FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(.191111111);//previous: .567
-            rightFoundationGrabber.setPosition(.01);//previous: .46
+            leftFoundationGrabber.setPosition(0);//previous: .567
+            rightFoundationGrabber.setPosition(1);//previous: .46
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .885 : .191111);//locked in: 0, open:.4
-            rightFoundationGrabber.setPosition((grab) ? .75 : .01); //locked in:.34 , open:0
+            leftFoundationGrabber.setPosition((grab) ? .1 : .9);//locked in: 0, open:.4
+            rightFoundationGrabber.setPosition((grab) ? .9 : .1); //locked in:.34 , open:0
         }
     }
 
@@ -99,6 +115,7 @@ public class MoacV_2 {
 
         Servo grabber;
         boolean grabberSwitcher = false;
+
 
         public Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");
@@ -138,16 +155,19 @@ public class MoacV_2 {
         public void takeIn() {
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
+            stacker.open();
         }
 
         public void spitOut() {
             leftIntake.setPower(-1);
             rightIntake.setPower(1);
+
         }
 
         public void stopIntake() {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
+            stacker.close();
         }
     }
 }

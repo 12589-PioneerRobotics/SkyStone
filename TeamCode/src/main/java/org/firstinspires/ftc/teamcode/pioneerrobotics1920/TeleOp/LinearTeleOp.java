@@ -15,6 +15,8 @@ public class LinearTeleOp extends LinearOpMode {
     Toggle.OneShot horizSlideOneShot;
     Toggle.OneShot grabOneShot;
     Toggle.OneShot modeOneShot;
+    Toggle.OneShot dpadOneShot;
+    Toggle.OneShot lifterOneShot;
 
     boolean invert;
 
@@ -28,7 +30,8 @@ public class LinearTeleOp extends LinearOpMode {
         horizSlideOneShot = new Toggle.OneShot();
         grabOneShot = new Toggle.OneShot();
         modeOneShot = new Toggle.OneShot();
-
+        dpadOneShot = new Toggle.OneShot();
+        lifterOneShot = new Toggle.OneShot();
         invert = false;
 
         telemetry.addData("init finished", null);
@@ -52,20 +55,26 @@ public class LinearTeleOp extends LinearOpMode {
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x), gamepad1.left_stick_x);
             }
 
-            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1);
+            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100 allen poop
             else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
-            else if (vertSlideOneShot.update(gamepad1.a)) moac.linearSlide.lifterPosition(0);
-            else moac.linearSlide.lifterPower(0);
+            else {
+                if (gamepad1.a) moac.linearSlide.lifterPosition(0);
+            }
+
+            if (lifterOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down))) moac.linearSlide.lifterPower(0);
 
             if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
             else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.6);
-            else if (horizSlideOneShot.update(gamepad1.b)) moac.linearSlide.horizPosition(1500);
-            else moac.linearSlide.horizSlidePower(0);
+            else {
+                if (horizSlideOneShot.update(gamepad1.b)) moac.linearSlide.horiz();
+            }
+
+            if (dpadOneShot.update(!(gamepad1.dpad_right||gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition()>5100) moac.linearSlide.horizSlidePower(0);
+
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
             else if(gamepad1.right_trigger > .5) moac.intake.takeIn();
             else moac.intake.stopIntake();
-
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
             //if(grabOneShot.update(gamepad1.y)) moac.stacker.grab();
