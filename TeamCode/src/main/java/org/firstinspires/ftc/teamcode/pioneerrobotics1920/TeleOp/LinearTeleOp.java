@@ -69,18 +69,17 @@ public class LinearTeleOp extends LinearOpMode {
                 if (horizSlideOneShot.update(gamepad1.b)) moac.linearSlide.horiz();
             }
 
-            if (dpadOneShot.update(!(gamepad1.dpad_right||gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition()>5100) moac.linearSlide.horizSlidePower(0);
-
+            if (dpadOneShot.update(!(gamepad1.dpad_right || gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition()>5100) moac.linearSlide.horizSlidePower(0);
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
             else if(gamepad1.right_trigger > .5) moac.intake.takeIn();
             else moac.intake.stopIntake();
-            moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
-            //if(grabOneShot.update(gamepad1.y)) moac.stacker.grab();
             if (gamepad1.y) moac.stacker.open();
             else if (gamepad1.right_trigger > .5) moac.stacker.open();
             else moac.stacker.close();
+
+            moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
             telemetry.addData("Vertical slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideVertical));

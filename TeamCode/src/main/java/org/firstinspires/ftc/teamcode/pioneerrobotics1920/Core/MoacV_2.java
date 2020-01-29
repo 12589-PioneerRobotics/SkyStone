@@ -47,30 +47,31 @@ public class MoacV_2 {
             horizPosition(0);
             horizSwitcher = true;
         }
-        public double getPos(DcMotor noYou){
+
+        public double getPos(DcMotor noYou) {
             return noYou.getCurrentPosition();
         }
 
-        public void drop(){
+        public void drop() {
             lifterPosition(500);
             horizPosition(2000);
             stacker.open();
         }
 
         public void lifterPower(double power) {
-           slideVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-           slideVertical.setPower(power);
+            slideVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideVertical.setPower(power);
         }
 
         public void lifterPosition(int clicks) {
-           slideVertical.setTargetPosition(clicks);
-           slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-           slideVertical.setPower(1);
+            slideVertical.setTargetPosition(clicks);
+            slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideVertical.setPower(1);
         }
 
-        public void horizSlidePower(double power){
-           slideHoriz.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-           slideHoriz.setPower(power);
+        public void horizSlidePower(double power) {
+            slideHoriz.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideHoriz.setPower(power);
         }
 
         public void horizPosition(int clicks) {
@@ -80,7 +81,7 @@ public class MoacV_2 {
         }
 
         public void horiz() {
-            slideHoriz.setTargetPosition((horizSwitcher) ? 2000: 0);
+            slideHoriz.setTargetPosition((horizSwitcher) ? 2000 : 0);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
             horizSwitcher = !horizSwitcher;
@@ -117,23 +118,22 @@ public class MoacV_2 {
         final private double OPEN_POS = .41;
         final private double CLOSE_POS = .33;
 
-
         public Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");
             grabber.setPosition(CLOSE_POS);
         }
 
-        public void grab(){
+        public void grab() {
             if (grabberSwitcher) grabber.setPosition(OPEN_POS);
             else grabber.setPosition(CLOSE_POS);
             grabberSwitcher = !grabberSwitcher;
         }
 
-        public void open(){
+        public void open() {
             grabber.setPosition(OPEN_POS);
         }
 
-        public void close(){
+        public void close() {
             grabber.setPosition(CLOSE_POS);
         }
     }

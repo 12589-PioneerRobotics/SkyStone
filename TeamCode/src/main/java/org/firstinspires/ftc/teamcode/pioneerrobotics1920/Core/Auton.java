@@ -117,7 +117,7 @@ public class Auton extends LinearOpMode {
 
                 }
                 else {
-                    nav.moveToY(85);
+                    nav.backToY(85);
                 }
 
                 nav.turnTo(180);
@@ -127,15 +127,11 @@ public class Auton extends LinearOpMode {
 
                 getBlueSkystone(skystonePos);
 
-                nav.moveToY(85);
-
-                nav.turnTo(180);
+                nav.backToY(85);
 
                 moac.linearSlide.drop();
 
                 park();
-
-                moac.intake.stopIntake();
             }
         }
         //starting red
@@ -178,20 +174,17 @@ public class Auton extends LinearOpMode {
 
                 getRedSkystone(skystonePos);
 
-                nav.turnTo(0);
-                nav.moveToY(85);
+                nav.turnTo(180);
+                nav.backToY(85);
 
-                moac.intake.spitOut();
+                moac.linearSlide.drop();
 
                 getRedSkystone(skystonePos);
 
-                nav.turnTo(0);
-                if(skystonePos == SkystoneCVTest.Position.CENTER) {
-                    nav.moveTo(nav.getX(), 85);
-                }
-                else nav.moveTo(nav.getX(), 85);
+                nav.turnTo(180);
+                nav.backTo(nav.getX(), 85);
 
-                moac.intake.spitOut();
+                moac.linearSlide.drop();
 
                 sleep(200);
                 nav.backTo(nav.getX()-5, 72);
@@ -245,7 +238,6 @@ public class Auton extends LinearOpMode {
                 } else {
                     nav.moveTo(nav.getX()-5, blueStones.get(2).y);
 
-                    moac.intake.stopIntake();
                     nav.turnTo(facingBlue);
 
                     if (useDistanceSensors) {
@@ -285,7 +277,7 @@ public class Auton extends LinearOpMode {
                     blueStones.remove(4);
                     round++;
                 } else {
-                    nav.backTo(nav.getX()-5, blueStones.get(1).y + 3);
+                    nav.moveTo(nav.getX()-5, blueStones.get(1).y + 3);
 
                     moac.intake.stopIntake();
                     nav.turnTo(facingBlue);
@@ -331,7 +323,7 @@ public class Auton extends LinearOpMode {
                     blueStones.remove(3);
                     round++;
                 } else {
-                    nav.backTo(nav.getX()-5, blueStones.get(0).y + 10);
+                    nav.moveTo(nav.getX()-5, blueStones.get(0).y + 10);
 
                     moac.intake.stopIntake();
 
@@ -346,11 +338,12 @@ public class Auton extends LinearOpMode {
                         nav.moveToX(26);
                         nav.moveTo(8.5, 26);
                     }
-                    nav.turnTo(facingBlue+45);//added to straighten out
+                    nav.turnTo(180);//added to straighten out
+                    drive.moveClose("right", 32, .6,2f);
+                    takeStone();
 
-                    takeStoneAgainstWall();
+                    drive.moveClose("right", 25, .6, 1.5f);
 
-                    nav.turnTo(facingBlue);
 
                     nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH)+7, facingBlue);
 
@@ -514,6 +507,7 @@ public class Auton extends LinearOpMode {
 
         drive.forward(17, 0.8);
         moac.intake.stopIntake();
+        moac.stacker.close();
         drive.forward(-17, 1);
     }
 
