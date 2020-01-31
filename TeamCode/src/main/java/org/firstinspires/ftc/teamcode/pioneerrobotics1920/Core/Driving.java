@@ -134,8 +134,8 @@ public class Driving {
 
     public void moveClose(String direction, double distance, double power, float thresh){
         if (direction.equals("back")) {
-            double diff = backDistance.getDistance(DistanceUnit.INCH) - distance;
-            while(Math.abs(backDistance.getDistance(DistanceUnit.INCH) - distance) > thresh) {
+            double diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
+            while (Math.abs(Operations.cmToInch(backDistance.cmUltrasonic()) - distance) > thresh) {
                 if (diff>=0)
                     libertyDrive(-power, 0, 0);
                 else

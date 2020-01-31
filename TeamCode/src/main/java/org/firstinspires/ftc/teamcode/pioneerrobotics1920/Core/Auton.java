@@ -16,15 +16,15 @@ public class Auton extends LinearOpMode {
     public boolean blue = true;
     protected boolean startBuilding = false;
     public boolean left = true;
-    private boolean grabFoundation = false;
-    private boolean useDistanceSensors = true;
-    private int round = 0;
-    private MoacV_2 moac;
+    public boolean grabFoundation = false;
+    public boolean useDistanceSensors = true;
+    public int round = 0;
+    public MoacV_2 moac;
 
-    private SkystoneCVTest detector;
-    private Driving drive;
-    private SkystoneCVTest.Position skystonePos;
-    private Navigation nav;
+    public SkystoneCVTest detector;
+    public Driving drive;
+    public SkystoneCVTest.Position skystonePos;
+    public Navigation nav;
     private ArrayList<Stones> blueStones = new ArrayList<>();
     private ArrayList<Stones> redStones = new ArrayList<>();
 
@@ -103,28 +103,28 @@ public class Auton extends LinearOpMode {
                 telemetry.update();
 
                 //first movement
+                nav.moveToX(14);
                 //detect skystone, includes all movements for getting stones
                 getBlueSkystone(skystonePos);
 
                 //next movement
-                if (grabFoundation) {
-                    nav.moveToY(120);
-                    nav.turnTo(270);
-
-                } else {
-                    nav.backToY(85);
-                }
-
                 nav.turnTo(180);
+                nav.backToY(85);
 
-                moac.linearSlide.drop();
+                drop();
 
-
+                sleep(3000);
+                telemetry.addData("X Value", nav.getX());
+                telemetry.addData("Y Value", nav.getY());
+                telemetry.addData("Angle", nav.getAngle());
+                telemetry.update();
                 getBlueSkystone(skystonePos);
 
                 nav.backToY(85);
 
-                moac.linearSlide.drop();
+                drop();
+
+                sleep(500);
 
                 park();
             }
@@ -172,14 +172,14 @@ public class Auton extends LinearOpMode {
                 nav.turnTo(180);
                 nav.backToY(85);
 
-                moac.linearSlide.drop();
+                drop();
 
                 getRedSkystone(skystonePos);
 
                 nav.turnTo(180);
                 nav.backTo(nav.getX(), 85);
 
-                moac.linearSlide.drop();
+                drop();
 
                 sleep(200);
                 nav.backTo(nav.getX() - 5, 72);
@@ -231,7 +231,7 @@ public class Auton extends LinearOpMode {
                     blueStones.remove(5);
                     round++;
                 } else {
-                    nav.moveTo(nav.getX() - 5, blueStones.get(2).y);
+                    nav.backToY(blueStones.get(2).y);
 
                     nav.turnTo(facingBlue);
 
@@ -272,9 +272,8 @@ public class Auton extends LinearOpMode {
                     blueStones.remove(4);
                     round++;
                 } else {
-                    nav.moveTo(nav.getX() - 5, blueStones.get(1).y + 3);
+                    nav.moveToY(blueStones.get(1).y + 3);
 
-                    moac.intake.stopIntake();
                     nav.turnTo(facingBlue);
 
                     if (useDistanceSensors) {
@@ -494,24 +493,31 @@ public class Auton extends LinearOpMode {
         round++;
     }
 
-    private void takeStone() {
+    public void takeStone() {
         final double DISTANCE = 17;
         moac.stacker.open();
         moac.intake.takeIn();
-        if (blue) {
-            nav.moveToX(nav.getX() + DISTANCE);
-            moac.intake.stopIntake();
-            moac.stacker.close();
-            nav.backToX(nav.getX() - DISTANCE);
-        } else {
-            nav.moveToX(nav.getX() - DISTANCE);
-            moac.intake.stopIntake();
-            moac.stacker.close();
-            nav.backToX(nav.getX() + DISTANCE);
+        drive.forward(DISTANCE, 1);
+        drive.forward(-DISTANCE - 5, 1);
+        moac.intake.stopIntake();
+        moac.stacker.close();
+    }
+
+    public void drop() {
+        while (moac.linearSlide.slideHoriz.getCurrentPosition() > -2000 && moac.linearSlide.slideVertical.getCurrentPosition() < 490) {
+            moac.linearSlide.lifterPosition(500);
+            moac.linearSlide.horizPosition(-2050);
+        }
+        moac.stacker.open();
+        sleep(500);
+        moac.stacker.close();
+        while (moac.linearSlide.slideHoriz.getCurrentPosition() < -10 && moac.linearSlide.slideVertical.getCurrentPosition() > 10) {
+            moac.linearSlide.lifterPosition(0);
+            moac.linearSlide.horizPosition(0);
         }
     }
 
-    private void takeStoneAgainstWall() {
+    public void takeStoneAgainstWall() {
         moac.intake.takeIn();
         drive.forward(12, 0.6);
         sleep(200);

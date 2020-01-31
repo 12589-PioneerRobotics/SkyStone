@@ -103,6 +103,14 @@ public class LinearTeleOp extends LinearOpMode {
             else if (gamepad1.right_trigger > .5) moac.stacker.open();
             else moac.stacker.close();
 
+            if (gamepad1.x) {
+                moac.stacker.open();
+                moac.linearSlide.lifterPosition(moac.linearSlide.slideVertical.getCurrentPosition() - 100);
+                moac.stacker.close();
+                moac.linearSlide.horizPosition(0);
+                moac.linearSlide.lifterPosition(0);
+            }
+
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");

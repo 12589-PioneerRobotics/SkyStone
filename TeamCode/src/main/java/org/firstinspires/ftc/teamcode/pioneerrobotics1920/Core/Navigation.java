@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
-import android.util.Log;
-
 public class Navigation {
     private double x, y, angleDiff;
     private Driving driving;
@@ -15,7 +13,7 @@ public class Navigation {
     public void currPos(double x0, double y0, double angle0) {
         x = x0;
         y = y0;
-        angleDiff = driving.gyro.getValueContinuous();
+        angleDiff = angle0;//driving.gyro.getValueContinuous();
     }
 
     public void moveTo(double x1, double y1) {
@@ -29,7 +27,6 @@ public class Navigation {
         turnAngle = 90 - Math.abs(Math.toDegrees(Math.atan2(diffY, diffX)));
         turnTo(turnAngle);
 
-        Log.v("TurnAngle",""+turnAngle);
 
         driving.forward(distance, power);
 

@@ -49,11 +49,6 @@ public class MoacV_2 {
             return noYou.getCurrentPosition();
         }
 
-        void drop() {
-            lifterPosition(500);
-            horizPosition(2000);
-            stacker.open();
-        }
 
         public void lifterPower(double power) {
             slideVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -71,7 +66,7 @@ public class MoacV_2 {
             slideHoriz.setPower(power);
         }
 
-        void horizPosition(int clicks) {
+        public void horizPosition(int clicks) {
             slideHoriz.setTargetPosition(clicks);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
@@ -105,8 +100,8 @@ public class MoacV_2 {
     public class Stacker {
         Servo grabber;
         boolean grabberSwitcher = false;
-        final private double OPEN_POS = .41;
-        final private double CLOSE_POS = .33;
+        final private double OPEN_POS = .45;
+        final private double CLOSE_POS = .3;
 
         Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");
