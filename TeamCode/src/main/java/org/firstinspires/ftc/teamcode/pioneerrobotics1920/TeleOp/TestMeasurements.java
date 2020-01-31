@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Coordinates;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
@@ -13,10 +11,10 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
 @Autonomous(name = "Test Measurements")
 public class TestMeasurements extends LinearOpMode {
 
-    Driving drive;
-    Navigation navigation;
-    MoacV_2.LinearSlide linearSlide;
-    MoacV_2 moac;
+    private Driving drive;
+    private Navigation navigation;
+    private MoacV_2.LinearSlide linearSlide;
+    private MoacV_2 moac;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new Driving(this);
@@ -61,8 +59,8 @@ public class TestMeasurements extends LinearOpMode {
                 telemetry.addData("turn angle", navigation.turnAngle);*/
                 telemetry.addData("Press a for moveClose(right), b for moveClose(back)", null);
                 telemetry.addData("Going to: ", inches[curIndex]);
-                telemetry.addData("Right Distance: ", drive.rightDistance.getDistance(DistanceUnit.INCH));
-                telemetry.addData("Back distance: ", drive.backDistance.getDistance(DistanceUnit.INCH));
+//                telemetry.addData("Right Distance: ", drive.rightDistance.getDistance(DistanceUnit.INCH));
+//                telemetry.addData("Back distance: ", drive.backDistance.getDistance(DistanceUnit.INCH));
 
             }
             telemetry.update();

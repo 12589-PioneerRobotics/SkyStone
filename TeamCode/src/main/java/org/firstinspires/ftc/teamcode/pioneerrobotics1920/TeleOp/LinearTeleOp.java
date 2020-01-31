@@ -9,18 +9,43 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 @TeleOp (name = "Linear TeleOp")
 public class LinearTeleOp extends LinearOpMode {
-    Driving drive;
-    MoacV_2 moac;
-    Toggle.OneShot vertSlideOneShot;
-    Toggle.OneShot horizSlideOneShot;
-    Toggle.OneShot grabOneShot;
-    Toggle.OneShot modeOneShot;
-    Toggle.OneShot dpadOneShot;
-    Toggle.OneShot lifterOneShot;
+    private Driving drive;
+    private MoacV_2 moac;
+    private Toggle.OneShot vertSlideOneShot;
+    private Toggle.OneShot horizSlideOneShot;
+    private Toggle.OneShot grabOneShot;
+    private Toggle.OneShot modeOneShot;
+    private Toggle.OneShot dpadOneShot;
+    private Toggle.OneShot lifterOneShot;
 
-    boolean invert;
+    private boolean invert;
 
-    final double SCALE = 0.4;
+    private final double SCALE = 0.4;
+
+    /**
+     * CONTROLS:
+     * <p>
+     * GAMEPAD1:
+     * <p>
+     * Start: Inverts direction of liberty drive movements
+     * <p>
+     * Y: Open Stacker Grabber
+     * A: Preset for rest position of vertical slide
+     * <p>
+     * Left Trigger: Intake OUT
+     * Right Trigger: Intake IN
+     * <p>
+     * Left Bumper: Slow mode for liberty drive movements
+     * Right Bumper: Move Foundation Grabbers
+     * <p>
+     * DPad Up: Moves Vertical Slide up
+     * DPad Down: Moves Vertical Slide down
+     * <p>
+     * DPad Left: Moves Horizontal Slide In
+     * DPad Right: Moves Horizontal Slide Out
+     * <p>
+     * GamePad2: Nothing (yet)
+     */
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -47,18 +72,17 @@ public class LinearTeleOp extends LinearOpMode {
                     drive.libertyDrive(Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE), -Operations.powerScale(gamepad1.right_stick_x, SCALE + 0.25));
                 else
                     drive.libertyDrive(Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.left_stick_x), -gamepad1.right_stick_x);
-            }
-            else {
+            } else {
                 if (gamepad1.left_bumper)
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
                 else
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x), gamepad1.left_stick_x);
             }
 
-            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100 allen poop
+            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
             else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
             else {
-                if (gamepad1.a) moac.linearSlide.lifterPosition(0);
+                if (vertSlideOneShot.update(gamepad1.a)) moac.linearSlide.lifterPosition(0);
             }
 
             if (lifterOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down))) moac.linearSlide.lifterPower(0);

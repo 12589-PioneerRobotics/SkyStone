@@ -6,16 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 public class Driving {
     //instantiations
-    public LinearOpMode linearOpMode;
+    LinearOpMode linearOpMode;
 
     private DcMotor frontLeft;
     private DcMotor frontRight;
@@ -24,11 +21,11 @@ public class Driving {
 
     public GyroWrapper gyro;
 
-    private final double CLICKS_PER_INCH = 29.021876534; // for Direct Drive as of 10/8/19 used the data for power = 0.4, R^2=1 30.6748466
+    private final double CLICKS_PER_INCH = 29.021876534;
 
-    DcMotor[] drivingMotors;
+    private DcMotor[] drivingMotors;
 
-    public ModernRoboticsI2cRangeSensor backDistance, leftDistance, rightDistance;
+    ModernRoboticsI2cRangeSensor backDistance, leftDistance, rightDistance;
 
     private void initHardware(HardwareMap hardwareMap) {
 
@@ -56,7 +53,7 @@ public class Driving {
     }
 
     //if distance sensors are going to be used
-    public void initDistanceSensors(HardwareMap hardwareMap) {
+    private void initDistanceSensors(HardwareMap hardwareMap) {
         backDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "backDistance");
         leftDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");
         rightDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
@@ -72,37 +69,37 @@ public class Driving {
         linearOpMode = opMode;
     }
 
-    public void setAllDrivingPositions(int clicks) {
+    private void setAllDrivingPositions(int clicks) {
         for (DcMotor motor : drivingMotors) {
             motor.setTargetPosition(clicks);
         }
     }
 
-    public void setDrivingModes(DcMotor.RunMode mode) {
+    private void setDrivingModes(DcMotor.RunMode mode) {
         for (DcMotor motor : drivingMotors) {
             motor.setMode(mode);
         }
     }
 
-    public void setAllDrivingPowers(double power) {
+    private void setAllDrivingPowers(double power) {
         for (DcMotor motor : drivingMotors) {
             motor.setPower(power);
         }
     }
 
-    public int averageEncoderPositions() {
+    private int averageEncoderPositions() {
         return (frontLeft.getCurrentPosition() + frontRight.getCurrentPosition() +
                 backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
     }
 
-    public void stopDriving() {
+    void stopDriving() {
         setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setAllDrivingPowers(0);
         setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearOpMode.idle();
     }
 
-    final void sleep(long milliseconds) {
+    private void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -114,7 +111,7 @@ public class Driving {
         return gyro.reportPosition();
     }
 
-    public boolean motorsBusy() {
+    private boolean motorsBusy() {
         return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
     }
 
@@ -214,58 +211,6 @@ public class Driving {
         linearOpMode.telemetry.addData("FrontRight Power", frontRight.getPower());
         linearOpMode.telemetry.addData("BackLeft Power", backLeft.getPower());
         linearOpMode.telemetry.addData("BackRight Power", backRight.getPower());
-    }
-
-    //UNUSED METHODS********************************************************************************
-    public void brake() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-    }
-
-    public void angleCorrection(double target) {
-        double power = .2;
-        double turnSign = Math.signum(target - gyro.getValueContinuous());
-        double correctSign;
-        final double THRESHOLD = 3.25; //3.25 is optimal
-        //double target = target + gyro.getValueContinuous(); //need getValueContinuous in case start position is not 0
-
-        frontLeft.setPower(power * turnSign);
-        backLeft.setPower(power * turnSign);
-        frontRight.setPower(-power * turnSign);
-        backRight.setPower(-power * turnSign);
-
-        while (Math.abs(gyro.getValueContinuous() - target) > THRESHOLD && linearOpMode.opModeIsActive()) {
-            correctSign = Math.signum(target - gyro.getValueContinuous());
-            frontLeft.setPower(power * correctSign);
-            backLeft.setPower(power * correctSign);
-            frontRight.setPower(-power * correctSign);
-            backRight.setPower(-power * correctSign);
-            linearOpMode.idle();
-        }
-    }
-
-    public void forwardMotor(DcMotor motor, int clicks, double power) {
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setPower(0);
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setTargetPosition(clicks);
-
-        while (linearOpMode.opModeIsActive() && motor.isBusy()) {
-            linearOpMode.idle();
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(power);
-        }
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setPower(0);
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        if (motor.getCurrentPosition() > 999 || motor.getCurrentPosition() < -999)
-            motor.setPower(0);
     }
 
     //turn based of a given angle
