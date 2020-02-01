@@ -73,7 +73,7 @@ public class MoacV_2 {
         }
 
         public void horiz() {
-            slideHoriz.setTargetPosition((horizSwitcher) ? -2000 : 0);
+            slideHoriz.setTargetPosition((horizSwitcher) ? -2050 : 0);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
             horizSwitcher = !horizSwitcher;
@@ -101,7 +101,7 @@ public class MoacV_2 {
         Servo grabber;
         boolean grabberSwitcher = false;
         final private double OPEN_POS = .45;
-        final private double CLOSE_POS = .3;
+        final private double CLOSE_POS = .31;
 
         Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");

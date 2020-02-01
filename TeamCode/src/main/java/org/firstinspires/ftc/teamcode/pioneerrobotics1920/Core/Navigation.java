@@ -24,7 +24,7 @@ public class Navigation {
         double diffY = y1 - y;
         double distance = Math.sqrt(diffX * diffX + diffY * diffY);
 
-        turnAngle = 90 - Math.abs(Math.toDegrees(Math.atan2(diffY, diffX)));
+        turnAngle = 90 - Math.toDegrees(Math.atan2(diffY, diffX));
         turnTo(turnAngle);
 
 

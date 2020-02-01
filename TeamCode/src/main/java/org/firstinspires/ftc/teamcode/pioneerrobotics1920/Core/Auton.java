@@ -109,22 +109,15 @@ public class Auton extends LinearOpMode {
 
                 //next movement
                 nav.turnTo(180);
-                nav.backToY(85);
+                nav.backToY(110);
 
-                drop();
+                getFoundation(blue, startBuilding);
 
-                sleep(3000);
-                telemetry.addData("X Value", nav.getX());
-                telemetry.addData("Y Value", nav.getY());
-                telemetry.addData("Angle", nav.getAngle());
-                telemetry.update();
                 getBlueSkystone(skystonePos);
 
-                nav.backToY(85);
+                nav.backToY(115);
 
                 drop();
-
-                sleep(500);
 
                 park();
             }
@@ -231,7 +224,7 @@ public class Auton extends LinearOpMode {
                     blueStones.remove(5);
                     round++;
                 } else {
-                    nav.backToY(blueStones.get(2).y);
+                    nav.moveToY(blueStones.get(2).y);
 
                     nav.turnTo(facingBlue);
 
@@ -509,9 +502,9 @@ public class Auton extends LinearOpMode {
             moac.linearSlide.horizPosition(-2050);
         }
         moac.stacker.open();
-        sleep(500);
+        sleep(100);
         moac.stacker.close();
-        while (moac.linearSlide.slideHoriz.getCurrentPosition() < -10 && moac.linearSlide.slideVertical.getCurrentPosition() > 10) {
+        while (moac.linearSlide.slideHoriz.getCurrentPosition() < -20 && moac.linearSlide.slideVertical.getCurrentPosition() > 20) {
             moac.linearSlide.lifterPosition(0);
             moac.linearSlide.horizPosition(0);
         }
@@ -539,13 +532,14 @@ public class Auton extends LinearOpMode {
                 moac.foundationGrabber.grabFoundation(true);
             } else {
                 drive.moveClose("back", 1.8, 0.6, 1f);
-                nav.currPos(48 - drive.backDistance.getDistance(DistanceUnit.INCH), drive.rightDistance.getDistance(DistanceUnit.INCH), 270);
-                drive.forward(-10, 0.8);
-                sleep(500);
-                drive.forward(10, 0.8);
-                nav.moveToX(nav.getX() - 15);
+                nav.currPos(40 - drive.backDistance.getDistance(DistanceUnit.INCH), 136 - drive.rightDistance.getDistance(DistanceUnit.INCH), 270);
+                drive.forward(-5, 0.5);
+                drop();
+                moac.foundationGrabber.grabFoundation(true);
+                nav.moveToX(nav.getX() - 24);
                 nav.turnTo(180);
-                nav.backToY(nav.getY() + 20);
+                moac.foundationGrabber.grabFoundation(false);
+
             }
         } else {
             if (startBuilding) {
