@@ -17,10 +17,14 @@ public class LinearTeleOp extends LinearOpMode {
     private Toggle.OneShot modeOneShot;
     private Toggle.OneShot dpadOneShot;
     private Toggle.OneShot lifterOneShot;
+    private Toggle.OneShot game2DpadUpOneShot;
+    private Toggle.OneShot game2DpadDownOneShot;
 
     private boolean invert;
 
     private final double SCALE = 0.4;
+
+    private final int[] LIFTER_PRESETS = {0, 550, 1263, 2022, 2750, 3500, 4250};
 
     /**
      * CONTROLS:
@@ -57,7 +61,10 @@ public class LinearTeleOp extends LinearOpMode {
         modeOneShot = new Toggle.OneShot();
         dpadOneShot = new Toggle.OneShot();
         lifterOneShot = new Toggle.OneShot();
+        game2DpadUpOneShot = new Toggle.OneShot();
+        game2DpadDownOneShot = new Toggle.OneShot();
         invert = false;
+        int counter = 0;
 
         telemetry.addData("init finished", null);
         telemetry.update();
@@ -106,15 +113,29 @@ public class LinearTeleOp extends LinearOpMode {
 
             if (gamepad1.x) {
                 moac.stacker.open();
-                moac.linearSlide.lifterPosition(moac.linearSlide.slideVertical.getCurrentPosition() - 100);
-                moac.stacker.close();
-                moac.linearSlide.horizPosition(0);
+                int currentHeight = moac.linearSlide.slideVertical.getCurrentPosition();
+                while (moac.linearSlide.slideVertical.getCurrentPosition() < currentHeight + 290)
+                    moac.linearSlide.lifterPosition(moac.linearSlide.slideVertical.getCurrentPosition() + 300);
+                while (moac.linearSlide.slideHoriz.getCurrentPosition() < -100) {
+                    moac.linearSlide.horizPosition(0);
+                    if (moac.linearSlide.slideHoriz.getCurrentPosition() > -1200)
+                        moac.stacker.close();
+                }
                 moac.linearSlide.lifterPosition(0);
             }
 
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
+            //gamepad2
+            if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
+                counter++;
+            else if (game2DpadDownOneShot.update(gamepad2.dpad_down) && counter > 0)
+                counter--;
+            if (gamepad1.y)
+                moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
+
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
+            telemetry.addData("STONE LEVEL", "" + counter);
             telemetry.addData("Vertical slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideVertical));
             telemetry.addData("Horizontal slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideHoriz));
             telemetry.update();

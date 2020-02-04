@@ -19,7 +19,7 @@ public class Operations {
                 accelFactor = 1 - 300 / (5 * curPos + 300);
                 break;
             case EXPONENTIAL:
-                accelFactor = Math.pow(1.8, .02 * curPos) / 200 + .35;
+                accelFactor = Math.pow(1.5, .04 * curPos) / 200 + .35;
                 break;
         }
         switch (deccel) {

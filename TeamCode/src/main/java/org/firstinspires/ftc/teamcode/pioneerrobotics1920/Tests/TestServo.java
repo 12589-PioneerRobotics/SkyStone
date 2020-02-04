@@ -14,7 +14,8 @@ public class TestServo extends OpMode {
 
     @Override
     public void init() {
-        servo1 = hardwareMap.servo.get("grabber");
+        servo1 = hardwareMap.servo.get("leftFoundationGrabber");
+        servo2 = hardwareMap.servo.get("rightFoundationGrabber");
         orientation.setAngleUnit(AngleUnit.DEGREES);
         orientation.startListening();
 
@@ -39,8 +40,9 @@ public class TestServo extends OpMode {
             servo1.setPosition(.025);
             */
 //        servo2.setPosition(servo2.getPosition() + gamepad1.right_stick_x * 0.001);
-        servo1.setPosition(servo1.getPosition() + gamepad1.left_stick_x * 0.0005);
-/*
+        servo1.setPosition(servo1.getPosition() + gamepad1.left_stick_x * 0.001);
+        servo2.setPosition(servo2.getPosition() + gamepad1.right_stick_x * 0.001);
+/*+
         if(gamepad1.a)
             servo3.setPosition(1);
         if (gamepad1.x)
@@ -52,6 +54,7 @@ public class TestServo extends OpMode {
 */
         telemetry.addData("orientation.isAvailable()", orientation.isAvailable());
         telemetry.addData("servo1 position", servo1.getPosition());
+        telemetry.addData("servo2 position", servo2.getPosition());
         telemetry.addData("Orientation angle: ", orientation.getAngle());
 //        telemetry.addData("servo2 position", servo2.getPosition());
         //telemetry.addData("servo3 position", servo3.getPosition());

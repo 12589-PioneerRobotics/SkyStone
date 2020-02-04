@@ -25,7 +25,7 @@ public class Driving {
 
     private DcMotor[] drivingMotors;
 
-    ModernRoboticsI2cRangeSensor backDistance, leftDistance, rightDistance;
+    ModernRoboticsI2cRangeSensor frontDistance, backDistance, leftDistance, rightDistance;
 
     private void initHardware(HardwareMap hardwareMap) {
 
@@ -54,6 +54,7 @@ public class Driving {
 
     //if distance sensors are going to be used
     private void initDistanceSensors(HardwareMap hardwareMap) {
+        frontDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
         backDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "backDistance");
         leftDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");
         rightDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
@@ -93,7 +94,7 @@ public class Driving {
     }
 
     void stopDriving() {
-        setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setAllDrivingPowers(0);
         setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearOpMode.idle();
@@ -115,8 +116,20 @@ public class Driving {
         return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
     }
 
+    public void forwardPos(double inches, double power) {
+        int clicks = (int) (inches * CLICKS_PER_INCH);
+        stopDriving();
+        setAllDrivingPositions(clicks);
+        setDrivingModes(DcMotor.RunMode.RUN_TO_POSITION);
+        setAllDrivingPowers(power);
+    }
+
     //move forward method based on inches
     public void forward(double inches, double power) {
+        forward(inches, power, 0.25);
+    }
+
+    public void forward(double inches, double power, double powerFloor) {
         int clicks = (int) (inches * CLICKS_PER_INCH);
         stopDriving();
         setAllDrivingPositions(clicks);
@@ -127,15 +140,31 @@ public class Driving {
             double factor = Operations.chooseAlgorithm(Operations.AccelerationAlgorithms.EXPONENTIAL, Operations.DeccelerationAlgorithms.PARABOLIC, clicks, averageEncoderPositions());
             if (factor>1) factor = 1;
             double newPower = power * factor;
-            setAllDrivingPowers(Math.max(newPower, 0.25));
+            setAllDrivingPowers(Math.max(newPower, powerFloor));
         }
         stopDriving();
     }
 
     public void moveClose(String direction, double distance, double power, float thresh){
+        if (direction.equals("front")) {
+            double diff = Operations.cmToInch(frontDistance.cmUltrasonic()) - distance;
+            while (diff > 100)
+                diff = Operations.cmToInch(frontDistance.cmUltrasonic()) - distance;
+            while (Math.abs(diff) - distance > thresh) {
+                linearOpMode.telemetry.addData("Front Distance: ", frontDistance.getDistance(DistanceUnit.INCH));
+                linearOpMode.telemetry.update();
+                if (diff >= 0)
+                    libertyDrive(power, 0, 0);
+                else
+                    libertyDrive(-power, 0, 0);
+                diff = ((Operations.cmToInch(frontDistance.cmUltrasonic()) - distance) > 100) ? diff : Operations.cmToInch(frontDistance.cmUltrasonic()) - distance;
+            }
+        }
         if (direction.equals("back")) {
             double diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
             while (Math.abs(Operations.cmToInch(backDistance.cmUltrasonic()) - distance) > thresh) {
+                linearOpMode.telemetry.addData("Back Distance: ", backDistance.getDistance(DistanceUnit.INCH));
+                linearOpMode.telemetry.update();
                 if (diff>=0)
                     libertyDrive(-power, 0, 0);
                 else
@@ -156,7 +185,7 @@ public class Driving {
         }
         if (direction.equals("right")) {
             double diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
-            while(rightDistance.getDistance(DistanceUnit.INCH) == DistanceUnit.infinity)
+            while (rightDistance.getDistance(DistanceUnit.INCH) > 100)
                 diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(diff) > thresh) {
                 linearOpMode.telemetry.addData( "Right Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
@@ -165,7 +194,7 @@ public class Driving {
                     libertyDrive(0, 0, power);
                 else
                     libertyDrive(0, 0, -power);
-                diff = (rightDistance.getDistance(DistanceUnit.INCH) == DistanceUnit.infinity)? diff: rightDistance.getDistance(DistanceUnit.INCH) - distance;
+                diff = (rightDistance.getDistance(DistanceUnit.INCH) > 100) ? diff : rightDistance.getDistance(DistanceUnit.INCH) - distance;
             }
         }
         stopDriving();

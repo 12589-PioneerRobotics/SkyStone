@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "Test Sensor", group = "test")
 public class TestSensor extends LinearOpMode {
-//    private ModernRoboticsI2cRangeSensor frontDistance;
+    private ModernRoboticsI2cRangeSensor frontDistance;
     private ModernRoboticsI2cRangeSensor backDistance;
     private ModernRoboticsI2cRangeSensor rightDistance;
     private ModernRoboticsI2cRangeSensor leftDistance;
@@ -16,7 +16,7 @@ public class TestSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-//        frontDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
+        frontDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
         backDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "backDistance");
         rightDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
         leftDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");
@@ -24,6 +24,7 @@ public class TestSensor extends LinearOpMode {
 
         while(this.opModeIsActive()){
 //            telemetry.addData("front distance",frontDistance.getDistance(DistanceUnit.INCH));
+            telemetry.addData("front distance", frontDistance.getDistance(DistanceUnit.INCH));
             telemetry.addData("back distance",backDistance.getDistance(DistanceUnit.INCH));
             telemetry.addData("back distance cmUltrasonic", backDistance.cmUltrasonic());
             telemetry.addData("back distance cmOptical", backDistance.cmOptical());

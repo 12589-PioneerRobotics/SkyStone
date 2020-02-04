@@ -16,7 +16,7 @@ import org.opencv.imgproc.Imgproc;
  */
 public class SkystoneCVTest extends OpenCVPipeline {
     // initializing of positions
-    public enum Position {UNKNOWN, LEFT, CENTER, RIGHT, FARTHEST}
+    public enum Position {UNKNOWN, LEFT, CENTER, RIGHT}
     //public Position skystonePos = Position.UNKNOWN;
     private Position skystonePos = Position.UNKNOWN;
     // initializing a unless variable
@@ -26,8 +26,8 @@ public class SkystoneCVTest extends OpenCVPipeline {
     public double[] centerImageValues;
     public double[] rightImageValues;
     // constants used in the formation of the rectangular images to check position of skystone
-    private int X = 250;
-    private int Y = 250;
+    private int X = 240;
+    private int Y = 225;
     final private int WIDTH_AND_HEIGHT = 30;
     final private int GAP_BETWEEN_BOXES = 125;
 
@@ -165,8 +165,8 @@ public class SkystoneCVTest extends OpenCVPipeline {
 
     public void changeCrop(boolean blue){
         if (!blue) {
-            X = 175;
-            Y = 100;
+            X = 250;
+            Y = 200;
         }
     }
 }

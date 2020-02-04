@@ -73,7 +73,7 @@ public class MoacV_2 {
         }
 
         public void horiz() {
-            slideHoriz.setTargetPosition((horizSwitcher) ? -2050 : 0);
+            slideHoriz.setTargetPosition((horizSwitcher) ? -2100 : 0);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
             horizSwitcher = !horizSwitcher;
@@ -82,18 +82,18 @@ public class MoacV_2 {
     }
 
     public class FoundationGrabber {
-        Servo leftFoundationGrabber, rightFoundationGrabber;
+        Servo leftFoundationGrabber, rightFoundationGrabber; // open 0.77, close 0.21 2/3/2020
 
         FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(0);//previous: .567
-            rightFoundationGrabber.setPosition(1);//previous: .46
+            leftFoundationGrabber.setPosition(0.05);
+            rightFoundationGrabber.setPosition(.21);
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .1 : .9);//locked in: 0, open:.4
-            rightFoundationGrabber.setPosition((grab) ? .9 : .1); //locked in:.34 , open:0
+            leftFoundationGrabber.setPosition((grab) ? .77 : 0.1); //vals .21 .77
+            rightFoundationGrabber.setPosition((grab) ? .77 : .21);
         }
     }
 
@@ -139,8 +139,8 @@ public class MoacV_2 {
         }
 
         public void takeIn() {
-            leftIntake.setPower(1);
-            rightIntake.setPower(-1);
+            leftIntake.setPower(.8);
+            rightIntake.setPower(-.8);
         }
 
         public void spitOut() {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 public class Navigation {
     private double x, y, angleDiff;
     private Driving driving;
@@ -8,6 +10,11 @@ public class Navigation {
 
     public Navigation(Driving driver) {
         driving = driver;
+    }
+
+    public void IamAt(double x0, double y0) {
+        x = x0;
+        y = y0;
     }
 
     public void currPos(double x0, double y0, double angle0) {
@@ -26,7 +33,6 @@ public class Navigation {
 
         turnAngle = 90 - Math.toDegrees(Math.atan2(diffY, diffX));
         turnTo(turnAngle);
-
 
         driving.forward(distance, power);
 
@@ -83,24 +89,64 @@ public class Navigation {
         driving.stopDriving();
     }
 
-    public void turnTo(double angle1) { turnTo(angle1, 1); }
+    public void arc(double angle1, double thresh, double turnPower, double drivePower) {
+        double diff = getDiff(angle1);
+        double RAW_THRESH = thresh;
+        double TURN_POWER = turnPower;
+        while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
+            if (diff > 0)
+                driving.libertyDrive(drivePower, TURN_POWER, 0);
+            else
+                driving.libertyDrive(drivePower, -TURN_POWER, 0);
+            driving.linearOpMode.telemetry.addData("difference", diff);
+            driving.linearOpMode.telemetry.addData("nav angle: ", getAngle());
+            driving.linearOpMode.telemetry.update();
+        }
+        driving.stopDriving();
+
+        while ((getDiff(angle1) > thresh || getDiff(angle1) < -thresh) && driving.linearOpMode.opModeIsActive()) {
+            diff = getDiff(angle1);
+            driving.libertyDrive(0, Operations.sgn(diff) * .3, 0);
+            driving.linearOpMode.idle();
+            driving.linearOpMode.telemetry.addData("difference", diff);
+
+            driving.linearOpMode.telemetry.update();
+        }
+        driving.stopDriving();
+    }
+
+    public void turnToCorrectPower(double angle1, double correctPower) {
+        turnTo(angle1, 1, correctPower);
+    }
+
     public void turnTo(double angle1, double thresh) {
+        turnTo(angle1, thresh, .25);
+    }
+
+    public void turnTo(double angle1) {
+        turnTo(angle1, 1, .25);
+    }
+
+    public void turnTo(double angle1, double thresh, double correctPower) {
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
         // angle is 0 to 359
         final double TURN_POWER = 1; // positive numbers only, please
-        final double CORRECT_POWER = .25;
+        final double CORRECT_POWER = correctPower;
         double diff = getDiff(angle1);
         final double RAW_THRESH = 5 + Math.abs(diff) / 30.0;
         // now, diff is the angle we would pass to the old ActuatorLibrary.turn method
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
-            double factor = Math.abs(getDiff(angle1))/135;
+            double factor = Math.abs(getDiff(angle1)) / 90; // denominator is arbitrary. Make smaller for higher powers (and faster turns) or decrease for smaller power.
             factor = (Math.abs(factor)<0.45)? ((factor<0)? -0.45:0.45):factor;//this is ugly but oh well
             //if (factor<1) {
-                if (diff > 0)
-                    driving.libertyDrive(0, TURN_POWER*factor, 0);
-                else
-                    driving.libertyDrive(0, -TURN_POWER*factor, 0);
-            driving.linearOpMode.telemetry.addData("factor", factor);
+            if (diff > 0)
+                driving.libertyDrive(0, TURN_POWER*factor, 0);
+            else
+                driving.libertyDrive(0, -TURN_POWER*factor, 0);
+            //driving.linearOpMode.telemetry.addData("factor", factor);
             driving.linearOpMode.telemetry.addData("difference", diff);
+            driving.linearOpMode.telemetry.addData("nav angle: ", getAngle());
             driving.linearOpMode.telemetry.update();
         }
         driving.stopDriving();
@@ -113,6 +159,9 @@ public class Navigation {
             driving.linearOpMode.telemetry.addData("difference", diff);
             driving.linearOpMode.telemetry.update();
         }
+
+        driving.linearOpMode.telemetry.addData("Time elapsed: ", time.milliseconds());
+        time.reset();
         driving.stopDriving();
     }
 
