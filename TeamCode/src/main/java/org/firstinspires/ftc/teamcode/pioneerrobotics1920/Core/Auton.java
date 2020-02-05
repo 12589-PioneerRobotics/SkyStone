@@ -468,7 +468,7 @@ public class Auton extends LinearOpMode {
 
                     round++;
                 } else {
-                    nav.backToY(redStones.get(0).y + 10);
+                    nav.moveToY(redStones.get(0).y + 10);
 
                     moac.intake.stopIntake();
 
@@ -506,7 +506,7 @@ public class Auton extends LinearOpMode {
         moac.stacker.open();
         moac.intake.takeIn();
         drive.forward(DISTANCE, .8, .5);
-        drive.forward(-DISTANCE - 6, 1);
+        drive.forward(-DISTANCE - 8, 1);
     }
 
     public void drop() {
