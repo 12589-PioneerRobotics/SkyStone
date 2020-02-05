@@ -24,7 +24,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     private final double SCALE = 0.4;
 
-    private final int[] LIFTER_PRESETS = {0, 550, 1263, 2022, 2750, 3500, 4250};
+    private final int[] LIFTER_PRESETS = {0, 600, 1350, 2100, 2850, 3600, 4350};
 
     /**
      * CONTROLS:
@@ -127,9 +127,9 @@ public class LinearTeleOp extends LinearOpMode {
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
             //gamepad2
-            if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
+            if (game2DpadUpOneShot.update(gamepad2.y) && counter < LIFTER_PRESETS.length - 1)
                 counter++;
-            else if (game2DpadDownOneShot.update(gamepad2.dpad_down) && counter > 0)
+            else if (game2DpadDownOneShot.update(gamepad2.a) && counter > 0)
                 counter--;
             if (gamepad1.y)
                 moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
