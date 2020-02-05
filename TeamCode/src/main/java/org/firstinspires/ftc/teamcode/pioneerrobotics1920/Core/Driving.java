@@ -147,40 +147,46 @@ public class Driving {
 
     public void moveClose(String direction, double distance, double power, float thresh){
         if (direction.equals("front")) {
-            double diff = Operations.cmToInch(frontDistance.cmUltrasonic()) - distance;
+            double diff = frontDistance.getDistance(DistanceUnit.INCH) - distance;
             while (diff > 100)
-                diff = Operations.cmToInch(frontDistance.cmUltrasonic()) - distance;
-            while (Math.abs(diff) - distance > thresh) {
+                diff = frontDistance.getDistance(DistanceUnit.INCH) - distance;
+            while ((Math.abs(diff)) > thresh) {
                 linearOpMode.telemetry.addData("Front Distance: ", frontDistance.getDistance(DistanceUnit.INCH));
                 linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(power, 0, 0);
                 else
                     libertyDrive(-power, 0, 0);
-                diff = ((Operations.cmToInch(frontDistance.cmUltrasonic()) - distance) > 100) ? diff : Operations.cmToInch(frontDistance.cmUltrasonic()) - distance;
+                //diff = frontDistance.getDistance(DistanceUnit.INCH)- distance;
+                diff = ((frontDistance.getDistance(DistanceUnit.INCH)- distance) > 100)? diff : frontDistance.getDistance(DistanceUnit.INCH) - distance;
             }
         }
         if (direction.equals("back")) {
             double diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
-            while (Math.abs(Operations.cmToInch(backDistance.cmUltrasonic()) - distance) > thresh) {
+            while (diff>100)
+                diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
+            while (Math.abs(diff) > thresh) {
                 linearOpMode.telemetry.addData("Back Distance: ", backDistance.getDistance(DistanceUnit.INCH));
                 linearOpMode.telemetry.update();
                 if (diff>=0)
                     libertyDrive(-power, 0, 0);
                 else
                     libertyDrive(power, 0, 0);
+                diff = ((Operations.cmToInch(backDistance.cmUltrasonic()) - distance)>100)? diff:(Operations.cmToInch(backDistance.cmUltrasonic()) - distance);
             }
         }
         if (direction.equals("left")) {
             double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
+            while (diff>100)
+                diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
             while(Math.abs(diff) > thresh) {
-                linearOpMode.telemetry.addData( "Left Distance: ",leftDistance.getDistance(DistanceUnit.INCH));
+                linearOpMode.telemetry.addData( "Left Distance: ", leftDistance.getDistance(DistanceUnit.INCH));
                 linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(0, 0, -power);
                 else
                     libertyDrive(0, 0, power);
-                diff =  leftDistance.getDistance(DistanceUnit.INCH) - distance;
+                diff =  ((leftDistance.getDistance(DistanceUnit.INCH) - distance)>100)? diff:(leftDistance.getDistance(DistanceUnit.INCH) - distance);
             }
         }
         if (direction.equals("right")) {
@@ -202,7 +208,7 @@ public class Driving {
 
     public void libertyDrive(double drive, double turn, double strafe) {
         setDrivingModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //turn += strafe*-0.05;
+        turn += strafe*-0.05;
         double factor = Math.abs(drive) + Math.abs(turn) + Math.abs(strafe);
         if (factor <= 1)
             factor = 1;

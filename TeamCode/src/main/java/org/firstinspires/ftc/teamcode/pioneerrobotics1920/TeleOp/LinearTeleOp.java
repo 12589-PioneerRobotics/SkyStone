@@ -75,12 +75,12 @@ public class LinearTeleOp extends LinearOpMode {
             if (modeOneShot.update(gamepad1.start)) invert = !invert;
 
             if (invert) {
-                if (gamepad1.left_stick_button)
+                if (gamepad1.back)
                     drive.libertyDrive(Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE), -Operations.powerScale(gamepad1.right_stick_x, SCALE + 0.25));
                 else
                     drive.libertyDrive(Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.left_stick_x), -gamepad1.right_stick_x);
             } else {
-                if (gamepad1.left_stick_button)
+                if (gamepad1.back)
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
                 else
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x), gamepad1.left_stick_x);
