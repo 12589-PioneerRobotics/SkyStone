@@ -15,6 +15,10 @@ public class TestAutonomous extends Auton {
         telemetry.addData("init finished", null);
         telemetry.update();
         waitForStart();
-        nav.arc(90, 3, .5, .5);
+        double curTime = getRuntime();
+        while (getRuntime()<curTime+.5)
+            drive.libertyDrive(-.4,0,0);
+        drive.stopDriving();
+
     }
 }

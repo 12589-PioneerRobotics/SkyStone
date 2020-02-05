@@ -93,7 +93,7 @@ public class Driving {
                 backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
     }
 
-    void stopDriving() {
+    public void stopDriving() {
         //setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setAllDrivingPowers(0);
         setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -202,7 +202,7 @@ public class Driving {
 
     public void libertyDrive(double drive, double turn, double strafe) {
         setDrivingModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turn += strafe*-0.05;
+        //turn += strafe*-0.05;
         double factor = Math.abs(drive) + Math.abs(turn) + Math.abs(strafe);
         if (factor <= 1)
             factor = 1;
