@@ -285,7 +285,7 @@ public class Auton extends LinearOpMode {
                 if (round == 0) {
                     nav.moveToX(14);
                     if (useDistanceSensors) {
-                        drive.moveClose("right", 30, .6, 2f);//move this far away from the right wall
+                        drive.moveClose("right", 29, .6, 2f);//move this far away from the right wall
                         nav.turnTo(facingBlue);
                         drive.moveClose("back", 26, .6, 3.5f);//move forward
                     } else {
@@ -584,7 +584,7 @@ public class Auton extends LinearOpMode {
                 moac.linearSlide.lifterPosition(0);
                 moac.linearSlide.horizPosition(0);
                 double curTime = getRuntime();
-                while (getRuntime()<curTime+.5)
+                while (getRuntime() < curTime + .6)
                     drive.libertyDrive(-.6,0,0);
                 drive.stopDriving();
                 moac.foundationGrabber.grabFoundation(false);

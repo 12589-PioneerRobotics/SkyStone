@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 @TeleOp (name = "Linear TeleOp")
@@ -54,6 +55,7 @@ public class LinearTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new Driving(this);
+        Navigation navigation = new Navigation(drive);
         moac = new MoacV_2(hardwareMap);
         vertSlideOneShot = new Toggle.OneShot();
         horizSlideOneShot = new Toggle.OneShot();
@@ -69,18 +71,20 @@ public class LinearTeleOp extends LinearOpMode {
         telemetry.addData("init finished", null);
         telemetry.update();
 
+        navigation.currPos(0, 0, 0);
+
         waitForStart();
 
         while (this.opModeIsActive()){
             if (modeOneShot.update(gamepad1.start)) invert = !invert;
 
             if (invert) {
-                if (gamepad1.back)
+                if (gamepad1.left_bumper)
                     drive.libertyDrive(Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE), -Operations.powerScale(gamepad1.right_stick_x, SCALE + 0.25));
                 else
                     drive.libertyDrive(Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.left_stick_x), -gamepad1.right_stick_x);
             } else {
-                if (gamepad1.back)
+                if (gamepad1.left_bumper)
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
                 else
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x), gamepad1.left_stick_x);
@@ -107,7 +111,7 @@ public class LinearTeleOp extends LinearOpMode {
             else if(gamepad1.right_trigger > .5) moac.intake.takeIn();
             else moac.intake.stopIntake();
 
-            if (gamepad1.left_bumper) moac.stacker.open();
+            if (gamepad1.back) moac.stacker.open();
             else if (gamepad1.right_trigger > .5) moac.stacker.open();
             else moac.stacker.close();
 
@@ -124,15 +128,19 @@ public class LinearTeleOp extends LinearOpMode {
                 moac.linearSlide.lifterPosition(0);
             }
 
-            moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
-
-            //gamepad2
-            if (game2DpadUpOneShot.update(gamepad2.y) && counter < LIFTER_PRESETS.length - 1)
-                counter++;
-            else if (game2DpadDownOneShot.update(gamepad2.a) && counter > 0)
-                counter--;
             if (gamepad1.y)
                 moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
+
+            moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
+
+            //gamepad22
+            if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
+                counter++;
+            else if (game2DpadDownOneShot.update(gamepad2.dpad_down) && counter > 0)
+                counter--;
+            if (gamepad2.right_bumper)
+                navigation.turnTo(0);
+
 
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
             telemetry.addData("STONE LEVEL", "" + counter);

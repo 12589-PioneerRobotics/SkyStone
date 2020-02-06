@@ -87,12 +87,12 @@ public class MoacV_2 {
         FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(0.05);
+            leftFoundationGrabber.setPosition(0.77);
             rightFoundationGrabber.setPosition(.21);
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .77 : 0.1); //vals .21 .77
+            leftFoundationGrabber.setPosition((grab) ? .21 : .77); //vals .21 .77
             rightFoundationGrabber.setPosition((grab) ? .77 : .21);
         }
     }
