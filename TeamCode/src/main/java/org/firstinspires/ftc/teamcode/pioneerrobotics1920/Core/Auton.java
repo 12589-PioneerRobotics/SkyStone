@@ -20,7 +20,6 @@ public class Auton extends LinearOpMode {
     public boolean useDistanceSensors = true;
     public int round = 0;
     public MoacV_2 moac;
-
     public SkystoneCVTest detector;
     public Driving drive;
     public SkystoneCVTest.Position skystonePos;
@@ -124,15 +123,15 @@ public class Auton extends LinearOpMode {
 
                 nav.turnTo(180);
 
-                moac.stacker.close();
                 moac.intake.stopIntake();
 
-                moac.linearSlide.horizPosition(-2050);
 
-                nav.backToY(112)
-                ;
+                moac.linearSlide.horizPosition(-2050);
+                moac.stacker.close();
+                nav.backToY(112);
+
                 moac.stacker.open();
-                sleep(150);
+                sleep(500);
                 moac.stacker.close();
 
                 moac.linearSlide.horizPosition(0);
@@ -187,14 +186,16 @@ public class Auton extends LinearOpMode {
 
                 nav.backToY(120);
                 sleep(300);
-                drive.moveClose("back", 12, .5, 1.5f);
+                drive.moveClose("back", 12, 1, 0f);
 
                 nav.turnTo(90);
                 getFoundation(blue, startBuilding);
 
                 getRedSkystone(skystonePos);
 
-                nav.turnTo(180);
+                //nav.turnTo(180);
+
+                sleep(100);
 
                 moac.intake.stopIntake();
                 moac.stacker.close();
@@ -203,7 +204,7 @@ public class Auton extends LinearOpMode {
                 nav.backToY(110);
 
                 moac.stacker.open();
-                sleep(150);
+                sleep(800);
                 moac.stacker.close();
 
                 moac.linearSlide.horizPosition(0);
@@ -220,12 +221,12 @@ public class Auton extends LinearOpMode {
     private void park() {
         if (!startBuilding) {
             if (left) {
-                if (blue) nav.moveTo(24, 72);
-                else nav.moveTo(120, 72);
+                if (blue) nav.moveToY(72);
+                else nav.moveToY(72);
                 nav.turnTo(180);
             } else {
-                if (blue) nav.moveTo(36, 72);
-                else nav.moveTo(110, 72);
+                if (blue) nav.moveToY(72);
+                else nav.moveToY(72);
                 nav.turnTo(180);
             }
         } else
@@ -253,7 +254,7 @@ public class Auton extends LinearOpMode {
                     takeStone();
 
 
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
+                    nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
 
                     blueStones.remove(5);
                     round++;
@@ -274,7 +275,7 @@ public class Auton extends LinearOpMode {
                     nav.turnTo(facingBlue);
 
                     takeStone();
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
+                    nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
                     blueStones.remove(2);
 
                 }
@@ -282,7 +283,7 @@ public class Auton extends LinearOpMode {
 
             case CENTER:
                 if (round == 0) {
-                    nav.moveToX(12);
+                    nav.moveToX(14);
                     if (useDistanceSensors) {
                         drive.moveClose("right", 30, .6, 2f);//move this far away from the right wall
                         nav.turnTo(facingBlue);
@@ -295,17 +296,18 @@ public class Auton extends LinearOpMode {
                     nav.turnTo(facingBlue);//added to straighten out
                     takeStone();
 
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
+                    nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
 
                     blueStones.remove(4);
                     round++;
                 } else {
-                    nav.moveToY(blueStones.get(1).y + 3);
+                    nav.moveToY(blueStones.get(1).y + 10);
 
                     nav.turnTo(facingBlue);
 
                     if (useDistanceSensors) {
                         drive.moveClose("right", 6, .6, 2f);//moves to within 6 inches from the right wall
+
                         nav.turnTo(facingBlue);
                         drive.moveClose("back", 26, .6, 3.5f);//moves to 28 inches forward
                     } else {
@@ -318,7 +320,7 @@ public class Auton extends LinearOpMode {
                     takeStone();
 
 
-                    nav.currPos(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
+                    nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
 
                     blueStones.remove(1);
                 }
@@ -329,8 +331,10 @@ public class Auton extends LinearOpMode {
                     drive.forward(6, 1, .6);
                     if (useDistanceSensors) {
                         drive.moveClose("right", 20, .6, 1.5f);
+                        drive.moveClose("right", 20, .6, 1.5f);
+
                         nav.turnTo(facingBlue);
-                        drive.moveClose("back", 25, .5, 1.5f);
+                        drive.moveClose("back", 25, .8, 1.5f);
                     } else {
                         nav.moveToY(22.5);
                         nav.moveToX(26);
@@ -345,12 +349,12 @@ public class Auton extends LinearOpMode {
                     blueStones.remove(3);
                     round++;
                 } else {
-                    nav.moveTo(nav.getX(), blueStones.get(0).y + 25);
+                    nav.moveTo(nav.getX(), blueStones.get(0).y + 35);
 
                     nav.turnTo(180);
                     sleep(350);
 
-                    drive.moveClose("front", 14, .4, 1f);//moves to within 6 inches from the right wall
+                    drive.moveClose("front", 13, .6, 0f);//moves to within 6 inches from the right wall
 
                     drive.moveClose("right", 38, .6, 2f);
                     nav.turnTo(180);
@@ -377,11 +381,12 @@ public class Auton extends LinearOpMode {
         switch (pos) {
             case LEFT:
                 if (round == 0) {
-                    drive.moveClose("left", 20, .6, 2f);
+                    drive.moveClose("left", 19, .6, 2f);
+                    drive.moveClose("left", 19, .4, 2f);
 
                     nav.turnTo(facingRed);
 
-                    drive.moveClose("back", 25, .6, 3f);
+                    drive.moveClose("back", 27, .6, 0f);
 
                     takeStone();
 
@@ -399,7 +404,7 @@ public class Auton extends LinearOpMode {
 
                     nav.turnTo(180);
 
-                    drive.moveClose("front", 12, .5, 3f);
+                    drive.moveClose("front", 13, .5, 3f);
 
                     drive.moveClose("left", 38, .6, 2f);
                     nav.turnTo(180);
@@ -418,6 +423,7 @@ public class Auton extends LinearOpMode {
             case CENTER:
                 if (round == 0) {
                     drive.moveClose("left", 26, .6, 2f);
+                    drive.moveClose("left", 26, .4, 2f);
 
                     nav.turnTo(facingRed);
 
@@ -441,6 +447,7 @@ public class Auton extends LinearOpMode {
                     nav.turnTo(facingRed);
 
                     drive.moveClose("left", 5.5, .6, 2f);
+                    drive.moveClose("left", 5.5, .4, 2f);
 
                     nav.turnTo(facingRed);
 
@@ -460,10 +467,11 @@ public class Auton extends LinearOpMode {
                 if (round == 0) {
                     if (useDistanceSensors) {
                         drive.moveClose("left", 36, .6, 2f);
+                        drive.moveClose("left", 36, .4, 2f);
 
                         nav.turnTo(facingRed);
 
-                        drive.moveClose("back", 24, .6, 3f);
+                        drive.moveClose("back", 26, .6, 3f);
                     } else {//lol this doesnt even work
                         nav.moveToY(36);
                         nav.moveToX(118);
@@ -488,10 +496,11 @@ public class Auton extends LinearOpMode {
                     //sensor may go through the transparent wall
                     if (useDistanceSensors) {
                         drive.moveClose("left", 9, .6, 1.5f);
+                        drive.moveClose("left", 9, .4, 1.5f);
 
                         nav.turnTo(facingRed);
 
-                        drive.moveClose("back", 26, .6, 3f);
+                        drive.moveClose("back", 26, .6, 0f);
                     } else {
                         nav.moveToY(15.5);
                         nav.moveToX(118);
@@ -513,11 +522,11 @@ public class Auton extends LinearOpMode {
     }
 
     public void takeStone() {
-        final double DISTANCE = 18;
+        final double DISTANCE = 20;
         moac.stacker.open();
         moac.intake.takeIn();
         drive.forward(DISTANCE, .8, .5);
-        drive.moveClose("back",28,.5,2f);
+        drive.moveClose("back", 27, 1, 2f);
     }
 
     public void drop() {
@@ -557,7 +566,9 @@ public class Auton extends LinearOpMode {
                 moac.foundationGrabber.grabFoundation(true);
                 */
             } else {
-                drive.moveClose("back", 1, 0.3, 1f);
+                //drive.moveClose("back", -1, 1, 1f);
+
+                drive.moveClose("front", 34, .8, 0f);
                 moac.foundationGrabber.grabFoundation(true);
                 nav.IamAt(40 - drive.backDistance.getDistance(DistanceUnit.INCH), 136 - drive.rightDistance.getDistance(DistanceUnit.INCH));
                 //drive.forward(-2,1,.7);
@@ -577,6 +588,10 @@ public class Auton extends LinearOpMode {
                     drive.libertyDrive(-.6,0,0);
                 drive.stopDriving();
                 moac.foundationGrabber.grabFoundation(false);
+
+                if (!Operations.approximatelyEquals(drive.rightDistance.getDistance(DistanceUnit.INCH), 26, 2))
+                    drive.moveClose("right", 26, .6, 1.5f);
+
                 nav.IamAt(drive.rightDistance.getDistance(DistanceUnit.INCH) + 8, 117);
             }
         } else {
@@ -592,7 +607,9 @@ public class Auton extends LinearOpMode {
                 moac.foundationGrabber.grabFoundation(true);
                 */
             } else {
-                drive.moveClose("back", 1, 0.3, 1f);
+                //drive.moveClose("back", -1, 1, 0f);
+
+                drive.moveClose("front", 34, .8, 0f);
                 moac.foundationGrabber.grabFoundation(true);
                 nav.IamAt(144 - drive.frontDistance.getDistance(DistanceUnit.INCH) - 6, 136 - drive.leftDistance.getDistance(DistanceUnit.INCH));
                 //drive.forward(-2,1,.7);
@@ -614,6 +631,9 @@ public class Auton extends LinearOpMode {
                 drive.stopDriving();
 
                 moac.foundationGrabber.grabFoundation(false);
+
+                if (!Operations.approximatelyEquals(drive.leftDistance.getDistance(DistanceUnit.INCH), 26, 2))
+                    drive.moveClose("left", 26, .6, 1.5f);
 
                 nav.IamAt(drive.leftDistance.getDistance(DistanceUnit.INCH) + 8, 117);
             }

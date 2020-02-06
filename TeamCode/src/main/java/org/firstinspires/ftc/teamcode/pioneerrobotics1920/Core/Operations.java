@@ -42,6 +42,14 @@ public class Operations {
         return 1;
     }
 
+    public static void approximatelyEquals(double value, double target) {
+        approximatelyEquals(value, target, target * 0.06);
+    }
+
+    public static boolean approximatelyEquals(double value, double target, double thresh) {
+        return Math.abs(value - target) < thresh;
+    }
+
     public static double powerScale(double power){
         return powerScale(power, 1);
     }
