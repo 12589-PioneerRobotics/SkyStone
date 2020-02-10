@@ -23,11 +23,12 @@ public class Driving {
 
     public GyroWrapper gyro;
 
-    private final double CLICKS_PER_INCH = 29.021876534;
+
+    public final double CLICKS_PER_INCH = 29.021876534;
 
     private DcMotor[] drivingMotors;
 
-    ModernRoboticsI2cRangeSensor frontDistance, backDistance, leftDistance, rightDistance;
+    public ModernRoboticsI2cRangeSensor frontDistance, backDistance, leftDistance, rightDistance;
 
     private void initHardware(HardwareMap hardwareMap) {
 
@@ -72,25 +73,25 @@ public class Driving {
         linearOpMode = opMode;
     }
 
-    private void setAllDrivingPositions(int clicks) {
+    public void setAllDrivingPositions(int clicks) {
         for (DcMotor motor : drivingMotors) {
             motor.setTargetPosition(clicks);
         }
     }
 
-    private void setDrivingModes(DcMotor.RunMode mode) {
+    public void setDrivingModes(DcMotor.RunMode mode) {
         for (DcMotor motor : drivingMotors) {
             motor.setMode(mode);
         }
     }
 
-    private void setAllDrivingPowers(double power) {
+    void setAllDrivingPowers(double power) {
         for (DcMotor motor : drivingMotors) {
             motor.setPower(power);
         }
     }
 
-    private int averageEncoderPositions() {
+    int averageEncoderPositions() {
         return (frontLeft.getCurrentPosition() + frontRight.getCurrentPosition() +
                 backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
     }
@@ -101,7 +102,7 @@ public class Driving {
         linearOpMode.idle();
     }
 
-    private void sleep(long milliseconds) {
+    public void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -113,16 +114,31 @@ public class Driving {
         return gyro.reportPosition();
     }
 
-    private boolean motorsBusy() {
+    public boolean motorsBusy() {
         return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
+    }
+
+    public double getAccurateDistanceSensorReading(ModernRoboticsI2cRangeSensor distanceSensor) {
+        double result = distanceSensor.getDistance(DistanceUnit.INCH);
+        while (result > 50 || result < 0)
+            result = distanceSensor.getDistance(DistanceUnit.INCH);
+        return result;
     }
 
     public void forwardPos(double inches, double power) {
         int clicks = (int) (inches * CLICKS_PER_INCH);
-        stopDriving();
+
+        /*
+        setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setAllDrivingPositions(clicks);
         setDrivingModes(DcMotor.RunMode.RUN_TO_POSITION);
-        setAllDrivingPowers(power);
+        setAllDrivingPowers(power)
+        */
+
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setTargetPosition(clicks);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setPower(power);
     }
 
     //move forward method based on inches
@@ -169,13 +185,14 @@ public class Driving {
                 diff = ((frontDistance.getDistance(DistanceUnit.INCH)- distance) > 100)? diff : frontDistance.getDistance(DistanceUnit.INCH) - distance;
             }
             */
-            forward(diff, power, .5);
+            forward(diff, power, .6);
         }
 
         if (direction.equals("back")) {
+            double value = backDistance.cmUltrasonic();
             Log.i("BackDistance dist", backDistance.getDistance(DistanceUnit.INCH) + "");
             Log.i("BackDistance cmUltra", backDistance.cmUltrasonic() + "");
-            double diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
+            double diff = Operations.cmToInch(value) - distance;
             while (Math.abs(diff) > 50) {
                 diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
                 Log.v("Back distance value", Operations.cmToInch(backDistance.cmUltrasonic()) + "");
@@ -192,12 +209,13 @@ public class Driving {
                 diff = ((Operations.cmToInch(backDistance.cmUltrasonic()) - distance)>100)? diff:(Operations.cmToInch(backDistance.cmUltrasonic()) - distance);
             }
             */
-            forward(-diff, power, .5);
+            forward(-diff, power, .6);
         }
         if (direction.equals("left")) {
             double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
             while (Math.abs(diff) > 50)
                 diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
+            sleep(10);
             while(Math.abs(diff) > thresh) {
                 linearOpMode.telemetry.addData( "Left Distance: ", leftDistance.getDistance(DistanceUnit.INCH));
                 linearOpMode.telemetry.update();
@@ -206,22 +224,58 @@ public class Driving {
                 else
                     libertyDrive(0, 0, power);
 
-                diff = (((leftDistance.getDistance(DistanceUnit.INCH) - distance) - diff) > dx) ? diff : (leftDistance.getDistance(DistanceUnit.INCH) - distance);
+                diff = (Math.abs(((leftDistance.getDistance(DistanceUnit.INCH) - distance)) - diff) > dx) ? diff : (leftDistance.getDistance(DistanceUnit.INCH) - distance);
             }
         }
         if (direction.equals("right")) {
-            double diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
+            double diff = Operations.cmToInch(rightDistance.cmUltrasonic()) - distance;
             while (Math.abs(diff) > 50)
-                diff = rightDistance.getDistance(DistanceUnit.INCH) - distance;
+                diff = Operations.cmToInch(rightDistance.cmUltrasonic()) - distance;
             while(Math.abs(diff) > thresh) {
-                linearOpMode.telemetry.addData( "Right Distance: ",rightDistance.getDistance(DistanceUnit.INCH));
+                linearOpMode.telemetry.addData("Right Distance: ", Operations.cmToInch(rightDistance.cmUltrasonic()));
                 linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(0, 0, power);
                 else
                     libertyDrive(0, 0, -power);
-                diff = (((rightDistance.getDistance(DistanceUnit.INCH) - distance) - diff) > dx) ? diff : rightDistance.getDistance(DistanceUnit.INCH) - distance;
+                diff = (Math.abs((Operations.cmToInch(rightDistance.cmUltrasonic()) - distance) - diff) > dx) ? diff : Operations.cmToInch(rightDistance.cmUltrasonic()) - distance;
             }
+        }
+        stopDriving();
+    }
+
+    public void strafeClose(boolean blue, double x, double y) {
+        double deltaY;
+        double deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
+        if (blue) {
+            deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
+
+            while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+                while (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) {
+                    deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
+                    deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
+                }
+                libertyDrive(deltaX / 24, 0, -deltaY / 6);
+                linearOpMode.telemetry.addData("deltaX", deltaX);
+                linearOpMode.telemetry.addData("deltaY", deltaY);
+                linearOpMode.telemetry.update();
+                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
+                deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
+            }
+
+        } else {
+            deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
+            while (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) {
+                deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
+                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
+            }
+
+            while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+                //libertyDrive(deltaX/4,0,deltaY/4);
+                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
+                deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
+            }
+
         }
         stopDriving();
     }
@@ -233,9 +287,21 @@ public class Driving {
         stopDriving();
     }
 
+    public void timeBasedStrafe(double power, double seconds) {
+        double currentTime = linearOpMode.getRuntime();
+        while (linearOpMode.getRuntime() < currentTime + seconds)
+            libertyDrive(0, 0, power);
+        stopDriving();
+    }
+
     public void libertyDrive(double drive, double turn, double strafe) {
         setDrivingModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turn += strafe*-0.05;
+        if (strafe != 0) {
+            if (strafe < 0)
+                turn += (1 - strafe) * 0.03;
+            else
+                turn += (-1 - strafe) * 0.03;
+        }
         double factor = Math.abs(drive) + Math.abs(turn) + Math.abs(strafe);
         if (factor <= 1)
             factor = 1;
@@ -403,4 +469,7 @@ public class Driving {
 
         linearOpMode.sleep(100);
     }
+
+    //The most stupid method ever
+
 }

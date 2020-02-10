@@ -20,12 +20,15 @@ public class LinearTeleOp extends LinearOpMode {
     private Toggle.OneShot lifterOneShot;
     private Toggle.OneShot game2DpadUpOneShot;
     private Toggle.OneShot game2DpadDownOneShot;
+    private Toggle.OneShot pushBotOneShot;
+
+    public boolean pushBot = false;
 
     private boolean invert;
 
     private final double SCALE = 0.4;
 
-    private final int[] LIFTER_PRESETS = {0, 600, 1350, 2100, 2850, 3600, 4350};
+    private final int[] LIFTER_PRESETS = {0, 700, 1350, 2100, 2850, 3600, 4350, 5100};
 
     /**
      * CONTROLS:
@@ -65,6 +68,7 @@ public class LinearTeleOp extends LinearOpMode {
         lifterOneShot = new Toggle.OneShot();
         game2DpadUpOneShot = new Toggle.OneShot();
         game2DpadDownOneShot = new Toggle.OneShot();
+        pushBotOneShot = new Toggle.OneShot();
         invert = false;
         int counter = 0;
 
@@ -140,8 +144,23 @@ public class LinearTeleOp extends LinearOpMode {
                 counter--;
             if (gamepad2.right_bumper)
                 navigation.turnTo(0);
+            if (gamepad2.y)
+                moac.linearSlide.resetLifter();
+            if (gamepad2.b)
+                moac.linearSlide.resetHoriz();
+            if (pushBotOneShot.update(gamepad2.start))
+                pushBot = !pushBot;
 
 
+
+            /*if(gamepad2.y) {
+                while(drive.backDistance.getDistance(DistanceUnit.INCH) > 5 && drive.backDistance.getDistance(DistanceUnit.INCH) < 30) {
+                    drive.libertyDrive(0,0,.4);
+                    drive.timeBasedStrafe(.4,.4);
+                }
+
+            }*/
+            telemetry.addData("push bot", (pushBot) ? "yes" : "no");
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
             telemetry.addData("STONE LEVEL", "" + counter);
             telemetry.addData("Vertical slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideVertical));

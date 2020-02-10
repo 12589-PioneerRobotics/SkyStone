@@ -27,7 +27,7 @@ public class Operations {
                 deccelFactor = (endPos - curPos) / 800;
                 break;
             case PARABOLIC:
-                deccelFactor = Math.pow(Math.abs(endPos - curPos) / 1000, 2);
+                deccelFactor = Math.pow(Math.abs(endPos - curPos) / 1800, 2);
                 break;
         }
         return Math.min(accelFactor, deccelFactor);
