@@ -90,8 +90,10 @@ public class LinearTeleOp extends LinearOpMode {
             } else {
                 if (gamepad1.left_bumper)
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
-                else
+                else {
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x), gamepad1.left_stick_x);
+                    //strafe god -> drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), gamepad1.left_stick_x, Operations.powerScale(gamepad1.right_stick_x));
+                }
             }
 
             if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
@@ -137,7 +139,7 @@ public class LinearTeleOp extends LinearOpMode {
 
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
-            //gamepad22
+            //gamepad2
             if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
                 counter++;
             else if (game2DpadDownOneShot.update(gamepad2.dpad_down) && counter > 0)

@@ -255,7 +255,7 @@ public class Driving {
                     deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
                     deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
                 }
-                libertyDrive(deltaX / 24, 0, -deltaY / 6);
+                libertyDrive(deltaX / 24, 0, -deltaY / 10);
                 linearOpMode.telemetry.addData("deltaX", deltaX);
                 linearOpMode.telemetry.addData("deltaY", deltaY);
                 linearOpMode.telemetry.update();
