@@ -149,6 +149,10 @@ public class LinearTeleOp extends LinearOpMode {
                     navigation.turnTo(180);
                     drive.strafeClose(blue,3,distancePreset);
                     navigation.turnTo(180);
+                    while(moac.linearSlide.slideVertical.getCurrentPosition() < LIFTER_PRESETS[counter]-20)
+                        moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
+
+
                 }
                 else {
                     navigation.turnTo(180);
