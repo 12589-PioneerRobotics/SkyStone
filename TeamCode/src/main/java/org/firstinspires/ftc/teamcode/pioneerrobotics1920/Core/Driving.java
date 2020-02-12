@@ -246,34 +246,30 @@ public class Driving {
 
     public void strafeClose(boolean blue, double x, double y) {
         double deltaY;
-        double deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
+        double initDeltaY;
+        double deltaX = x - getAccurateDistanceSensorReading(backDistance);
+        double initDeltaX = x - getAccurateDistanceSensorReading(backDistance);
         if (blue) {
-            deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
+            initDeltaY = y -getAccurateDistanceSensorReading(rightDistance);
+            deltaY = y -getAccurateDistanceSensorReading(rightDistance);
 
             while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                while (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) {
-                    deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
-                    deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-                }
-                libertyDrive(deltaX / 24, 0, -deltaY / 10);
+                libertyDrive(deltaX / Math.abs(initDeltaX/2), 0, -deltaY / Math.abs(initDeltaY));
                 linearOpMode.telemetry.addData("deltaX", deltaX);
                 linearOpMode.telemetry.addData("deltaY", deltaY);
                 linearOpMode.telemetry.update();
-                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-                deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
+                deltaX = y - getAccurateDistanceSensorReading(backDistance);
+                deltaY = x - getAccurateDistanceSensorReading(rightDistance);
             }
 
         } else {
-            deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
-            while (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) {
-                deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
-                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-            }
+            initDeltaY = y -getAccurateDistanceSensorReading(leftDistance);
+            deltaY = y -getAccurateDistanceSensorReading(leftDistance);
 
             while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                //libertyDrive(deltaX/4,0,deltaY/4);
-                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-                deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
+                libertyDrive(deltaX / Math.abs(initDeltaX/2), 0, deltaY / Math.abs(initDeltaY));
+                deltaX = x - getAccurateDistanceSensorReading(backDistance);
+                deltaY = y - getAccurateDistanceSensorReading(leftDistance);
             }
 
         }
@@ -469,6 +465,7 @@ public class Driving {
 
         linearOpMode.sleep(100);
     }
+
 
     //The most stupid method ever
 

@@ -21,7 +21,10 @@ public class LinearTeleOp extends LinearOpMode {
     private Toggle.OneShot game2DpadUpOneShot;
     private Toggle.OneShot game2DpadDownOneShot;
     private Toggle.OneShot pushBotOneShot;
-
+    private Toggle.OneShot game2xOneShot;
+    private Toggle.OneShot aOneShot;
+    boolean blue;
+    double distancePreset;
     public boolean pushBot = false;
 
     private boolean invert;
@@ -68,14 +71,16 @@ public class LinearTeleOp extends LinearOpMode {
         lifterOneShot = new Toggle.OneShot();
         game2DpadUpOneShot = new Toggle.OneShot();
         game2DpadDownOneShot = new Toggle.OneShot();
+        game2xOneShot = new Toggle.OneShot();
         pushBotOneShot = new Toggle.OneShot();
+        aOneShot = new Toggle.OneShot();
         invert = false;
         int counter = 0;
 
         telemetry.addData("init finished", null);
         telemetry.update();
 
-        navigation.currPos(0, 0, 0);
+        navigation.currPos(0, 0, 180);
 
         waitForStart();
 
@@ -98,9 +103,9 @@ public class LinearTeleOp extends LinearOpMode {
 
             if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
             else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
-            else {
-                if (vertSlideOneShot.update(gamepad1.a)) moac.linearSlide.lifterPosition(0);
-            }
+//            else {
+//                if (vertSlideOneShot.update(gamepad1.a)) moac.linearSlide.lifterPosition(0);
+//            }
 
             if (lifterOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down)))
                 moac.linearSlide.lifterPower(.1);
@@ -139,7 +144,18 @@ public class LinearTeleOp extends LinearOpMode {
 
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
-            //gamepad2
+            if(aOneShot.update(gamepad1.a))
+                if(blue) {
+                    navigation.turnTo(180);
+                    drive.strafeClose(blue,3,distancePreset);
+                    navigation.turnTo(180);
+                }
+                else {
+                    navigation.turnTo(180);
+                    drive.strafeClose(blue,3,distancePreset);
+                    navigation.turnTo(180);
+                }
+
             if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
                 counter++;
             else if (game2DpadDownOneShot.update(gamepad2.dpad_down) && counter > 0)
@@ -152,6 +168,8 @@ public class LinearTeleOp extends LinearOpMode {
                 moac.linearSlide.resetHoriz();
             if (pushBotOneShot.update(gamepad2.start))
                 pushBot = !pushBot;
+            if(game2xOneShot.update(gamepad2.x))
+                recordDistance();
 
 
 
@@ -169,5 +187,12 @@ public class LinearTeleOp extends LinearOpMode {
             telemetry.addData("Horizontal slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideHoriz));
             telemetry.update();
         }
+    }
+
+    private void recordDistance(){
+        if (blue)
+            distancePreset = drive.getAccurateDistanceSensorReading(drive.rightDistance);
+        else
+            distancePreset = drive.getAccurateDistanceSensorReading(drive.leftDistance);
     }
 }

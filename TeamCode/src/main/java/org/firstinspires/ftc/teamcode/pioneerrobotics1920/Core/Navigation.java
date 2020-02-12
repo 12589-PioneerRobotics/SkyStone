@@ -168,7 +168,7 @@ public class Navigation {
         driving.stopDriving();
     }
 
-    private double getDiff(double target) {
+    public double getDiff(double target) {
         double diff = target - getAngle();
         if (diff > 180)
             diff = diff - 360;
