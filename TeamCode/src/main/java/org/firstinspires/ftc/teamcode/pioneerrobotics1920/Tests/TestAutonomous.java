@@ -12,7 +12,9 @@ public class TestAutonomous extends LinearOpMode {
         drive = new Driving(this);
         telemetry.addData("init finished", null);
         telemetry.update();
+
         waitForStart();
+        drive.timeBasedStrafe(.8, 1.5);
 
     }
 }
