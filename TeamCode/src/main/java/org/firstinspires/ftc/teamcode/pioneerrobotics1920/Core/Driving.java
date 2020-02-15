@@ -24,7 +24,7 @@ public class Driving {
     public GyroWrapper gyro;
 
 
-    public final double CLICKS_PER_INCH = 29.021876534;
+    final double CLICKS_PER_INCH = 29.021876534;
 
     private DcMotor[] drivingMotors;
 
@@ -55,6 +55,10 @@ public class Driving {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public void resetGyro(OpMode opMode) {
+        gyro = new GyroWrapper(opMode.hardwareMap.get(BNO055IMU.class, "imu"));
+    }
+
     //if distance sensors are going to be used
     private void initDistanceSensors(HardwareMap hardwareMap) {
         frontDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
@@ -73,7 +77,7 @@ public class Driving {
         linearOpMode = opMode;
     }
 
-    public void setAllDrivingPositions(int clicks) {
+    void setAllDrivingPositions(int clicks) {
         for (DcMotor motor : drivingMotors) {
             motor.setTargetPosition(clicks);
         }
@@ -96,13 +100,13 @@ public class Driving {
                 backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
     }
 
-    public void stopDriving() {
+    void stopDriving() {
         setAllDrivingPowers(0);
         setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearOpMode.idle();
     }
 
-    public void sleep(long milliseconds) {
+    void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -114,7 +118,7 @@ public class Driving {
         return gyro.reportPosition();
     }
 
-    public boolean motorsBusy() {
+    boolean motorsBusy() {
         return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
     }
 
@@ -145,7 +149,8 @@ public class Driving {
     public void forward(double inches, double power) {
         forward(inches, power, 0.25);
     }
-    public void forward(double inches, double power, double powerFloor) {
+
+    void forward(double inches, double power, double powerFloor) {
         int clicks = (int) (inches * CLICKS_PER_INCH);
         stopDriving();
         setAllDrivingPositions(clicks);
@@ -244,7 +249,7 @@ public class Driving {
         stopDriving();
     }
 
-    public void strafeClose(boolean blue, double x, double y) {
+    void strafeClose(boolean blue, double x, double y) {
         double deltaY;
         double initDeltaY;
         double deltaX = x - getAccurateDistanceSensorReading(backDistance);

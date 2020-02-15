@@ -24,8 +24,9 @@ public class LinearTeleOp extends LinearOpMode {
     private Toggle.OneShot game2xOneShot;
     private Toggle.OneShot aOneShot;
     boolean blue;
-    double distancePreset;
-    public boolean pushBot = false;
+    private Navigation navigation;
+    private double distancePreset;
+    private boolean pushBot = false;
 
     private boolean invert;
 
@@ -60,8 +61,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        drive = new Driving(this);
-        Navigation navigation = new Navigation(drive);
+
         moac = new MoacV_2(hardwareMap);
         vertSlideOneShot = new Toggle.OneShot();
         horizSlideOneShot = new Toggle.OneShot();
@@ -80,8 +80,9 @@ public class LinearTeleOp extends LinearOpMode {
         telemetry.addData("init finished", null);
         telemetry.update();
 
-        navigation.currPos(0, 0, 180);
 
+        drive = new Driving(this);
+        navigation = new Navigation(drive);
         waitForStart();
 
         while (this.opModeIsActive()){
@@ -144,7 +145,8 @@ public class LinearTeleOp extends LinearOpMode {
 
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
-            if(aOneShot.update(gamepad1.a))
+
+            /*if(aOneShot.update(gamepad1.a))
                 if(blue) {
                     navigation.turnTo(180);
                     drive.strafeClose(blue,3,distancePreset);
@@ -158,14 +160,21 @@ public class LinearTeleOp extends LinearOpMode {
                     navigation.turnTo(180);
                     drive.strafeClose(blue,3,distancePreset);
                     navigation.turnTo(180);
-                }
+                }*/
 
             if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
                 counter++;
             else if (game2DpadDownOneShot.update(gamepad2.dpad_down) && counter > 0)
                 counter--;
-            if (gamepad2.right_bumper)
+            if (gamepad2.right_bumper) {
+                drive.resetGyro(this);
+                navigation.currPos(0, 0, 0);
+            }
+
+            if (gamepad1.a) {
                 navigation.turnTo(0);
+            }
+
             if (gamepad2.y)
                 moac.linearSlide.resetLifter();
             if (gamepad2.b)

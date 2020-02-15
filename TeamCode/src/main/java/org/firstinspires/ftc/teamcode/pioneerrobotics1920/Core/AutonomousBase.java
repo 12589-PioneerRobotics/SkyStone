@@ -6,18 +6,14 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 public interface AutonomousBase {
 
-    public boolean blue = true;
-    boolean startBuilding = false;
-    public boolean left = true;
-    public boolean grabFoundation = false;
-    public boolean useDistanceSensors = true;
+
 
 
     public void park();
 
     public void getSkystone(SkystoneCVTest.Position pos);
 
-    public void getFoundation(boolean blue, boolean startBuilding);
+    public void getFoundation();
 
 
     class Stones {
@@ -30,6 +26,11 @@ public interface AutonomousBase {
     }
 
     public class AutonomousCore {
+        public boolean blue = true;
+        public boolean startBuilding = false;
+        public boolean left = true;
+        public boolean grabFoundation = false;
+        public boolean useDistanceSensors = true;
 
         public AutonomousCore(OpMode opMode) {
             drive = new Driving(opMode);
