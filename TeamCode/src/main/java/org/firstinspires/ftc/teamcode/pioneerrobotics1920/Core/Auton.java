@@ -12,9 +12,7 @@ import java.util.ArrayList;
 
 @Autonomous(name = "Autonomous")
 //@Disabled
-public class
-Auton extends LinearOpMode {
-
+public class Auton extends LinearOpMode {
 
     public boolean blue = true;
     protected boolean startBuilding = false;
@@ -280,7 +278,7 @@ Auton extends LinearOpMode {
 //                        drive.moveClose("back", 25, 1, 0f);
 
                     //nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7,drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
 
                     blueStones.remove(2);
                 }
@@ -305,7 +303,7 @@ Auton extends LinearOpMode {
 
                     nav.turnTo(facingBlue);
 
-                    drive.strafeClose(blue,26,10);
+                    drive.strafeClose(blue, 26, 10);
 
                     nav.turnTo(facingBlue);//added to straighten out
 
@@ -322,7 +320,7 @@ Auton extends LinearOpMode {
 
             case RIGHT:
                 if (round == 0) {
-                    drive.strafeClose(blue,25,20);
+                    drive.strafeClose(blue, 25, 20);
 
                     nav.turnTo(facingBlue);//added to straighten out. May or may not be necessary
 
@@ -546,16 +544,16 @@ Auton extends LinearOpMode {
         moac.stacker.open();
         moac.intake.takeIn();
         drive.forward(DISTANCE, .8, .5);
-        if(blue)
-            nav.arc(180,3,-.6,-.6);
+        if (blue)
+            nav.arc(180, 3, -.6, -.6);
         else
-            nav.arc(180,3,.6,-.6);
+            nav.arc(180, 3, .6, -.6);
 
         //drive.moveClose("back", backDistance, 1, 0f);
     }
 
     public void takeStone() {
-        takeStone(25,blue);
+        takeStone(25, blue);
     }
 
     public void drop() {
@@ -614,7 +612,7 @@ Auton extends LinearOpMode {
                 moac.linearSlide.horizPosition(0);
                 double curTime = getRuntime();
                 while (getRuntime() < curTime + .6)
-                    drive.libertyDrive(-.6,0,0);
+                    drive.libertyDrive(-.6, 0, 0);
                 drive.stopDriving();
                 moac.foundationGrabber.grabFoundation(false);
 
@@ -657,8 +655,8 @@ Auton extends LinearOpMode {
                 moac.linearSlide.horizPosition(0);
 
                 double curTime = getRuntime();
-                while (getRuntime()<curTime+.5)
-                    drive.libertyDrive(-.6,0,0);
+                while (getRuntime() < curTime + .5)
+                    drive.libertyDrive(-.6, 0, 0);
                 drive.stopDriving();
 
                 moac.foundationGrabber.grabFoundation(false);

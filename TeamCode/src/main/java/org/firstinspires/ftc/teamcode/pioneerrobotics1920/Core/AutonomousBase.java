@@ -5,16 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 public interface AutonomousBase {
-
-
-
-
     public void park();
 
     public void getSkystone(SkystoneCVTest.Position pos);
 
     public void getFoundation();
-
 
     class Stones {
         public int x, y;
@@ -47,7 +42,7 @@ public interface AutonomousBase {
         public Navigation nav;
         public MoacV_2 moac;
 
-        public void takeStone() {
+        void takeStone() {
             final double DISTANCE = 18;
             moac.stacker.open();
             moac.intake.takeIn();
@@ -55,7 +50,7 @@ public interface AutonomousBase {
             drive.forward(-DISTANCE - 8, 1);
         }
 
-        public void takeStoneAgainstWall() {
+        void takeStoneAgainstWall() {
             moac.intake.takeIn();
             moac.stacker.open();
             drive.forward(8, 0.6);
@@ -63,8 +58,4 @@ public interface AutonomousBase {
 
         }
     }
-
 }
-
-
-
