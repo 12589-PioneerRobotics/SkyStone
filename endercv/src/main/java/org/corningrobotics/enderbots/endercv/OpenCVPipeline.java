@@ -9,9 +9,6 @@ import org.opencv.android.JavaCameraView;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
-import static org.opencv.android.OpenCVLoader.initAsync;
-import static org.opencv.android.OpenCVLoader.initDebug;
-
 /**
  * Created by guinea on 6/19/17.
  * -------------------------------------------------------------------------------------

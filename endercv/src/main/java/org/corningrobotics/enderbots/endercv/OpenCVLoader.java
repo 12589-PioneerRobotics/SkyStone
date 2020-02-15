@@ -1,6 +1,5 @@
 package org.corningrobotics.enderbots.endercv;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
