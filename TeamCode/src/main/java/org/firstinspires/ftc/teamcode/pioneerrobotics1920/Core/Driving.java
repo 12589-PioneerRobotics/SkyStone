@@ -466,7 +466,4 @@ public class Driving {
         linearOpMode.sleep(100);
     }
 
-
-    //The most stupid method ever
-
 }
