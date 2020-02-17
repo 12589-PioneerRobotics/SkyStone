@@ -129,7 +129,6 @@ public class Driving {
     public void forward(double inches, double power) {
         forward(inches, power, 0.25);
     }
-
     public void forward(double inches, double power, double powerFloor) {
         int clicks = (int) (inches * CLICKS_PER_INCH);
         stopDriving();

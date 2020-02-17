@@ -15,11 +15,10 @@ public class TeleopSkyStone extends OpMode {
     Toggle.OneShot aOneShot;
     Toggle.OneShot dpad_rightOneShot;
     final double SCALE = .4;
-    boolean blue;
 
     public void init(){
         drive = new Driving(this);
-        moac = new MoacV_2(hardwareMap, blue);
+        moac = new MoacV_2(hardwareMap);
         lifterOneShot = new Toggle.OneShot();
         telemetry.addData("init finished", null);
         aOneShot = new Toggle.OneShot();
