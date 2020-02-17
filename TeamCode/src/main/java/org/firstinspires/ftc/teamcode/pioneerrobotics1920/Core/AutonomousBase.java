@@ -43,14 +43,6 @@ public interface AutonomousBase {
         public Navigation nav;
         public MoacV_2 moac;
 
-        void takeStone() {
-            final double DISTANCE = 18;
-            moac.stacker.open();
-            moac.intake.takeIn();
-            drive.forward(DISTANCE, .8, .5);
-            drive.forward(-DISTANCE - 8, 1);
-        }
-
         void takeStoneAgainstWall() {
             moac.intake.takeIn();
             moac.stacker.open();
@@ -58,5 +50,14 @@ public interface AutonomousBase {
             drive.forward(-8, 1);
 
         }
+
+        public void takeStone() {
+            final double DISTANCE = 20;
+            moac.stacker.open();
+            moac.intake.takeIn();
+            drive.forward(DISTANCE, .8, .5);
+            nav.arc(180, 3, .6, -.6);
+        }
     }
+
 }

@@ -146,10 +146,10 @@ public class LinearTeleOp extends LinearOpMode {
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
 
-            /*if(aOneShot.update(gamepad1.a))
+            if (aOneShot.update(gamepad1.a))
                 if(blue) {
                     navigation.turnTo(180);
-                    drive.strafeClose(blue,3,distancePreset);
+                    //drive.strafeClose(true, false, );
                     navigation.turnTo(180);
                     while(moac.linearSlide.slideVertical.getCurrentPosition() < LIFTER_PRESETS[counter]-20)
                         moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
@@ -158,9 +158,9 @@ public class LinearTeleOp extends LinearOpMode {
                 }
                 else {
                     navigation.turnTo(180);
-                    drive.strafeClose(blue,3,distancePreset);
+                    //drive.strafeClose(blue,3,distancePreset);
                     navigation.turnTo(180);
-                }*/
+                }
 
             if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
                 counter++;

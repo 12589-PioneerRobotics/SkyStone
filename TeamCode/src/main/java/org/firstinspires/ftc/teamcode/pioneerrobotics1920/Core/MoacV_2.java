@@ -181,8 +181,8 @@ public class MoacV_2 {
 
         public IntakeSensor(HardwareMap hardwareMap, boolean blue) {
             stoneSensor = hardwareMap.colorSensor.get("stoneSensor");
-            lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
-            lights.setPattern(blue ? RevBlinkinLedDriver.BlinkinPattern.BLUE : RevBlinkinLedDriver.BlinkinPattern.RED);
+//            lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
+//            lights.setPattern(blue ? RevBlinkinLedDriver.BlinkinPattern.BLUE : RevBlinkinLedDriver.BlinkinPattern.RED);
         }
 
         public boolean stoneIn() {
