@@ -62,7 +62,7 @@ public class LinearTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        moac = new MoacV_2(hardwareMap);
+        moac = new MoacV_2(hardwareMap, blue);
         vertSlideOneShot = new Toggle.OneShot();
         horizSlideOneShot = new Toggle.OneShot();
         grabOneShot = new Toggle.OneShot();
@@ -183,6 +183,12 @@ public class LinearTeleOp extends LinearOpMode {
                 pushBot = !pushBot;
             if(game2xOneShot.update(gamepad2.x))
                 recordDistance();
+
+            if (gamepad2.x) {
+                if (moac.intakeSensor.stoneIn()) {
+                    moac.intake.stopIntake();
+                }
+            }
 
 
 

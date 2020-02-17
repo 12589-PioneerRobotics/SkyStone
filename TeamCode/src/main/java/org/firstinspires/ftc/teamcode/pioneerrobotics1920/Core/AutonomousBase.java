@@ -5,11 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 public interface AutonomousBase {
-    public void park();
 
-    public void getSkystone(SkystoneCVTest.Position pos);
+    void park();
 
-    public void getFoundation();
+    void getSkystone(SkystoneCVTest.Position pos);
+
+    void getFoundation();
 
     class Stones {
         public int x, y;
@@ -20,7 +21,7 @@ public interface AutonomousBase {
         }
     }
 
-    public class AutonomousCore {
+    class AutonomousCore {
         public boolean blue = true;
         public boolean startBuilding = false;
         public boolean left = true;
@@ -31,7 +32,7 @@ public interface AutonomousBase {
             drive = new Driving(opMode);
             nav = new Navigation(drive);
             detector.changeCrop(blue);
-            moac = new MoacV_2(opMode.hardwareMap);
+            moac = new MoacV_2(opMode.hardwareMap, blue);
             detector = new SkystoneCVTest();
         }
 

@@ -27,7 +27,7 @@ public class AutonomousRed extends LinearOpMode implements AutonomousBase {
         auto.detector.changeCrop(auto.blue);
         auto.drive = new Driving(this);
         auto.nav = new Navigation(auto.drive);
-        moac = new MoacV_2(this.hardwareMap);
+        moac = new MoacV_2(this.hardwareMap, auto.blue);
 
         while (!auto.drive.gyro.isGyroReady()) {
             telemetry.addData("Sensors not calibrated", null);

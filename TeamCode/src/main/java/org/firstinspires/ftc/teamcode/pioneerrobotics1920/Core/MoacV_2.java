@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,17 +17,27 @@ public class MoacV_2 {
     public Intake intake;
     public Driving drive;
     public Stacker stacker;
+    public IntakeSensor intakeSensor;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
         //linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
     }
 
+    public MoacV_2(HardwareMap hardwareMap, boolean blue) { //TeleOp Constructor
+        intake = new Intake(hardwareMap);
+        linearSlide = new LinearSlide(hardwareMap);
+        foundationGrabber = new FoundationGrabber(hardwareMap);
+        stacker = new Stacker(hardwareMap);
+        intakeSensor = new IntakeSensor(hardwareMap, blue);
+
+    }
     public MoacV_2(HardwareMap hardwareMap) { //TeleOp Constructor
         intake = new Intake(hardwareMap);
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
         stacker = new Stacker(hardwareMap);
+
     }
 
     public class LinearSlide {
@@ -160,6 +172,21 @@ public class MoacV_2 {
         public void stopIntake() {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
+        }
+    }
+
+    public class IntakeSensor {
+        public ColorSensor stoneSensor;
+        public RevBlinkinLedDriver lights;
+
+        public IntakeSensor(HardwareMap hardwareMap, boolean blue) {
+            stoneSensor = hardwareMap.colorSensor.get("stoneSensor");
+            lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
+            lights.setPattern(blue ? RevBlinkinLedDriver.BlinkinPattern.BLUE : RevBlinkinLedDriver.BlinkinPattern.RED);
+        }
+
+        public boolean stoneIn() {
+            return stoneSensor.blue() < 200; //abritrary
         }
     }
 }

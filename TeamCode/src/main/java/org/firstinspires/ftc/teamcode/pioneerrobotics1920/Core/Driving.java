@@ -249,6 +249,45 @@ public class Driving {
         stopDriving();
     }
 
+    public void strafeClose(boolean right, boolean front, float x, float y, float thresh) {
+        int sgnX;
+        int sgnY;
+
+        ModernRoboticsI2cRangeSensor sensorX;
+        ModernRoboticsI2cRangeSensor sensorY;
+
+        if (right) {
+            sensorX = rightDistance; //right is positive direction
+            sgnX = 1;
+        } else {
+            sensorX = leftDistance; //left is negative direction
+            sgnX = -1;
+        }
+
+        if (front) {
+            sensorY = frontDistance;
+            sgnY = 1;
+        } else {
+            sensorY = backDistance;
+            sgnY = -1;
+        }
+
+        double dx = getAccurateDistanceSensorReading(sensorX) - x;
+        double dy = getAccurateDistanceSensorReading(sensorY) - y;
+
+        double strafePower = 0;
+        double drivePower = 0;
+
+        while (Math.abs(dx) > thresh && Math.abs(dy) > thresh) {
+            if (Math.abs(dx) > thresh) strafePower = Operations.sgn(dx) * sgnX * 0.6;
+            else strafePower = 0;
+            if (Math.abs(dy) > thresh) drivePower = Operations.sgn(dy) * sgnY * 0.6;
+            else drivePower = 0;
+            libertyDrive(drivePower, 0, strafePower);
+        }
+        stopDriving();
+    }
+
     void strafeClose(boolean blue, double x, double y) {
         double deltaY;
         double initDeltaY;
