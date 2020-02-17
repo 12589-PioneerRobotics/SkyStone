@@ -13,7 +13,6 @@ import java.util.ArrayList;
 @Autonomous(name = "Autonomous")
 //@Disabled
 public class Auton extends LinearOpMode {
-
     public boolean blue = true;
     protected boolean startBuilding = false;
     public boolean left = true;
@@ -68,7 +67,6 @@ public class Auton extends LinearOpMode {
 
         //*******************THE PART THAT RUNS*************************
         if (blue) {
-            //TODO: pull the foundation
             if (startBuilding) {
                 nav.currPos(9, 108, 90);
 
@@ -147,7 +145,6 @@ public class Auton extends LinearOpMode {
         }
         //starting red
         else {
-            //TODO: pull the foundation
             if (startBuilding) {
                 nav.currPos(135, 108, 270);
 
@@ -230,7 +227,7 @@ public class Auton extends LinearOpMode {
     }
     //*********************END OF PART THAT RUNS**************************
 
-    //TODO: make park() work
+
     private void park() {
         if (!startBuilding) {
             if (left) {
@@ -246,7 +243,6 @@ public class Auton extends LinearOpMode {
             nav.backToY(72);
     }
 
-    //TODO: test right case
     private void getBlueSkystone(SkystoneCVTest.Position pos) {
         int facingBlue = 90;
         switch (pos) {

@@ -12,7 +12,7 @@ public class AutonomousRed extends LinearOpMode implements AutonomousBase {
     public AutonomousCore auto;
 
     private ArrayList<Stones> stones = new ArrayList<>();
-    MoacV_2 moac;
+    private MoacV_2 moac;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -108,7 +108,16 @@ public class AutonomousRed extends LinearOpMode implements AutonomousBase {
 
     @Override
     public void park() {
-
+        if (!auto.startBuilding) {
+            if (auto.left) {
+                auto.nav.moveToY(72);
+                auto.nav.turnTo(180);
+            } else {
+                auto.nav.moveToY(72);
+                auto.nav.turnTo(180);
+            }
+        } else
+            auto.nav.backToY(72);
     }
 
     @Override

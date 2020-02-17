@@ -30,7 +30,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     private boolean invert;
 
-    private final double SCALE = 0.4;
+    private final double SCALE = 0.35; //was .4
 
     private final int[] LIFTER_PRESETS = {0, 700, 1350, 2100, 2850, 3600, 4350, 5100};
 

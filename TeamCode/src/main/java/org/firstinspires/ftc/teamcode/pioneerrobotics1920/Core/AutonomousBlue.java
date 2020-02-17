@@ -16,7 +16,16 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
 
     @Override
     public void park() {
-
+        if (!auto.startBuilding) {
+            if (auto.left) {
+                auto.nav.moveToY(72);
+                auto.nav.turnTo(180);
+            } else {
+                auto.nav.moveToY(72);
+                auto.nav.turnTo(180);
+            }
+        } else
+            auto.nav.backToY(72);
     }
 
     @Override
@@ -224,7 +233,7 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
             auto.nav.moveToX(14);
             auto.nav.moveToY(72);
         } else {
-            //start auto.blue loading autonomous
+            //blue loading autonomous
             auto.nav.currPos(9, 36, 90);
 
             auto.detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
@@ -234,7 +243,6 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
             telemetry.update();
 
             waitForStart();
-            //*****************************WAIT FOR START*******************************
 
             auto.skystonePos = auto.detector.getSkystonePos();
 
