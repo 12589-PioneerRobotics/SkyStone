@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,7 +8,6 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 @TeleOp(name = "TeleOp SkyStone")
-@Disabled
 public class TeleopSkyStone extends OpMode {
     Driving drive;
     MoacV_2 moac;
