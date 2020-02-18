@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,7 +15,7 @@ public class MoacV_2 {
     public Intake intake;
     public Driving drive;
     public Stacker stacker;
-    public IntakeSensor intakeSensor;
+    //public IntakeSensor intakeSensor;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
         //linearSlide = new LinearSlide(hardwareMap);
@@ -29,7 +27,7 @@ public class MoacV_2 {
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
         stacker = new Stacker(hardwareMap);
-        intakeSensor = new IntakeSensor(hardwareMap, blue);
+        //intakeSensor = new IntakeSensor(hardwareMap, blue);
 
     }
     public MoacV_2(HardwareMap hardwareMap) { //TeleOp Constructor
@@ -167,7 +165,7 @@ public class MoacV_2 {
         }
     }
 
-    public class IntakeSensor {
+    /*public class IntakeSensor {
         public ColorSensor stoneSensor;
         public RevBlinkinLedDriver lights;
 
@@ -180,5 +178,5 @@ public class MoacV_2 {
         public boolean stoneIn() {
             return stoneSensor.blue() < 200; //abritrary
         }
-    }
+    }*/
 }
