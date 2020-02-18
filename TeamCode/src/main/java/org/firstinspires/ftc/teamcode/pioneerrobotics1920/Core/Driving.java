@@ -284,6 +284,8 @@ public class Driving {
             if (Math.abs(dy) > thresh) drivePower = Operations.sgn(dy) * sgnY * 0.6;
             else drivePower = 0;
             libertyDrive(drivePower, 0, strafePower);
+            dx = getAccurateDistanceSensorReading(sensorX) - x;
+            dy = getAccurateDistanceSensorReading(sensorY) - y;
         }
         stopDriving();
     }
