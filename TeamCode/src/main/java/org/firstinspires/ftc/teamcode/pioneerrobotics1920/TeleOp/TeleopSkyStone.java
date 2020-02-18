@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,7 +8,6 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 @TeleOp(name = "TeleOp SkyStone")
-@Disabled
 public class TeleopSkyStone extends OpMode {
     Driving drive;
     MoacV_2 moac;
@@ -17,11 +15,10 @@ public class TeleopSkyStone extends OpMode {
     Toggle.OneShot aOneShot;
     Toggle.OneShot dpad_rightOneShot;
     final double SCALE = .4;
-    boolean blue;
 
     public void init(){
         drive = new Driving(this);
-        moac = new MoacV_2(hardwareMap, blue);
+        moac = new MoacV_2(hardwareMap);
         lifterOneShot = new Toggle.OneShot();
         telemetry.addData("init finished", null);
         aOneShot = new Toggle.OneShot();

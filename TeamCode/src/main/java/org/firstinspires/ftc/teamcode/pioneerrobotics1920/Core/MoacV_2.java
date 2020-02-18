@@ -73,10 +73,6 @@ public class MoacV_2 {
             slideVertical.setPower(1);
         }
 
-        public void resetLifter() {
-            slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-
         public void horizSlidePower(double power) {
             slideHoriz.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideHoriz.setPower(power);
@@ -89,14 +85,10 @@ public class MoacV_2 {
         }
 
         public void horiz() {
-            slideHoriz.setTargetPosition((horizSwitcher) ? -2050 : 0);
+            slideHoriz.setTargetPosition((horizSwitcher) ? -2100 : 0);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
             horizSwitcher = !horizSwitcher;
-        }
-
-        public void resetHoriz() {
-            slideHoriz.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
     }
@@ -112,8 +104,8 @@ public class MoacV_2 {
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .2 : .77); //vals .21 .77
-            rightFoundationGrabber.setPosition((grab) ? .8 : .21);
+            leftFoundationGrabber.setPosition((grab) ? .21 : .77); //vals .21 .77
+            rightFoundationGrabber.setPosition((grab) ? .77 : .21);
         }
     }
 
@@ -181,8 +173,8 @@ public class MoacV_2 {
 
         public IntakeSensor(HardwareMap hardwareMap, boolean blue) {
             stoneSensor = hardwareMap.colorSensor.get("stoneSensor");
-            lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
-            lights.setPattern(blue ? RevBlinkinLedDriver.BlinkinPattern.BLUE : RevBlinkinLedDriver.BlinkinPattern.RED);
+//            lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
+//            lights.setPattern(blue ? RevBlinkinLedDriver.BlinkinPattern.BLUE : RevBlinkinLedDriver.BlinkinPattern.RED);
         }
 
         public boolean stoneIn() {
