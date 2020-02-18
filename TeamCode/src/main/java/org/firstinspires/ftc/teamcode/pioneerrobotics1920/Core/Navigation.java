@@ -124,7 +124,7 @@ public class Navigation {
     }
 
     public void turnTo(double angle1) {
-        turnTo(angle1, 1, .275);
+        turnTo(angle1, 1, .25);
     }
 
     public void turnTo(double angle1, double thresh, double correctPower) {
@@ -137,7 +137,7 @@ public class Navigation {
         final double RAW_THRESH = 5 + Math.abs(diff) / 30.0;
         // now, diff is the angle we would pass to the old ActuatorLibrary.turn method
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
-            double factor = Math.abs(getDiff(angle1)) / 105; // denominator is arbitrary. Make smaller for higher powers (and faster turns) or decrease for smaller power.
+            double factor = Math.abs(getDiff(angle1)) / 90; // denominator is arbitrary. Make smaller for higher powers (and faster turns) or decrease for smaller power.
             factor = (Math.abs(factor)<0.45)? ((factor<0)? -0.45:0.45):factor;//this is ugly but oh well
             //if (factor<1) {
             if (diff > 0)
@@ -147,28 +147,25 @@ public class Navigation {
             //driving.linearOpMode.telemetry.addData("factor", factor);
             driving.linearOpMode.telemetry.addData("difference", diff);
             driving.linearOpMode.telemetry.addData("nav angle: ", getAngle());
-            driving.linearOpMode.telemetry.addData("Turn To", angle1);
             driving.linearOpMode.telemetry.update();
         }
         driving.stopDriving();
-        driving.sleep(100);
         // no updating of member variables necessary
         // precise turn
-        while (Math.abs(getDiff(angle1)) > thresh && driving.linearOpMode.opModeIsActive()) {
+        while ((getDiff(angle1) > thresh || getDiff(angle1) < -thresh) && driving.linearOpMode.opModeIsActive()) {
             diff = getDiff(angle1);
             driving.libertyDrive(0, Operations.sgn(diff) * CORRECT_POWER, 0);
             driving.linearOpMode.idle();
             driving.linearOpMode.telemetry.addData("difference", diff);
-            driving.linearOpMode.telemetry.addData("nav angle: ", getAngle());
-            driving.linearOpMode.telemetry.addData("Turn To", angle1);
             driving.linearOpMode.telemetry.update();
         }
+
         driving.linearOpMode.telemetry.addData("Time elapsed: ", time.milliseconds());
         time.reset();
         driving.stopDriving();
     }
 
-    private double getDiff(double target) {
+    public double getDiff(double target) {
         double diff = target - getAngle();
         if (diff > 180)
             diff = diff - 360;

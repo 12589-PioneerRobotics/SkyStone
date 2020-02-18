@@ -15,17 +15,27 @@ public class MoacV_2 {
     public Intake intake;
     public Driving drive;
     public Stacker stacker;
+    //public IntakeSensor intakeSensor;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
         //linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
     }
 
+    public MoacV_2(HardwareMap hardwareMap, boolean blue) { //TeleOp Constructor
+        intake = new Intake(hardwareMap);
+        linearSlide = new LinearSlide(hardwareMap);
+        foundationGrabber = new FoundationGrabber(hardwareMap);
+        stacker = new Stacker(hardwareMap);
+        //intakeSensor = new IntakeSensor(hardwareMap, blue);
+
+    }
     public MoacV_2(HardwareMap hardwareMap) { //TeleOp Constructor
         intake = new Intake(hardwareMap);
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
         stacker = new Stacker(hardwareMap);
+
     }
 
     public class LinearSlide {
@@ -61,10 +71,6 @@ public class MoacV_2 {
             slideVertical.setPower(1);
         }
 
-        public void resetLifter() {
-            slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-
         public void horizSlidePower(double power) {
             slideHoriz.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideHoriz.setPower(power);
@@ -77,14 +83,10 @@ public class MoacV_2 {
         }
 
         public void horiz() {
-            slideHoriz.setTargetPosition((horizSwitcher) ? -2050 : 0);
+            slideHoriz.setTargetPosition((horizSwitcher) ? -2100 : 0);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
             horizSwitcher = !horizSwitcher;
-        }
-
-        public void resetHoriz() {
-            slideHoriz.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
     }
@@ -100,8 +102,8 @@ public class MoacV_2 {
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .2 : .77); //vals .21 .77
-            rightFoundationGrabber.setPosition((grab) ? .8 : .21);
+            leftFoundationGrabber.setPosition((grab) ? .21 : .77); //vals .21 .77
+            rightFoundationGrabber.setPosition((grab) ? .77 : .21);
         }
     }
 
@@ -162,4 +164,19 @@ public class MoacV_2 {
             rightIntake.setPower(0);
         }
     }
+
+    /*public class IntakeSensor {
+        public ColorSensor stoneSensor;
+        public RevBlinkinLedDriver lights;
+
+        public IntakeSensor(HardwareMap hardwareMap, boolean blue) {
+            stoneSensor = hardwareMap.colorSensor.get("stoneSensor");
+//            lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
+//            lights.setPattern(blue ? RevBlinkinLedDriver.BlinkinPattern.BLUE : RevBlinkinLedDriver.BlinkinPattern.RED);
+        }
+
+        public boolean stoneIn() {
+            return stoneSensor.blue() < 200; //abritrary
+        }
+    }*/
 }

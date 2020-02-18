@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,10 +7,10 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 
 @TeleOp(name = "Controller")
-@Disabled
 public class Controller extends OpMode {
     private Driving drive;
     private Toggle.OneShot strafeOneShot;
+    boolean blue;
     //7355608
     MoacV_2 moac;
     float power;
@@ -33,7 +32,7 @@ public class Controller extends OpMode {
     }
 
     public void init() {
-        moac = new MoacV_2(this.hardwareMap);
+        moac = new MoacV_2(this.hardwareMap, blue);
         drive = new Driving(this);
         strafeOneShot = new Toggle.OneShot();
     }

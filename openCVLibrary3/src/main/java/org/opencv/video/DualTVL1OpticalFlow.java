@@ -3,9 +3,6 @@
 //
 package org.opencv.video;
 
-import org.opencv.video.DenseOpticalFlow;
-import org.opencv.video.DualTVL1OpticalFlow;
-
 // C++: class DualTVL1OpticalFlow
 //javadoc: DualTVL1OpticalFlow
 

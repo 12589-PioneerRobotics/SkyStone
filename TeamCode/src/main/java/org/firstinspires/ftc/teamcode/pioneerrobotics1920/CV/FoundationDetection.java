@@ -1,12 +1,6 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV;
 
-import android.provider.ContactsContract;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.corningrobotics.enderbots.endercv.OpenCVPipeline;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Coordinates;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -18,7 +12,6 @@ import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
 

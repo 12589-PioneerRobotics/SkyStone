@@ -24,7 +24,7 @@ public class Driving {
     public GyroWrapper gyro;
 
 
-    public final double CLICKS_PER_INCH = 29.021876534;
+    final double CLICKS_PER_INCH = 29.021876534;
 
     private DcMotor[] drivingMotors;
 
@@ -55,6 +55,10 @@ public class Driving {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public void resetGyro(OpMode opMode) {
+        gyro = new GyroWrapper(opMode.hardwareMap.get(BNO055IMU.class, "imu"));
+    }
+
     //if distance sensors are going to be used
     private void initDistanceSensors(HardwareMap hardwareMap) {
         frontDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
@@ -73,7 +77,7 @@ public class Driving {
         linearOpMode = opMode;
     }
 
-    public void setAllDrivingPositions(int clicks) {
+    void setAllDrivingPositions(int clicks) {
         for (DcMotor motor : drivingMotors) {
             motor.setTargetPosition(clicks);
         }
@@ -96,13 +100,13 @@ public class Driving {
                 backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
     }
 
-    public void stopDriving() {
+    void stopDriving() {
         setAllDrivingPowers(0);
         setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearOpMode.idle();
     }
 
-    public void sleep(long milliseconds) {
+    void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -114,7 +118,7 @@ public class Driving {
         return gyro.reportPosition();
     }
 
-    public boolean motorsBusy() {
+    boolean motorsBusy() {
         return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
     }
 
@@ -145,7 +149,8 @@ public class Driving {
     public void forward(double inches, double power) {
         forward(inches, power, 0.25);
     }
-    public void forward(double inches, double power, double powerFloor) {
+
+    void forward(double inches, double power, double powerFloor) {
         int clicks = (int) (inches * CLICKS_PER_INCH);
         stopDriving();
         setAllDrivingPositions(clicks);
@@ -244,36 +249,73 @@ public class Driving {
         stopDriving();
     }
 
-    public void strafeClose(boolean blue, double x, double y) {
+    public void strafeClose(boolean right, boolean front, float x, float y, float thresh) {
+        int sgnX;
+        int sgnY;
+
+        ModernRoboticsI2cRangeSensor sensorX;
+        ModernRoboticsI2cRangeSensor sensorY;
+
+        if (right) {
+            sensorX = rightDistance; //right is positive direction
+            sgnX = 1;
+        } else {
+            sensorX = leftDistance; //left is negative direction
+            sgnX = -1;
+        }
+
+        if (front) {
+            sensorY = frontDistance;
+            sgnY = 1;
+        } else {
+            sensorY = backDistance;
+            sgnY = -1;
+        }
+
+        double dx = getAccurateDistanceSensorReading(sensorX) - x;
+        double dy = getAccurateDistanceSensorReading(sensorY) - y;
+
+        double strafePower = 0;
+        double drivePower = 0;
+
+        while (Math.abs(dx) > thresh && Math.abs(dy) > thresh) {
+            if (Math.abs(dx) > thresh) strafePower = Operations.sgn(dx) * sgnX * 0.6;
+            else strafePower = 0;
+            if (Math.abs(dy) > thresh) drivePower = Operations.sgn(dy) * sgnY * 0.6;
+            else drivePower = 0;
+            libertyDrive(drivePower, 0, strafePower);
+            dx = getAccurateDistanceSensorReading(sensorX) - x;
+            dy = getAccurateDistanceSensorReading(sensorY) - y;
+        }
+        stopDriving();
+    }
+
+    void strafeClose(boolean blue, double x, double y) {
         double deltaY;
-        double deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
+        double initDeltaY;
+        double deltaX = x - getAccurateDistanceSensorReading(backDistance);
+        double initDeltaX = x - getAccurateDistanceSensorReading(backDistance);
         if (blue) {
-            deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
+            initDeltaY = y -getAccurateDistanceSensorReading(rightDistance);
+            deltaY = y -getAccurateDistanceSensorReading(rightDistance);
 
             while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                while (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) {
-                    deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
-                    deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-                }
-                libertyDrive(deltaX / 24, 0, -deltaY / 10);
+                libertyDrive(deltaX / Math.abs(initDeltaX/2), 0, -deltaY / Math.abs(initDeltaY));
                 linearOpMode.telemetry.addData("deltaX", deltaX);
                 linearOpMode.telemetry.addData("deltaY", deltaY);
                 linearOpMode.telemetry.update();
-                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-                deltaY = y - Operations.cmToInch(rightDistance.cmUltrasonic());
+                deltaX = y - getAccurateDistanceSensorReading(backDistance);
+                deltaY = x - getAccurateDistanceSensorReading(rightDistance);
             }
 
         } else {
-            deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
-            while (Math.abs(deltaY) > 50 || Math.abs(deltaX) > 50) {
-                deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
-                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-            }
+            initDeltaY = y -getAccurateDistanceSensorReading(leftDistance);
+            deltaY = y -getAccurateDistanceSensorReading(leftDistance);
 
             while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                //libertyDrive(deltaX/4,0,deltaY/4);
-                deltaX = x - Operations.cmToInch(backDistance.cmUltrasonic());
-                deltaY = Operations.cmToInch(leftDistance.cmUltrasonic()) - y;
+                libertyDrive(deltaX / Math.abs(initDeltaX/2), 0, deltaY / Math.abs(initDeltaY));
+                deltaX = x - getAccurateDistanceSensorReading(backDistance);
+                deltaY = y - getAccurateDistanceSensorReading(leftDistance);
             }
 
         }
@@ -469,7 +511,5 @@ public class Driving {
 
         linearOpMode.sleep(100);
     }
-
-    //The most stupid method ever
 
 }

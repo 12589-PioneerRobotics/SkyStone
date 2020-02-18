@@ -1,13 +1,13 @@
 package org.opencv.android;
 
-import java.text.DecimalFormat;
-
-import org.opencv.core.Core;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+
+import org.opencv.core.Core;
+
+import java.text.DecimalFormat;
 
 public class FpsMeter {
     private static final String TAG               = "FpsMeter";
