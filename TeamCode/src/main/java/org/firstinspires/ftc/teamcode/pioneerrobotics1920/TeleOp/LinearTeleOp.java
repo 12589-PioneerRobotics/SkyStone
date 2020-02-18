@@ -20,10 +20,11 @@ public class LinearTeleOp extends LinearOpMode {
     private Toggle.OneShot lifterOneShot;
     private Toggle.OneShot game2DpadUpOneShot;
     private Toggle.OneShot game2DpadDownOneShot;
+    public boolean blue = true;
 
     private boolean invert;
 
-    private final double SCALE = 0.4;
+    private final double SCALE = 0.35;
 
     private final int[] LIFTER_PRESETS = {0, 600, 1350, 2100, 2850, 3600, 4350};
 
