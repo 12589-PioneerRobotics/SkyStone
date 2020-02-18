@@ -18,7 +18,7 @@ public class TestAutonomous extends Auton {
         double curTime = getRuntime();
         while (getRuntime() < curTime + .5)
             drive.libertyDrive(-.4, 0, 0);
-        drive.stopDriving();
+//        drive.stopDriving();
 
     }
 }
