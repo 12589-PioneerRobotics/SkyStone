@@ -320,7 +320,7 @@ public class Auton extends LinearOpMode {
 
             case RIGHT:
                 if (round == 0) {
-                    drive.strafeClose(blue, 25, 20);
+                    drive.strafeClose(blue, 26, 20);
 
                     nav.turnTo(facingBlue);//added to straighten out. May or may not be necessary
 
