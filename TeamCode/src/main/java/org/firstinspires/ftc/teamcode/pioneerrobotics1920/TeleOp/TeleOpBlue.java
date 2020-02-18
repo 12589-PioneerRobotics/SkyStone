@@ -6,6 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOpBlue extends LinearTeleOp {
     public TeleOpBlue(){
         super();
-        blue = false;
+        blue = true;
     }
 }

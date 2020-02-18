@@ -134,6 +134,7 @@ public class LinearTeleOp extends LinearOpMode {
 
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
+
             //gamepad22
             if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
                 counter++;
