@@ -21,20 +21,16 @@ public interface AutonomousBase {
         }
     }
 
-    class AutonomousCore {
-        public boolean blue = true;
-        public boolean startBuilding = false;
-        public boolean left = true;
+    public class AutonomousCore {
+        public void setBlue(boolean blue) {
+            this.blue = blue;
+        }
+
+        public boolean blue;
+        public boolean startBuilding;
+        public boolean left;
         public boolean grabFoundation = false;
         public boolean useDistanceSensors = true;
-
-        public AutonomousCore(OpMode opMode) {
-            drive = new Driving(opMode);
-            nav = new Navigation(drive);
-            detector.changeCrop(blue);
-            moac = new MoacV_2(opMode.hardwareMap, blue);
-            detector = new SkystoneCVTest();
-        }
 
         public int round = 0;
         public SkystoneCVTest detector;
@@ -42,6 +38,21 @@ public interface AutonomousBase {
         public SkystoneCVTest.Position skystonePos;
         public Navigation nav;
         public MoacV_2 moac;
+
+        public AutonomousCore(OpMode opMode, boolean blue, boolean startBuilding, boolean left) {
+
+            this.blue = blue;
+            this.left = left;
+            this.startBuilding = startBuilding;
+
+            drive = new Driving(opMode);
+            nav = new Navigation(drive);
+            moac = new MoacV_2(opMode.hardwareMap, this.blue);
+            detector = new SkystoneCVTest();
+            detector.changeCrop(this.blue);
+        }
+
+
 
         void takeStoneAgainstWall() {
             moac.intake.takeIn();

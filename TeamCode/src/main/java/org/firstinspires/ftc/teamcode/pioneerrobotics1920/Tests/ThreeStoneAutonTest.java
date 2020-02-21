@@ -45,13 +45,13 @@ public class ThreeStoneAutonTest extends Auton {
         {
             switch (skystonePos) {
                 case LEFT:
-                    drive.strafeClose(blue, 26, 14);
+                    drive.strafeClose(true, false, 26, 14, 1);
                     nav.turnTo(90);
                     takeStone(25, blue);
                     nav.turnTo(180);
                     break;
                 case CENTER:
-                    drive.strafeClose(blue, 26, 10);
+                    drive.strafeClose(true, false, 26, 10, 1);
                     nav.turnTo(90);
                     takeStone(25, blue);
                     nav.turnTo(180);
@@ -113,21 +113,21 @@ public class ThreeStoneAutonTest extends Auton {
                 case LEFT:
                     nav.moveToY(36);
                     nav.turnTo(90);
-                    drive.strafeClose(blue, 24, 36);
+                    drive.strafeClose(true, false, 24, 36, 1);
                     nav.turnTo(90);
                     takeStone();
                     break;
                 case CENTER:
                     nav.moveToY(29);
                     nav.turnTo(90);
-                    drive.strafeClose(blue, 24, 29);
+                    drive.strafeClose(true, false, 24, 29, 1);
                     nav.turnTo(90);
                     takeStone();
                     break;
                 case RIGHT:
                     nav.moveToY(20);
                     nav.turnTo(90);
-                    drive.strafeClose(blue, 24, 20);
+                    drive.strafeClose(true, false, 24, 20, 1);
                     nav.turnTo(90);
                     takeStone();
                     break;
@@ -158,14 +158,14 @@ public class ThreeStoneAutonTest extends Auton {
                 case LEFT:
                     nav.moveToY(20);
                     nav.turnTo(90);
-                    drive.strafeClose(blue, 26, 20);
+                    drive.strafeClose(true, false, 26, 20, 1);
                     nav.turnTo(90);
                     takeStone();
                     break;
                 case RIGHT:
                     nav.moveToY(36);
                     nav.turnTo(90);
-                    drive.strafeClose(blue, 24, 36);
+                    drive.strafeClose(true, false, 24, 36, 1);
                     nav.turnTo(90);
                     takeStone();
                     break;

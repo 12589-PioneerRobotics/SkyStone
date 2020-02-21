@@ -279,14 +279,17 @@ public class Driving {
         double strafePower = 0;
         double drivePower = 0;
 
-        while (Math.abs(dx) > thresh && Math.abs(dy) > thresh) {
-            if (Math.abs(dx) > thresh) strafePower = Range.clip(dx * sgnX / x / 4, -1, 1);
+        while (Math.abs(dx) > thresh || Math.abs(dy) > thresh) {
+            if (Math.abs(dx) > thresh) strafePower = Range.clip(4 * dx * sgnX / x, -1, 1);
             else strafePower = 0;
-            if (Math.abs(dy) > thresh) drivePower = Range.clip(2 * dy * sgnY / y / 4, -1, 1);
+            if (Math.abs(dy) > thresh) drivePower = Range.clip(dy * sgnY / y, -.5, .5);
             else drivePower = 0;
             libertyDrive(drivePower, 0, strafePower);
             dx = getAccurateDistanceSensorReading(sensorX) - x;
             dy = getAccurateDistanceSensorReading(sensorY) - y;
+            linearOpMode.telemetry.addData("dx", dx);
+            linearOpMode.telemetry.addData("dy", dy);
+            linearOpMode.telemetry.update();
         }
         stopDriving();
     }
@@ -301,7 +304,7 @@ public class Driving {
             deltaY = y -getAccurateDistanceSensorReading(rightDistance);
 
             while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                libertyDrive(deltaX / Math.abs(initDeltaX/2), 0, -deltaY / Math.abs(initDeltaY));
+                libertyDrive(deltaX / Math.abs(initDeltaX / 2) / 8, 0, -deltaY / Math.abs(initDeltaY));
                 linearOpMode.telemetry.addData("deltaX", deltaX);
                 linearOpMode.telemetry.addData("deltaY", deltaY);
                 linearOpMode.telemetry.update();
@@ -339,12 +342,7 @@ public class Driving {
 
     public void libertyDrive(double drive, double turn, double strafe) {
         setDrivingModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if (strafe != 0) {
-            if (strafe < 0)
-                turn += (1 - strafe) * 0.03;
-            else
-                turn += (-1 - strafe) * 0.03;
-        }
+
         double factor = Math.abs(drive) + Math.abs(turn) + Math.abs(strafe);
         if (factor <= 1)
             factor = 1;

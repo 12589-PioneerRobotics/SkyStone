@@ -146,9 +146,9 @@ public class LinearTeleOp extends LinearOpMode {
             if (gamepad2.right_bumper)
                 navigation.turnTo(0);
 
-            /*if (gamepad2.a) {
-                drive.
-            }*/
+            if (gamepad2.a) {
+                drive.resetGyro(this);
+            }
 
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
             telemetry.addData("STONE LEVEL", "" + counter);

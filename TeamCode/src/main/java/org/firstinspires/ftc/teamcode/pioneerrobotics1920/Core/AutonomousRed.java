@@ -11,11 +11,17 @@ import java.util.ArrayList;
 public class AutonomousRed extends LinearOpMode implements AutonomousBase {
     public AutonomousCore auto;
 
+    public AutonomousRed(boolean left, boolean startBuilding) {
+        auto = new AutonomousCore(this, false, left, startBuilding);
+    }
+
     private ArrayList<Stones> stones = new ArrayList<>();
     private MoacV_2 moac;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+
         stones.add(new Stones(110, 21));
         stones.add(new Stones(110, 12));
         stones.add(new Stones(110, 8));

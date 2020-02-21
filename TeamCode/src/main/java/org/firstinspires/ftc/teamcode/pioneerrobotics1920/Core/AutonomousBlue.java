@@ -10,9 +10,15 @@ import java.util.ArrayList;
 
 public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
 
+    public AutonomousBlue(boolean left, boolean startBuilding) {
+        auto = new AutonomousCore(this, true, left, startBuilding);
+    }
+
     public AutonomousBase.AutonomousCore auto;
 
+
     private ArrayList<Stones> stones = new ArrayList<>();
+
 
     @Override
     public void park() {
@@ -34,18 +40,7 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
         switch (pos) {
             case LEFT:
                 if (auto.round == 0) {
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("right", 36, .6, 2f);//move parallel to the block
-                    } else auto.nav.moveToY(36);
-                    auto.nav.turnTo(facingBlue);
-
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("back", 24, .6, 3.5f);//move up to the block.
-                    } else {
-                        auto.nav.moveToX(28);
-                        auto.nav.turnTo(facingBlue);
-                    }
-                    auto.nav.turnTo(facingBlue);
+                    auto.drive.strafeClose(true, false, 36, 24, 1);
                     auto.takeStone();
 
                     auto.nav.currPos(auto.drive.backDistance.getDistance(DistanceUnit.INCH) + 7, auto.drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
@@ -199,7 +194,7 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        auto = new AutonomousCore(this);
+
 
         stones.add(new Stones(37, 8));
         stones.add(new Stones(37, 15));

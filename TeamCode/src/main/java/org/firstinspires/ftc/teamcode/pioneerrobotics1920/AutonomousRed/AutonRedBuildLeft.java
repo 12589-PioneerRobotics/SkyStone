@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.AutonomousRed;
 @Autonomous(name = "Red building left", group = "Red")
 public class AutonRedBuildLeft extends AutonomousRed {
     public AutonRedBuildLeft(){
-        super();
+        super(true, true);
         auto.blue = false;
         auto.startBuilding = true;
         auto.left = true;
