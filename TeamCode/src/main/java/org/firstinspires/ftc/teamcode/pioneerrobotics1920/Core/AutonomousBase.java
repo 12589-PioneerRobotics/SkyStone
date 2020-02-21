@@ -67,6 +67,7 @@ public interface AutonomousBase {
             moac.stacker.open();
             moac.intake.takeIn();
             drive.forward(DISTANCE, .8, .5);
+            drive.forward(-15, .8, .5);
             nav.arc(180, 3, .6, -.6);
         }
     }
