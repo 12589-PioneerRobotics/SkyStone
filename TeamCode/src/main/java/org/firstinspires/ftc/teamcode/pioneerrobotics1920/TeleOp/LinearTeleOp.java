@@ -137,6 +137,7 @@ public class LinearTeleOp extends LinearOpMode {
 
             moac.foundationGrabber.grabFoundation(gamepad1.right_bumper);
 
+
             //gamepad22
             if (game2DpadUpOneShot.update(gamepad2.dpad_up) && counter < LIFTER_PRESETS.length - 1)
                 counter++;
@@ -145,6 +146,9 @@ public class LinearTeleOp extends LinearOpMode {
             if (gamepad2.right_bumper)
                 navigation.turnTo(0);
 
+            /*if (gamepad2.a) {
+                drive.
+            }*/
 
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
             telemetry.addData("STONE LEVEL", "" + counter);
