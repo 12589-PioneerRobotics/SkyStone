@@ -26,7 +26,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     private final double SCALE = 0.35;
 
-    private final int[] LIFTER_PRESETS = {0, 600, 1350, 2100, 2850, 3600, 4350};
+    private final int[] LIFTER_PRESETS = {0, 600, 1300, 2050, 2800, 3550, 4300, 4950};
 
     /**
      * CONTROLS:
@@ -98,7 +98,10 @@ public class LinearTeleOp extends LinearOpMode {
             }
 
             if (lifterOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down)))
-                moac.linearSlide.lifterPower(.1);
+                if (moac.linearSlide.slideVertical.getCurrentPosition() > 500)
+                    moac.linearSlide.lifterPower(.1);
+                else
+                    moac.linearSlide.lifterPower(0);
 
             if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
             else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.6);

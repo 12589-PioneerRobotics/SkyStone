@@ -231,7 +231,7 @@ public class Auton extends LinearOpMode {
     //*********************END OF PART THAT RUNS**************************
 
     //TODO: make park() work
-    private void park() {
+    public void park() {
         if (!startBuilding) {
             if (left) {
                 if (blue) nav.moveToY(72);
@@ -247,7 +247,7 @@ public class Auton extends LinearOpMode {
     }
 
     //TODO: test right case
-    private void getBlueSkystone(SkystoneCVTest.Position pos) {
+    public void getBlueSkystone(SkystoneCVTest.Position pos) {
         int facingBlue = 90;
         switch (pos) {
             case LEFT:
@@ -367,7 +367,7 @@ public class Auton extends LinearOpMode {
         round++;
     }
 
-    private void getRedSkystone(SkystoneCVTest.Position pos) {
+    public void getRedSkystone(SkystoneCVTest.Position pos) {
         int facingRed = 270;
         useDistanceSensors = true;
         switch (pos) {

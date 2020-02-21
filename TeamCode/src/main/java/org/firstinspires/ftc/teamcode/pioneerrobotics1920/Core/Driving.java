@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
@@ -100,7 +101,7 @@ public class Driving {
                 backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
     }
 
-    void stopDriving() {
+    public void stopDriving() {
         setAllDrivingPowers(0);
         setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearOpMode.idle();
@@ -279,9 +280,9 @@ public class Driving {
         double drivePower = 0;
 
         while (Math.abs(dx) > thresh && Math.abs(dy) > thresh) {
-            if (Math.abs(dx) > thresh) strafePower = Operations.sgn(dx) * sgnX * 0.6;
+            if (Math.abs(dx) > thresh) strafePower = Range.clip(dx * sgnX / x / 4, -1, 1);
             else strafePower = 0;
-            if (Math.abs(dy) > thresh) drivePower = Operations.sgn(dy) * sgnY * 0.6;
+            if (Math.abs(dy) > thresh) drivePower = Range.clip(2 * dy * sgnY / y / 4, -1, 1);
             else drivePower = 0;
             libertyDrive(drivePower, 0, strafePower);
             dx = getAccurateDistanceSensorReading(sensorX) - x;
@@ -290,7 +291,7 @@ public class Driving {
         stopDriving();
     }
 
-    void strafeClose(boolean blue, double x, double y) {
+    public void strafeClose(boolean blue, double x, double y) {
         double deltaY;
         double initDeltaY;
         double deltaX = x - getAccurateDistanceSensorReading(backDistance);

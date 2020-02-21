@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
@@ -16,13 +17,13 @@ public class TestSensor extends LinearOpMode {
     private Toggle.OneShot oneShotLight;
     //private MoacV_2 moac;
 
-    //private RevColorSensorV3 test;
+    private ColorSensor test;
     private boolean lightOn = true;
     //RevBlinkinLedDriver light;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //test = hardwareMap.get(RevColorSensorV3.class, "brickSensor");
+        test = hardwareMap.colorSensor.get("brickSensor");
         // moac = new MoacV_2(hardwareMap);
         oneShotLight = new Toggle.OneShot();
         frontDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
@@ -30,14 +31,14 @@ public class TestSensor extends LinearOpMode {
         rightDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
         leftDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");
         waitForStart();
-        //test.enableLed(true);
+        test.enableLed(true);
 //        light = hardwareMap.get(RevBlinkinLedDriver.class, "led");
 //        light.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
 
 
         while(this.opModeIsActive()){
 
-            //telemetry.addData("Color values", "Red: %d, Green: %d, Blue: %, Alpha: %d", test.red(), test.green(), test.blue(), test.alpha());
+            telemetry.addData("Color values", "Red: %d, Green: %d, Blue: %, Alpha: %d", test.red(), test.green(), test.blue(), test.alpha());
             if (oneShotLight.update(gamepad1.y)) {
                 lightOn = !lightOn;
                 //test.enableLed(!lightOn);
@@ -61,7 +62,6 @@ public class TestSensor extends LinearOpMode {
            }*/
 
 
-            telemetry.addData("front distance", frontDistance.getDistance(DistanceUnit.INCH));
             telemetry.addData("front distance", frontDistance.getDistance(DistanceUnit.INCH));
             telemetry.addData("back distance",backDistance.getDistance(DistanceUnit.INCH));
             telemetry.addData("back distance cmUltrasonic", backDistance.cmUltrasonic());

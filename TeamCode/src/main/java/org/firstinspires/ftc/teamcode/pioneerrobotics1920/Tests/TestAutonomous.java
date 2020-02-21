@@ -12,12 +12,7 @@ public class TestAutonomous extends Auton {
         drive = new Driving(this);
         nav = new Navigation(drive);
         nav.currPos(30, 30, 0);
-        telemetry.addData("init finished", null);
-        telemetry.update();
-        waitForStart();
-        double curTime = getRuntime();
-        while (getRuntime() < curTime + .5)
-            drive.libertyDrive(-.4, 0, 0);
+        drive.strafeClose(true, false, 36, 24, 2);
 //        drive.stopDriving();
 
     }
