@@ -20,9 +20,11 @@ public class LinearTeleOp extends LinearOpMode {
     private Toggle.OneShot lifterOneShot;
     private Toggle.OneShot game2DpadUpOneShot;
     private Toggle.OneShot game2DpadDownOneShot;
+    private Toggle.OneShot roleOneShot;
     public boolean blue = true;
 
     private boolean invert;
+    private boolean pushbot;
 
     private final double SCALE = 0.35;
 
@@ -62,11 +64,13 @@ public class LinearTeleOp extends LinearOpMode {
         horizSlideOneShot = new Toggle.OneShot();
         grabOneShot = new Toggle.OneShot();
         modeOneShot = new Toggle.OneShot();
+        roleOneShot = new Toggle.OneShot();
         dpadOneShot = new Toggle.OneShot();
         lifterOneShot = new Toggle.OneShot();
         game2DpadUpOneShot = new Toggle.OneShot();
         game2DpadDownOneShot = new Toggle.OneShot();
         invert = false;
+        pushbot = false;
         int counter = 0;
 
         telemetry.addData("init finished", null);
@@ -78,6 +82,7 @@ public class LinearTeleOp extends LinearOpMode {
 
         while (this.opModeIsActive()){
             if (modeOneShot.update(gamepad1.start)) invert = !invert;
+            if (roleOneShot.update(gamepad1.right_stick_button)) pushbot = !pushbot;
 
             if (invert) {
                 if (gamepad1.left_bumper)
@@ -119,6 +124,11 @@ public class LinearTeleOp extends LinearOpMode {
             else if (gamepad1.right_trigger > .5) moac.stacker.open();
             else moac.stacker.close();
 
+            if (pushbot) {
+
+            }
+
+
             if (gamepad1.x) {
                 moac.stacker.open();
                 int currentHeight = moac.linearSlide.slideVertical.getCurrentPosition();
@@ -150,7 +160,8 @@ public class LinearTeleOp extends LinearOpMode {
                 drive.resetGyro(this);
             }
 
-            drive.getMotorPosTelemetry();
+            //drive.getMotorPosTelemetry();
+            telemetry.addData("Role", (pushbot) ? "Pushbot" : "Stackbot");
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
             telemetry.addData("STONE LEVEL", "" + counter);
             telemetry.addData("Vertical slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideVertical));

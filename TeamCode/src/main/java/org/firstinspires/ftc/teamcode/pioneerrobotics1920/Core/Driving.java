@@ -163,7 +163,7 @@ public class Driving {
             if (factor>1) factor = 1;
             double newPower = power * factor;
             setAllDrivingPowers(Math.max(newPower, powerFloor));
-            getMotorPosTelemetry();
+
         }
         stopDriving();
     }

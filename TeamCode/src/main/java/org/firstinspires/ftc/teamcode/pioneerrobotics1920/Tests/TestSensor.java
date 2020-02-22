@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 @TeleOp(name = "Test Sensor", group = "test")
@@ -12,8 +14,10 @@ public class TestSensor extends LinearOpMode {
     private ModernRoboticsI2cRangeSensor backDistance;
     private ModernRoboticsI2cRangeSensor rightDistance;
     private ModernRoboticsI2cRangeSensor leftDistance;*/
+
+    private ColorSensor brickSensor;
     private Toggle.OneShot oneShotLight;
-    //private MoacV_2 moac;
+    private MoacV_2 moac;
 
     //    private ColorSensor test;
     private boolean lightOn = true;
@@ -24,9 +28,12 @@ public class TestSensor extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 //        test = hardwareMap.colorSensor.get("brickSensor");
-        // moac = new MoacV_2(hardwareMap);
+        moac = new MoacV_2(hardwareMap);
         driving = new Driving(this);
         oneShotLight = new Toggle.OneShot();
+
+        brickSensor = this.hardwareMap.get(ColorSensor.class, "brickSensor");
+
         /*frontDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
         backDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "backDistance");
         rightDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
@@ -61,10 +68,14 @@ public class TestSensor extends LinearOpMode {
            else {
                light.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
            }*/
+            telemetry.addData("Alpha", brickSensor.alpha());
+            telemetry.addData("ARGB", brickSensor.argb());
+            telemetry.addData("Blue", brickSensor.blue());
+            telemetry.addData("Red", brickSensor.red());
+            telemetry.addData("Green", brickSensor.green());
 
-
-            telemetry.addData("right distance", driving.getAccurateDistanceSensorReading(driving.rightDistance));
-            telemetry.addData("back distance", driving.getAccurateDistanceSensorReading(driving.backDistance));
+            //telemetry.addData("right distance", driving.getAccurateDistanceSensorReading(driving.rightDistance));
+            //telemetry.addData("back distance", driving.getAccurateDistanceSensorReading(driving.backDistance));
             /*telemetry.addData("back distance cmUltrasonic", backDistance.cmUltrasonic());
             telemetry.addData("back distance cmOptical", backDistance.cmOptical());
             telemetry.addData("right distance",rightDistance.getDistance(DistanceUnit.INCH));
