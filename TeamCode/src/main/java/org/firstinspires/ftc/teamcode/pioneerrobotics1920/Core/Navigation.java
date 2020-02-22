@@ -91,7 +91,7 @@ public class Navigation {
 
     public void arc(double angle1, double thresh, double turnPower, double drivePower) {
         double diff = getDiff(angle1);
-        double RAW_THRESH = thresh;
+        double RAW_THRESH = 5 + Math.abs(angle1) / 15;
         double TURN_POWER = turnPower;
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
             if (diff > 0)

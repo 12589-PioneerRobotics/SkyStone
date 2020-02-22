@@ -17,10 +17,10 @@ public class Driving {
     //instantiations
     LinearOpMode linearOpMode;
 
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backLeft;
-    private DcMotor backRight;
+    public DcMotor frontLeft;
+    public DcMotor frontRight;
+    public DcMotor backLeft;
+    public DcMotor backRight;
 
     public GyroWrapper gyro;
 
@@ -125,7 +125,7 @@ public class Driving {
 
     public double getAccurateDistanceSensorReading(ModernRoboticsI2cRangeSensor distanceSensor) {
         double result = distanceSensor.getDistance(DistanceUnit.INCH);
-        while (result > 50 || result < 0)
+        while (result > 80 || result < 0)
             result = distanceSensor.getDistance(DistanceUnit.INCH);
         return result;
     }
@@ -163,6 +163,7 @@ public class Driving {
             if (factor>1) factor = 1;
             double newPower = power * factor;
             setAllDrivingPowers(Math.max(newPower, powerFloor));
+            getMotorPosTelemetry();
         }
         stopDriving();
     }
@@ -234,17 +235,17 @@ public class Driving {
             }
         }
         if (direction.equals("right")) {
-            double diff = Operations.cmToInch(rightDistance.cmUltrasonic()) - distance;
+            double diff = getAccurateDistanceSensorReading(rightDistance) - distance;
             while (Math.abs(diff) > 50)
-                diff = Operations.cmToInch(rightDistance.cmUltrasonic()) - distance;
+                diff = getAccurateDistanceSensorReading(rightDistance) - distance;
             while(Math.abs(diff) > thresh) {
-                linearOpMode.telemetry.addData("Right Distance: ", Operations.cmToInch(rightDistance.cmUltrasonic()));
+                linearOpMode.telemetry.addData("Right Distance: ", getAccurateDistanceSensorReading(rightDistance));
                 linearOpMode.telemetry.update();
                 if (diff >= 0)
                     libertyDrive(0, 0, power);
                 else
                     libertyDrive(0, 0, -power);
-                diff = (Math.abs((Operations.cmToInch(rightDistance.cmUltrasonic()) - distance) - diff) > dx) ? diff : Operations.cmToInch(rightDistance.cmUltrasonic()) - distance;
+                diff = (Math.abs((getAccurateDistanceSensorReading(rightDistance) - distance) - diff) > dx) ? diff : getAccurateDistanceSensorReading(rightDistance) - distance;
             }
         }
         stopDriving();
@@ -331,6 +332,12 @@ public class Driving {
         while (linearOpMode.getRuntime() < curTime + seconds)
             libertyDrive(power, 0, 0);
         stopDriving();
+    }
+
+    public void smoothTimeBasedForward(double seconds, double power) {
+        double curTime = linearOpMode.getRuntime();
+        while (linearOpMode.getRuntime() < curTime + seconds)
+            libertyDrive(power, 0, 0);
     }
 
     public void timeBasedStrafe(double power, double seconds) {

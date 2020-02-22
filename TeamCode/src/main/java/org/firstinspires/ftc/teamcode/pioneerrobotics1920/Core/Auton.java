@@ -252,7 +252,7 @@ public class Auton extends LinearOpMode {
         switch (pos) {
             case LEFT:
                 if (round == 0) {
-                    drive.strafeClose(blue, 36, 36);
+                    drive.strafeClose(blue, 36, 24);
                     nav.turnTo(facingBlue);
 
                     takeStone();
@@ -544,8 +544,9 @@ public class Auton extends LinearOpMode {
         moac.stacker.open();
         moac.intake.takeIn();
         drive.forward(DISTANCE, .8, .5);
-        drive.forward(DISTANCE - 10, 1);
-        nav.arc(180, 3, .6, -.6);
+        nav.turnTo(90);
+
+        nav.arc(180, 1, .5, -.6);
 
         //drive.moveClose("back", backDistance, 1, 0f);
     }

@@ -45,13 +45,13 @@ public class ThreeStoneAutonTest extends Auton {
         {
             switch (skystonePos) {
                 case LEFT:
-                    drive.strafeClose(true, false, 26, 14, 1);
+                    drive.strafeClose(true, false, 24, 14, 1);
                     nav.turnTo(90);
                     takeStone(25, blue);
                     nav.turnTo(180);
                     break;
                 case CENTER:
-                    drive.strafeClose(true, false, 26, 10, 1);
+                    drive.strafeClose(true, false, 24, 10, 1);
                     nav.turnTo(90);
                     takeStone(25, blue);
                     nav.turnTo(180);
@@ -82,17 +82,17 @@ public class ThreeStoneAutonTest extends Auton {
         nav.turnTo(270);
 
         {
-            drive.moveClose("front", 32, .8, 0f);
+            drive.moveClose("front", 31, 5, 0f);
             moac.foundationGrabber.grabFoundation(true);
             nav.IamAt(drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7, 144 - 7 - drive.getAccurateDistanceSensorReading(drive.rightDistance));
             sleep(500);
             while (moac.linearSlide.slideHoriz.getCurrentPosition() > -2000 && moac.linearSlide.slideVertical.getCurrentPosition() < 490) {
                 moac.linearSlide.lifterPosition(500);
                 moac.linearSlide.horizPosition(-2050);
-                nav.arc(180, 5, .8, .6);
+                nav.arc(180, 1, .8, .65);
             }
             moac.stacker.open();
-            while (moac.linearSlide.slideHoriz.getCurrentPosition() > 1250) {
+            while (moac.linearSlide.slideHoriz.getCurrentPosition() > 1350) {
                 moac.linearSlide.lifterPosition(0);
                 moac.linearSlide.horizPosition(0);
             }
@@ -100,7 +100,7 @@ public class ThreeStoneAutonTest extends Auton {
             moac.foundationGrabber.grabFoundation(false);
             nav.turnTo(180);
             double curTime = getRuntime();
-            while (getRuntime() < curTime + .7)
+            while (getRuntime() < curTime + .5)
                 drive.libertyDrive(-.6, 0, 0);
             drive.stopDriving();
             if (!Operations.approximatelyEquals(drive.getAccurateDistanceSensorReading(drive.rightDistance), 25, 1))
@@ -108,6 +108,7 @@ public class ThreeStoneAutonTest extends Auton {
             nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance), 30);
         }
 
+        //Todo: DON"T turnTo 90 degree and then turn
         {
             switch (skystonePos) {
                 case LEFT:
@@ -116,6 +117,7 @@ public class ThreeStoneAutonTest extends Auton {
                     drive.strafeClose(true, false, 24, 36, 1);
                     nav.turnTo(90);
                     takeStone();
+                    nav.turnTo(180);
                     break;
                 case CENTER:
                     nav.moveToY(29);
@@ -123,6 +125,7 @@ public class ThreeStoneAutonTest extends Auton {
                     drive.strafeClose(true, false, 24, 29, 1);
                     nav.turnTo(90);
                     takeStone();
+                    nav.turnTo(180);
                     break;
                 case RIGHT:
                     nav.moveToY(20);
@@ -130,6 +133,7 @@ public class ThreeStoneAutonTest extends Auton {
                     drive.strafeClose(true, false, 24, 20, 1);
                     nav.turnTo(90);
                     takeStone();
+                    nav.turnTo(180);
                     break;
             }
             nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
@@ -143,6 +147,7 @@ public class ThreeStoneAutonTest extends Auton {
                 customizedForward(-(115 - nav.getY()), 1, .25, 42);
             x++;
         }
+
         nav.IamAt(drive.getAccurateDistanceSensorReading(drive.leftDistance) + 8, 110);
         moac.stacker.open();
         moac.linearSlide.horizPosition(0);
@@ -158,7 +163,7 @@ public class ThreeStoneAutonTest extends Auton {
                 case LEFT:
                     nav.moveToY(20);
                     nav.turnTo(90);
-                    drive.strafeClose(true, false, 26, 20, 1);
+                    drive.strafeClose(true, false, 24, 20, 1);
                     nav.turnTo(90);
                     takeStone();
                     break;

@@ -102,8 +102,8 @@ public class MoacV_2 {
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .21 : .77); //vals .21 .77
-            rightFoundationGrabber.setPosition((grab) ? .77 : .21);
+            leftFoundationGrabber.setPosition((grab) ? .25 : .84); //vals .21 .77
+            rightFoundationGrabber.setPosition((grab) ? .71 : .21);
         }
     }
 

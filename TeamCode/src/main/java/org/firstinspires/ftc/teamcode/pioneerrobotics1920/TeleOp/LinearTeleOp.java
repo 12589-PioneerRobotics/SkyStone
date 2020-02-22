@@ -150,6 +150,7 @@ public class LinearTeleOp extends LinearOpMode {
                 drive.resetGyro(this);
             }
 
+            drive.getMotorPosTelemetry();
             telemetry.addData("invert:", (invert)? "inverted":"not inverted");
             telemetry.addData("STONE LEVEL", "" + counter);
             telemetry.addData("Vertical slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideVertical));
