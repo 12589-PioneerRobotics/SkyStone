@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
-import android.util.Log;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -169,53 +167,24 @@ public class Driving {
     }
 
     public void moveClose(String direction, double distance, double power, float thresh){
-        double dx = 5;
+        double diff;
+        double initDiff;
         setAllDrivingPowers(0);
+        /*
         if (direction.equals("front")) {
-            Log.i("FrontDistance dist", frontDistance.getDistance(DistanceUnit.INCH) + "");
-            Log.i("Frontdistance cmultra", frontDistance.cmUltrasonic() + "");
             double diff = frontDistance.getDistance(DistanceUnit.INCH) - distance;
-            while (Math.abs(diff) > 50) {
+            while (Math.abs(diff) > 80) {
                 diff = frontDistance.getDistance(DistanceUnit.INCH) - distance;
-                Log.v("Front distance value", Operations.cmToInch(frontDistance.cmUltrasonic()) + "");
-                Log.v("diff in loopy", diff + "");
             }
-            /*
-            while ((Math.abs(diff)) > thresh) {
-                linearOpMode.telemetry.addData("Front Distance: ", frontDistance.getDistance(DistanceUnit.INCH));
-                linearOpMode.telemetry.update();
-                if (diff >= 0)
-                    libertyDrive(power, 0, 0);
-                else
-                    libertyDrive(-power, 0, 0);
-                //diff = frontDistance.getDistance(DistanceUnit.INCH)- distance;
-                diff = ((frontDistance.getDistance(DistanceUnit.INCH)- distance) > 100)? diff : frontDistance.getDistance(DistanceUnit.INCH) - distance;
-            }
-            */
             forward(diff, power, .6);
         }
 
         if (direction.equals("back")) {
             double value = backDistance.cmUltrasonic();
-            Log.i("BackDistance dist", backDistance.getDistance(DistanceUnit.INCH) + "");
-            Log.i("BackDistance cmUltra", backDistance.cmUltrasonic() + "");
             double diff = Operations.cmToInch(value) - distance;
-            while (Math.abs(diff) > 50) {
+            while (Math.abs(diff) > 80) {
                 diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
-                Log.v("Back distance value", Operations.cmToInch(backDistance.cmUltrasonic()) + "");
-                Log.v("diff in loopy", diff + "");
             }
-            /*
-            while (Math.abs(diff) > thresh) {
-                linearOpMode.telemetry.addData("Back Distance: ", backDistance.getDistance(DistanceUnit.INCH));
-                linearOpMode.telemetry.update();
-                if (diff>=0)
-                    libertyDrive(-power, 0, 0);
-                else
-                    libertyDrive(power, 0, 0);
-                diff = ((Operations.cmToInch(backDistance.cmUltrasonic()) - distance)>100)? diff:(Operations.cmToInch(backDistance.cmUltrasonic()) - distance);
-            }
-            */
             forward(-diff, power, .6);
         }
         if (direction.equals("left")) {
@@ -248,6 +217,31 @@ public class Driving {
                 diff = (Math.abs((getAccurateDistanceSensorReading(rightDistance) - distance) - diff) > dx) ? diff : getAccurateDistanceSensorReading(rightDistance) - distance;
             }
         }
+         */
+        switch (direction) {
+            case "front":
+                forward((distance - getAccurateDistanceSensorReading(frontDistance)), 1, .6);
+                break;
+            case "back":
+                forward((distance - getAccurateDistanceSensorReading(backDistance)), 1, .6);
+                break;
+            case "right":
+                diff = getAccurateDistanceSensorReading(rightDistance) - distance;
+                initDiff = diff;
+                while (Math.abs(diff) > thresh) {
+                    libertyDrive(0, 0, power * diff / initDiff);
+                    diff = getAccurateDistanceSensorReading(rightDistance) - distance;
+                }
+                break;
+            case "left":
+                diff = getAccurateDistanceSensorReading(leftDistance) - distance;
+                initDiff = diff;
+                while (Math.abs(diff) > thresh) {
+                    libertyDrive(0, 0, -power * diff / initDiff);
+                    diff = getAccurateDistanceSensorReading(leftDistance) - distance;
+                }
+                break;
+        }
         stopDriving();
     }
 
@@ -277,13 +271,16 @@ public class Driving {
         double dx = getAccurateDistanceSensorReading(sensorX) - x;
         double dy = getAccurateDistanceSensorReading(sensorY) - y;
 
+        double dxi = dx;
+        double dyi = dy;
+
         double strafePower = 0;
         double drivePower = 0;
 
         while (Math.abs(dx) > thresh || Math.abs(dy) > thresh) {
-            if (Math.abs(dx) > thresh) strafePower = Range.clip(4 * dx * sgnX / x, -1, 1);
+            if (Math.abs(dx) > thresh) strafePower = Range.clip(2 * dx * sgnX / dxi, -.8, .8);
             else strafePower = 0;
-            if (Math.abs(dy) > thresh) drivePower = Range.clip(dy * sgnY / y, -.5, .5);
+            if (Math.abs(dy) > thresh) drivePower = Range.clip(dy * sgnY / dyi, -.5, .5);
             else drivePower = 0;
             libertyDrive(drivePower, 0, strafePower);
             dx = getAccurateDistanceSensorReading(sensorX) - x;
