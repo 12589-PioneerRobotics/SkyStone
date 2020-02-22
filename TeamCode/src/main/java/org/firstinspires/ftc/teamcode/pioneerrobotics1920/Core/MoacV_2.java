@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,6 +16,7 @@ public class MoacV_2 {
     public Intake intake;
     public Driving drive;
     public Stacker stacker;
+
     //public IntakeSensor intakeSensor;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
@@ -136,11 +138,12 @@ public class MoacV_2 {
     public class Intake {
         DcMotor leftIntake;
         DcMotor rightIntake;
+        public ColorSensor brickSensor;
 
         Intake(HardwareMap hardwareMap) {
             leftIntake = hardwareMap.dcMotor.get("leftIntake");
             rightIntake = hardwareMap.dcMotor.get("rightIntake");
-
+            brickSensor = hardwareMap.get(ColorSensor.class, "brickSensor");
             leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
             rightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -151,6 +154,14 @@ public class MoacV_2 {
         public void takeIn() {
             leftIntake.setPower(.8);
             rightIntake.setPower(-.8);
+        }
+
+        public void pushbotTakeIn() {
+            while (brickSensor.alpha() > 12 || brickSensor.blue() > 3) {
+                leftIntake.setPower(.8);
+                rightIntake.setPower(-.8);
+            }
+            stopIntake();
         }
 
         public void spitOut() {

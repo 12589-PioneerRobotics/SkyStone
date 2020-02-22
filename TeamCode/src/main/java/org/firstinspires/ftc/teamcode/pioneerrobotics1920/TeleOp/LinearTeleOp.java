@@ -117,16 +117,18 @@ public class LinearTeleOp extends LinearOpMode {
             if (dpadOneShot.update(!(gamepad1.dpad_right || gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition()>5100) moac.linearSlide.horizSlidePower(0);
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
-            else if(gamepad1.right_trigger > .5) moac.intake.takeIn();
+            else if (gamepad1.right_trigger > .5) {
+                if (pushbot)
+                    moac.intake.pushbotTakeIn();
+                else
+                    moac.intake.takeIn();
+            }
             else moac.intake.stopIntake();
 
             if (gamepad1.back) moac.stacker.open();
             else if (gamepad1.right_trigger > .5) moac.stacker.open();
             else moac.stacker.close();
 
-            if (pushbot) {
-
-            }
 
 
             if (gamepad1.x) {

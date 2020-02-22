@@ -42,26 +42,29 @@ public class ThreeStoneAutonTest extends Auton {
         telemetry.addData("skystone Pos", detector.getPosition());
         telemetry.update();
 
+        drive.smoothTimeBasedForward(.4, .5);
+
         {
             switch (skystonePos) {
                 case LEFT:
-                    drive.strafeClose(true, false, 24, 14, 1);
+                    drive.strafeClose(true, false, 14, 24, 1);
                     nav.turnTo(90);
                     takeStone(25, blue);
                     nav.turnTo(180);
                     break;
                 case CENTER:
-                    drive.strafeClose(true, false, 24, 10, 1);
+                    drive.strafeClose(true, false, 10, 24, 1);
                     nav.turnTo(90);
                     takeStone(25, blue);
                     nav.turnTo(180);
                     break;
                 case RIGHT:
-                    nav.arc(180, 5, .6, .3);
+                    nav.arc(180, 1, .6, .3);
                     drive.strafeClose(true, true, 38, 15, 1);
                     nav.turnTo(180);
                     takeStoneAgainstWall();
                     drive.moveClose("right", 25, .6, 1);
+                    nav.turnTo(180);
                     break;
             }
             nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
@@ -108,38 +111,31 @@ public class ThreeStoneAutonTest extends Auton {
             nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance), 30);
         }
 
-        //Todo: DON"T turnTo 90 degree and then turn
         {
             switch (skystonePos) {
                 case LEFT:
                     nav.moveToY(36);
-                    nav.turnTo(90);
-                    drive.strafeClose(true, false, 24, 36, 1);
-                    nav.turnTo(90);
-                    takeStone();
+                    drive.strafeClose(true, true, 38, 36, 1);
                     nav.turnTo(180);
+                    takeStoneAgainstWall();
                     break;
                 case CENTER:
                     nav.moveToY(29);
-                    nav.turnTo(90);
-                    drive.strafeClose(true, false, 24, 29, 1);
-                    nav.turnTo(90);
-                    takeStone();
+                    drive.strafeClose(true, true, 38, 29, 1);
                     nav.turnTo(180);
+                    takeStoneAgainstWall();
                     break;
                 case RIGHT:
                     nav.moveToY(20);
-                    nav.turnTo(90);
-                    drive.strafeClose(true, false, 24, 20, 1);
-                    nav.turnTo(90);
-                    takeStone();
+                    drive.strafeClose(true, true, 38, 20, 1);
                     nav.turnTo(180);
+                    takeStoneAgainstWall();
                     break;
             }
+            drive.moveClose("right", 24, .6, 1);
+            nav.turnTo(180);
             nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
         }
-
-        nav.turnTo(180);
 
         int x = 0;
         while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
