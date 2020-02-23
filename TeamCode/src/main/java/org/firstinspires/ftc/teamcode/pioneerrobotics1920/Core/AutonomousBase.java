@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
@@ -38,6 +39,7 @@ public interface AutonomousBase {
         public SkystoneCVTest.Position skystonePos;
         public Navigation nav;
         public MoacV_2 moac;
+
 
         public AutonomousCore(OpMode opMode, boolean blue, boolean startBuilding, boolean left) {
 

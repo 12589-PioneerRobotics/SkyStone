@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -9,12 +10,12 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 import java.util.ArrayList;
 
 public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
-
+    public AutonomousBase.AutonomousCore auto;
+    public HardwareMap hardwareMap;
     public AutonomousBlue(boolean left, boolean startBuilding) {
         auto = new AutonomousCore(this, true, left, startBuilding);
     }
 
-    public AutonomousBase.AutonomousCore auto;
     int count = 0;
 
 
