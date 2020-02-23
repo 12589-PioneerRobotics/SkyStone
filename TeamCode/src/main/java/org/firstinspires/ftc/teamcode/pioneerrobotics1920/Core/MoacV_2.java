@@ -156,12 +156,11 @@ public class MoacV_2 {
             rightIntake.setPower(-.8);
         }
 
-        public void pushbotTakeIn() {
-            while (brickSensor.alpha() > 12 || brickSensor.blue() > 3) {
-                leftIntake.setPower(.8);
-                rightIntake.setPower(-.8);
-            }
-            stopIntake();
+        public boolean getStoneState() {
+            if (brickSensor.alpha() > 12 || brickSensor.blue() > 3)
+                return true;
+            else
+                return false;
         }
 
         public void spitOut() {

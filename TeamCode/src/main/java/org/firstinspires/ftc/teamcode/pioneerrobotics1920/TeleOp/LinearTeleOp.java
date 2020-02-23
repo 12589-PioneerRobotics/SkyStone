@@ -118,8 +118,8 @@ public class LinearTeleOp extends LinearOpMode {
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
             else if (gamepad1.right_trigger > .5) {
-                if (pushbot)
-                    moac.intake.pushbotTakeIn();
+                if (pushbot && moac.intake.getStoneState())
+                    moac.intake.stopIntake();
                 else
                     moac.intake.takeIn();
             }

@@ -78,7 +78,7 @@ public class Auton extends LinearOpMode {
                 waitForStart();
                 //*****************************WAIT FOR START*******************************
 
-                drive.forward(8, 1);
+
             }
             //startLoading
             else {
@@ -101,6 +101,7 @@ public class Auton extends LinearOpMode {
                 telemetry.addData("skystone Pos", detector.getPosition());
                 telemetry.update();
 
+                drive.smoothTimeBasedForward(.4, .5);
                 getBlueSkystone(skystonePos);
 
                 //next movement
@@ -109,7 +110,7 @@ public class Auton extends LinearOpMode {
                 moac.intake.stopIntake();
                 moac.stacker.close();
 
-                nav.backToY(120);
+                nav.backToY(115);
                 sleep(300);
                 if (Operations.approximatelyEquals(drive.backDistance.getDistance(DistanceUnit.INCH), 12, 2))
                     drive.moveClose("back", 14, 1, 0f);
@@ -119,13 +120,10 @@ public class Auton extends LinearOpMode {
 
                 getBlueSkystone(skystonePos);
 
-                nav.turnTo(180);
-
                 moac.intake.stopIntake();
                 moac.stacker.close();
 
-                //moac.linearSlide.horizPosition(-2050);
-                //nav.backToY(112);
+                moac.linearSlide.horizPosition(-2050);
                 int x = 0;
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
                     if (x == 0)
@@ -140,7 +138,25 @@ public class Auton extends LinearOpMode {
 
                 moac.linearSlide.horizPosition(0);
                 moac.linearSlide.lifterPosition(0);
+                getBlueSkystone(skystonePos);
+
+                moac.linearSlide.horizPosition(-2050);
+                x = 0;
+                while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
+                    if (x == 0)
+                        customizedForward(-(115 - nav.getY()), 1, .25, 48);
+                    x++;
+                }
+                nav.IamAt(drive.rightDistance.getDistance(DistanceUnit.INCH) + 8, 110);
+
+                moac.stacker.open();
+                sleep(500);
+                moac.stacker.close();
+
+                moac.linearSlide.horizPosition(0);
+                moac.linearSlide.lifterPosition(0);
                 park();
+
                 telemetry.addData("finish time", getRuntime());
                 telemetry.update();
             }
@@ -248,117 +264,83 @@ public class Auton extends LinearOpMode {
 
     //TODO: test right case
     public void getBlueSkystone(SkystoneCVTest.Position pos) {
-        int facingBlue = 90;
         switch (pos) {
             case LEFT:
                 if (round == 0) {
-                    drive.strafeClose(blue, 36, 24);
-                    nav.turnTo(facingBlue);
-
+                    drive.strafeClose(true, false, 36, 24, 1);
                     takeStone();
 
-//
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
-
-                    blueStones.remove(5);
-                    round++;
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
+                } else if (round == 1){
+                    drive.smoothTimeBasedForward(2, .5);
+                    drive.strafeClose(true, true, 38, 32, 2);
+                    takeStoneAgainstWall();
+                    drive.strafeClose(true, true, 24, 40, 2);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
+                    moac.intake.stopIntake();
+                    moac.stacker.close();
                 } else {
-                    nav.moveToY(blueStones.get(2).y);
-
-                    nav.turnTo(facingBlue);
-
-                    drive.strafeClose(blue, 26, 14);
-
-
-                    nav.turnTo(facingBlue);
-
-                    takeStone();
-
-//                    if (!Operations.approximatelyEquals(drive.backDistance.getDistance(DistanceUnit.INCH), 25, 1.5))
-//                        drive.moveClose("back", 25, 1, 0f);
-
-                    //nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
-
-                    blueStones.remove(2);
+                    drive.smoothTimeBasedForward(2.2, .6);
+                    drive.strafeClose(true, true, 38, 25, 2);
+                    takeStoneAgainstWall();
+                    drive.strafeClose(true, true, 24, 33, 2);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
+                    moac.intake.stopIntake();
+                    moac.stacker.close();
                 }
                 break;
 
             case CENTER:
                 if (round == 0) {
-                    drive.strafeClose(blue, 25, 29);
-
-                    nav.turnTo(facingBlue);//added to straighten out
+                    drive.strafeClose(true, false, 30, 24, 1);
                     takeStone();
-//                    if (!Operations.approximatelyEquals(drive.backDistance.getDistance(DistanceUnit.INCH), 25, 1.5))
-//                        drive.moveClose("back", 25, 1, 0f);
 
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
 
-                    //nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
-                    blueStones.remove(4);
-                    round++;
-                } else {
-                    nav.moveToY(blueStones.get(1).y + 10);
+                } else if (round ==1){
+                    drive.smoothTimeBasedForward(2.2, .6);
+                    drive.strafeClose(true, true, 38, 25, 2);
+                    takeStoneAgainstWall();
+                    drive.strafeClose(true, true, 24, 33, 2);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
+                    moac.intake.stopIntake();
+                    moac.stacker.close();
 
-                    nav.turnTo(facingBlue);
-
-                    drive.strafeClose(blue, 26, 10);
-
-                    nav.turnTo(facingBlue);//added to straighten out
-
-                    takeStone();
-//                    if (!Operations.approximatelyEquals(drive.backDistance.getDistance(DistanceUnit.INCH), 25, 1.5))
-//                        drive.moveClose("back", 25, 1, 0f);
-
-
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance));
-
-                    blueStones.remove(1);
+                } else{
+                    drive.smoothTimeBasedForward(2.3, .6);
+                    drive.strafeClose(true, true, 38, 14, 2);
+                    takeStoneAgainstWall();
+                    drive.strafeClose(true, true, 24, 28, 2);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
+                    moac.intake.stopIntake();
+                    moac.stacker.close();
                 }
                 break;
 
             case RIGHT:
                 if (round == 0) {
-                    drive.strafeClose(blue, 26, 20);
-
-                    nav.turnTo(facingBlue);//added to straighten out. May or may not be necessary
-
+                    drive.strafeClose(true, false, 20, 24, 1);
                     takeStone();
 
-//                    if (!Operations.approximatelyEquals(drive.backDistance.getDistance(DistanceUnit.INCH), 25, 1.5))
-//                        drive.moveClose("back", 25, 1, 0f);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
 
-                    //nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.rightDistance.getDistance(DistanceUnit.INCH) + 7);
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance));
-
-                    blueStones.remove(3);
-                    round++;
-                } else {
-                    nav.moveTo(nav.getX(), blueStones.get(0).y + 25);
-
-                    nav.turnTo(180);
-                    sleep(150);
-
-                    drive.moveClose("front", 15, .8, 0f);//moves to within 6 inches from the right wall
-
-                    nav.turnTo(180);
-
-                    drive.moveClose("right", 38, .7, 2f);
-                    nav.turnTo(180);
+                } else if (round == 1){
+                    drive.smoothTimeBasedForward(2, .6);
+                    drive.strafeClose(true, true, 38, 14, 2);
                     takeStoneAgainstWall();
-
-                    drive.moveClose("right", 25, .7, 1.5f);
-
-                    nav.turnTo(180);
-
-//                    if (!Operations.approximatelyEquals(drive.rightDistance.getDistance(DistanceUnit.INCH), 25, 1))
-//                        drive.moveClose("right", 25, .7, 1f);
-
-                    //nav.IamAt(drive.rightDistance.getDistance(DistanceUnit.INCH)+7, drive.frontDistance.getDistance(DistanceUnit.INCH) + 6);
-                    nav.IamAt(drive.backDistance.getDistance(DistanceUnit.INCH) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 6);
-
-                    blueStones.remove(1);
+                    drive.strafeClose(true, true, 24, 28, 2);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
+                    moac.intake.stopIntake();
+                    moac.stacker.close();
+                }
+                else {
+                    drive.smoothTimeBasedForward(1.5, .6);
+                    drive.strafeClose(true, true, 38, 48, 2);
+                    takeStoneAgainstWall();
+                    drive.strafeClose(true, true, 24, 48, 2);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
+                    moac.intake.stopIntake();
+                    moac.stacker.close();
                 }
                 break;
             default:
