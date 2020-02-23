@@ -123,7 +123,6 @@ public class Auton extends LinearOpMode {
                 moac.intake.stopIntake();
                 moac.stacker.close();
 
-                moac.linearSlide.horizPosition(-2050);
                 int x = 0;
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
                     if (x == 0)
@@ -140,7 +139,6 @@ public class Auton extends LinearOpMode {
                 moac.linearSlide.lifterPosition(0);
                 getBlueSkystone(skystonePos);
 
-                moac.linearSlide.horizPosition(-2050);
                 x = 0;
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
                     if (x == 0)
@@ -220,9 +218,6 @@ public class Auton extends LinearOpMode {
                 moac.intake.stopIntake();
                 moac.stacker.close();
 
-//                nav.backToY(110);
-//                while()
-//                drive.forwardPos(, .);
 
                 int x = 0;
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
@@ -272,7 +267,7 @@ public class Auton extends LinearOpMode {
 
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
                 } else if (round == 1){
-                    drive.smoothTimeBasedForward(2, .5);
+                    drive.smoothTimeBasedForward(1.2, 1);
                     drive.strafeClose(true, true, 38, 32, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 40, 2);
@@ -280,7 +275,7 @@ public class Auton extends LinearOpMode {
                     moac.intake.stopIntake();
                     moac.stacker.close();
                 } else {
-                    drive.smoothTimeBasedForward(2.2, .6);
+                    drive.smoothTimeBasedForward(1.3, 1);
                     drive.strafeClose(true, true, 38, 25, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 33, 2);
@@ -298,7 +293,7 @@ public class Auton extends LinearOpMode {
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
 
                 } else if (round ==1){
-                    drive.smoothTimeBasedForward(2.2, .6);
+                    drive.smoothTimeBasedForward(1.3, 1);
                     drive.strafeClose(true, true, 38, 25, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 33, 2);
@@ -307,7 +302,7 @@ public class Auton extends LinearOpMode {
                     moac.stacker.close();
 
                 } else{
-                    drive.smoothTimeBasedForward(2.3, .6);
+                    drive.smoothTimeBasedForward(1.4, 1);
                     drive.strafeClose(true, true, 38, 14, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 28, 2);
@@ -325,7 +320,7 @@ public class Auton extends LinearOpMode {
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
 
                 } else if (round == 1){
-                    drive.smoothTimeBasedForward(2, .6);
+                    drive.smoothTimeBasedForward(1.4, 1);
                     drive.strafeClose(true, true, 38, 14, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 28, 2);
@@ -334,7 +329,7 @@ public class Auton extends LinearOpMode {
                     moac.stacker.close();
                 }
                 else {
-                    drive.smoothTimeBasedForward(1.5, .6);
+                    drive.smoothTimeBasedForward(1.5, 1);
                     drive.strafeClose(true, true, 38, 48, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 48, 2);
@@ -665,7 +660,7 @@ public class Auton extends LinearOpMode {
             drive.setAllDrivingPowers(Math.max(newPower, powerFloor));
             if (Math.abs(clicks - drive.averageEncoderPositions()) < (value * drive.CLICKS_PER_INCH)) {
                 moac.linearSlide.horizPosition(-2050);
-                moac.linearSlide.lifterPosition(600);
+
             }
         }
         drive.stopDriving();
