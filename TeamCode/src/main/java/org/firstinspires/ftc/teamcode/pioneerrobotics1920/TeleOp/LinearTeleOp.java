@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,6 +27,7 @@ public class LinearTeleOp extends LinearOpMode {
     private Toggle.OneShot roleOneShot;
     public boolean blue = true;
 
+    View relativeLayout;
     private boolean invert;
     private boolean pushbot;
 
@@ -57,6 +62,12 @@ public class LinearTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+
+        relativeLayout.setBackgroundColor(Color.WHITE);
+
         drive = new Driving(this);
         Navigation navigation = new Navigation(drive);
         moac = new MoacV_2(hardwareMap);
@@ -118,12 +129,19 @@ public class LinearTeleOp extends LinearOpMode {
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
             else if (gamepad1.right_trigger > .5) {
-                if (pushbot && moac.intake.getStoneState())
+                if (pushbot && moac.intake.getStoneState()) {
                     moac.intake.stopIntake();
-                else
+                    relativeLayout.setBackgroundColor(Color.YELLOW);
+                }
+                else {
                     moac.intake.takeIn();
+                    relativeLayout.setBackgroundColor(Color.WHITE);
+                }
             }
-            else moac.intake.stopIntake();
+            else {
+                moac.intake.stopIntake();
+                relativeLayout.setBackgroundColor(Color.WHITE);
+            }
 
             if (gamepad1.back) moac.stacker.open();
             else if (gamepad1.right_trigger > .5) moac.stacker.open();
