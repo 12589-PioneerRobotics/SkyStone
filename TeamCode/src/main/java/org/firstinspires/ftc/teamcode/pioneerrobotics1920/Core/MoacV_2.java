@@ -157,7 +157,7 @@ public class MoacV_2 {
         }
 
         public boolean getStoneState() {
-            if (brickSensor.alpha() > 12 || brickSensor.blue() > 3)
+            if (brickSensor.alpha() < 12 || brickSensor.blue() < 3)
                 return true;
             else
                 return false;
