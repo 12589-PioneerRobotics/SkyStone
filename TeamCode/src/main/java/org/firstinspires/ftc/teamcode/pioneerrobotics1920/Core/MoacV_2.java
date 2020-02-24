@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.ArrayList;
+
 public class MoacV_2 {
     //TODO: Add these back once hardware map is complete
 
@@ -140,6 +142,18 @@ public class MoacV_2 {
         DcMotor rightIntake;
         public ColorSensor brickSensor;
 
+        int red;
+        int green;
+        int blue;
+
+        boolean hasStone;
+
+        final double THRESH = 20;
+
+        ArrayList<Double> differences = new ArrayList<>();
+
+        /*File file = new File("org/firstinspires/ftc/teamcode/pioneerrobotics1920/Tests/Color_Values.txt");
+        FileStr*/
         Intake(HardwareMap hardwareMap) {
             leftIntake = hardwareMap.dcMotor.get("leftIntake");
             rightIntake = hardwareMap.dcMotor.get("rightIntake");
@@ -149,6 +163,12 @@ public class MoacV_2 {
 
             leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            red = brickSensor.red();
+            green = brickSensor.green();
+            blue = brickSensor.blue();
+
+            hasStone = false;
         }
 
         public void takeIn() {
@@ -157,10 +177,21 @@ public class MoacV_2 {
         }
 
         public boolean getStoneState() {
-            if (brickSensor.alpha() < 12 || brickSensor.blue() < 3)
+            if (brickSensor.alpha() < 10 || brickSensor.blue() < 2)
                 return true;
             else
                 return false;
+        }
+
+        public boolean detectStone() {
+            double difference = Math.sqrt(Math.pow(brickSensor.red() - red, 2) + Math.pow(brickSensor.green() - green, 2) + Math.pow(brickSensor.blue() - blue, 2));
+            if (difference > THRESH)
+                hasStone = !hasStone;
+            this.red = brickSensor.red();
+            this.green = brickSensor.green();
+            this.blue = brickSensor.blue();
+            differences.add(difference);
+            return hasStone;
         }
 
         public void spitOut() {
@@ -172,6 +203,10 @@ public class MoacV_2 {
         public void stopIntake() {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
+        }
+
+        public void calibrition() {
+
         }
     }
 

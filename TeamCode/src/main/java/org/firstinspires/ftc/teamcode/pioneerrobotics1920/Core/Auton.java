@@ -126,7 +126,7 @@ public class Auton extends LinearOpMode {
                 int x = 0;
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
                     if (x == 0)
-                        customizedForward(-(115 - nav.getY()), 1, .25, 48);
+                        customizedForward(-(110 - nav.getY()), 1, .25, 48);
                     x++;
                 }
                 nav.IamAt(drive.rightDistance.getDistance(DistanceUnit.INCH) + 8, 110);
@@ -265,9 +265,9 @@ public class Auton extends LinearOpMode {
                     drive.strafeClose(true, false, 36, 24, 1);
                     takeStone();
 
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
                 } else if (round == 1){
-                    drive.smoothTimeBasedForward(1.2, 1);
+                    drive.smoothTimeBasedForward(1.2, .7);
                     drive.strafeClose(true, true, 38, 32, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 40, 2);
@@ -275,7 +275,7 @@ public class Auton extends LinearOpMode {
                     moac.intake.stopIntake();
                     moac.stacker.close();
                 } else {
-                    drive.smoothTimeBasedForward(1.3, 1);
+                    drive.smoothTimeBasedForward(1.3, .7);
                     drive.strafeClose(true, true, 38, 25, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 33, 2);
@@ -290,7 +290,7 @@ public class Auton extends LinearOpMode {
                     drive.strafeClose(true, false, 30, 24, 1);
                     takeStone();
 
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
 
                 } else if (round ==1){
                     drive.smoothTimeBasedForward(1.3, 1);
@@ -317,7 +317,7 @@ public class Auton extends LinearOpMode {
                     drive.strafeClose(true, false, 20, 24, 1);
                     takeStone();
 
-                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.backDistance) + 7, drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7);
+                    nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.backDistance) + 7);
 
                 } else if (round == 1){
                     drive.smoothTimeBasedForward(1.4, 1);

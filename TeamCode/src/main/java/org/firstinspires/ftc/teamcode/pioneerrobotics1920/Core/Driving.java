@@ -220,10 +220,10 @@ public class Driving {
          */
         switch (direction) {
             case "front":
-                forward((distance - getAccurateDistanceSensorReading(frontDistance)), 1, .6);
+                forward((getAccurateDistanceSensorReading(frontDistance) - distance), 1, .6);
                 break;
             case "back":
-                forward((distance - getAccurateDistanceSensorReading(backDistance)), 1, .6);
+                forward((getAccurateDistanceSensorReading(backDistance) - distance), 1, .6);
                 break;
             case "right":
                 diff = getAccurateDistanceSensorReading(rightDistance) - distance;
@@ -268,6 +268,10 @@ public class Driving {
             sgnY = -1;
         }
 
+        double angle0 = gyro.getValueContinuous();
+        double angleDiff = 0;
+        double turnCorrectThresh = 2;
+
         double dx = getAccurateDistanceSensorReading(sensorX) - x;
         double dy = getAccurateDistanceSensorReading(sensorY) - y;
 
@@ -276,13 +280,19 @@ public class Driving {
 
         double strafePower = 0;
         double drivePower = 0;
+        double turnPower = 0;
+
+        double correctionPower = 0.02;
 
         while (Math.abs(dx) > thresh || Math.abs(dy) > thresh) {
-            if (Math.abs(dx) > thresh) strafePower = Range.clip(2 * dx * sgnX / dxi, -.8, .8);
+            angleDiff = angle0 - gyro.getValueContinuous();
+            if (Math.abs(dx) > thresh)
+                strafePower = Range.clip(2 * dx * sgnX / Math.abs(dxi), -.8, .8);
             else strafePower = 0;
-            if (Math.abs(dy) > thresh) drivePower = Range.clip(dy * sgnY / dyi, -.5, .5);
+            if (Math.abs(dy) > thresh) drivePower = Range.clip(dy * sgnY / Math.abs(dyi), -.5, .5);
             else drivePower = 0;
-            libertyDrive(drivePower, 0, strafePower);
+            turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
+            libertyDrive(drivePower, turnPower, strafePower);
             dx = getAccurateDistanceSensorReading(sensorX) - x;
             dy = getAccurateDistanceSensorReading(sensorY) - y;
             linearOpMode.telemetry.addData("dx", dx);
@@ -346,7 +356,6 @@ public class Driving {
 
     public void libertyDrive(double drive, double turn, double strafe) {
         setDrivingModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         double factor = Math.abs(drive) + Math.abs(turn) + Math.abs(strafe);
         if (factor <= 1)
             factor = 1;
@@ -354,6 +363,7 @@ public class Driving {
         frontLeft.setPower((drive + strafe + turn) / factor);
         backRight.setPower((drive + strafe - turn) / factor);
         frontRight.setPower((drive - strafe - turn) / factor);
+        getPowersTelemetry();
     }
 
     public void correctStrafe(double power, double startAngle){

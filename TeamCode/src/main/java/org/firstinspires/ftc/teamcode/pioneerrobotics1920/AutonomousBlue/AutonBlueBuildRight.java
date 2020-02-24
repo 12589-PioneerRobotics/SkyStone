@@ -9,8 +9,8 @@ public class AutonBlueBuildRight extends AutonomousBlue {
     public AutonBlueBuildRight(){
         super(false, false);
 //        auto.blue = true;
-        auto.setBlue(true);
+        /*auto.setBlue(true);
         auto.startBuilding = true;
-        auto.left = false;
+        auto.left = false;*/
     }
 }

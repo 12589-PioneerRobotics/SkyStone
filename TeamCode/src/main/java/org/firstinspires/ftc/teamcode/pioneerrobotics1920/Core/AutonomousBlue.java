@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 import java.util.ArrayList;
 
 public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
-    public AutonomousBase.AutonomousCore auto;
+    public AutonomousCore auto;
     public HardwareMap hardwareMap;
     public AutonomousBlue(boolean left, boolean startBuilding) {
         auto = new AutonomousCore(this, true, left, startBuilding);
@@ -19,7 +18,7 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
     int count = 0;
 
 
-    private ArrayList<Stones> stones = new ArrayList<>();
+    private ArrayList<AutonomousCore.Stones> stones = new ArrayList<>();
 
 
     @Override
@@ -166,12 +165,12 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
     public void runOpMode() throws InterruptedException {
 
 
-        stones.add(new Stones(37, 8));
-        stones.add(new Stones(37, 15));
-        stones.add(new Stones(37, 24));
+        /*stones.add(new AutonomousCore.Stones(37, 8));
+        stones.add(new AutonomousCore.Stones(37, 15));
+        stones.add(new AutonomousCore.Stones(37, 24));
         stones.add(new Stones(37, 32));
         stones.add(new Stones(37, 40));
-        stones.add(new Stones(37, 48));
+        stones.add(new Stones(37, 48));*/
         
         /*auto.detector = new SkystoneCVTest();
         auto.detector.changeCrop(auto.blue);

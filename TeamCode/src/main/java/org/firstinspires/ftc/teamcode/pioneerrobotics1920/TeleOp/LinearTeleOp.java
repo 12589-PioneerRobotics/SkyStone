@@ -67,7 +67,11 @@ public class LinearTeleOp extends LinearOpMode {
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
-        relativeLayout.setBackgroundColor(Color.WHITE);
+        relativeLayout.post(new Runnable() {
+            public void run() {
+                relativeLayout.setBackgroundColor(Color.WHITE);
+            }
+        });
 
         drive = new Driving(this);
         Navigation navigation = new Navigation(drive);
@@ -149,7 +153,11 @@ public class LinearTeleOp extends LinearOpMode {
             }
             else {
                 moac.intake.stopIntake();
-                relativeLayout.setBackgroundColor(Color.WHITE);
+                relativeLayout.post(new Runnable() {
+                    public void run() {
+                        relativeLayout.setBackgroundColor(Color.WHITE);
+                    }
+                });
             }
 
             if (gamepad1.back) moac.stacker.open();
