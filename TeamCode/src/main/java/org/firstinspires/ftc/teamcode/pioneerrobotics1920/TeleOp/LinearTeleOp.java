@@ -35,6 +35,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     private final int[] LIFTER_PRESETS = {0, 600, 1300, 2050, 2800, 3550, 4300, 4950};
 
+
     /**
      * CONTROLS:
      * <p>
@@ -131,11 +132,19 @@ public class LinearTeleOp extends LinearOpMode {
             else if (gamepad1.right_trigger > .5) {
                 if (pushbot && moac.intake.getStoneState()) {
                     moac.intake.stopIntake();
-                    relativeLayout.setBackgroundColor(Color.YELLOW);
+                    relativeLayout.post(new Runnable() {
+                        public void run() {
+                            relativeLayout.setBackgroundColor(Color.GREEN);
+                        }
+                    });
                 }
                 else {
                     moac.intake.takeIn();
-                    relativeLayout.setBackgroundColor(Color.WHITE);
+                    relativeLayout.post(new Runnable() {
+                        public void run() {
+                            relativeLayout.setBackgroundColor(Color.WHITE);
+                        }
+                    });
                 }
             }
             else {
@@ -189,4 +198,5 @@ public class LinearTeleOp extends LinearOpMode {
             telemetry.update();
         }
     }
+
 }
