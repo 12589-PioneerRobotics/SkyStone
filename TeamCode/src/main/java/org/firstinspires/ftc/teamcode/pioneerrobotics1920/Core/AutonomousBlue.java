@@ -11,14 +11,14 @@ import java.util.ArrayList;
 public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
     public AutonomousCore auto;
     public HardwareMap hardwareMap;
+
     public AutonomousBlue(boolean left, boolean startBuilding) {
         auto = new AutonomousCore(this, true, left, startBuilding);
     }
 
     int count = 0;
 
-
-    private ArrayList<AutonomousCore.Stones> stones = new ArrayList<>();
+    private ArrayList<Stones> stones = new ArrayList<>();
 
 
     @Override
@@ -164,13 +164,12 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
     @Override
     public void runOpMode() throws InterruptedException {
 
-
-        /*stones.add(new AutonomousCore.Stones(37, 8));
-        stones.add(new AutonomousCore.Stones(37, 15));
-        stones.add(new AutonomousCore.Stones(37, 24));
+        stones.add(new Stones(37, 8));
+        stones.add(new Stones(37, 15));
+        stones.add(new Stones(37, 24));
         stones.add(new Stones(37, 32));
         stones.add(new Stones(37, 40));
-        stones.add(new Stones(37, 48));*/
+        stones.add(new Stones(37, 48));
         
         /*auto.detector = new SkystoneCVTest();
         auto.detector.changeCrop(auto.blue);
@@ -240,6 +239,15 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
             auto.moac.linearSlide.horizPosition(0);
             auto.moac.linearSlide.lifterPosition(0);
             park();
+        }
+    }
+
+    public class Stones {
+        public int x, y;
+
+        public Stones(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }
