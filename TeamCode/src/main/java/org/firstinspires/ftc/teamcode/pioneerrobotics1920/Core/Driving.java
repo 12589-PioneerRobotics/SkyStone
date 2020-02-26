@@ -205,7 +205,7 @@ public class Driving {
                 diff = getAccurateDistanceSensorReading(rightDistance) - distance;
                 initDiff = diff;
                 while (Math.abs(diff) > thresh) {
-                    libertyDrive(0, 0, power * diff / initDiff);
+                    libertyDrive(0, 0, power * diff / Math.abs(initDiff));
                     diff = getAccurateDistanceSensorReading(rightDistance) - distance;
                 }
                 break;
@@ -213,7 +213,7 @@ public class Driving {
                 diff = getAccurateDistanceSensorReading(leftDistance) - distance;
                 initDiff = diff;
                 while (Math.abs(diff) > thresh) {
-                    libertyDrive(0, 0, -power * diff / initDiff);
+                    libertyDrive(0, 0, -power * diff / Math.abs(initDiff));
                     diff = getAccurateDistanceSensorReading(leftDistance) - distance;
                 }
                 break;
