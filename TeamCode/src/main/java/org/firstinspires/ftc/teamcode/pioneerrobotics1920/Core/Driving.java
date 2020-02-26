@@ -177,7 +177,7 @@ public class Driving {
             case "front":
                 if (useEncoder) {
                     stopDriving();
-                    forward((getAccurateDistanceSensorReading(frontDistance) - distance), 1, .6);
+                    forward(-(getAccurateDistanceSensorReading(frontDistance) - distance), 1, .6);
                 } else {
                     diff = getAccurateDistanceSensorReading(frontDistance) - distance;
                     initDiff = diff;
