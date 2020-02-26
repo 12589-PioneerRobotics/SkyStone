@@ -27,6 +27,7 @@ public class Auton extends LinearOpMode {
     public Navigation nav;
     private ArrayList<Stones> blueStones = new ArrayList<>();
     private ArrayList<Stones> redStones = new ArrayList<>();
+    int count = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -35,6 +36,7 @@ public class Auton extends LinearOpMode {
         drive = new Driving(this);
         nav = new Navigation(drive);
         moac = new MoacV_2(this.hardwareMap);
+
 
         //add stones into the array
         {
@@ -267,15 +269,15 @@ public class Auton extends LinearOpMode {
 
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
                 } else if (round == 1){
-                    drive.smoothTimeBasedForward(1.2, .7);
-                    drive.strafeClose(true, true, 38, 32, 2);
+                    drive.smoothTimeBasedForward(.6, 1);
+                    drive.strafeClose(true, true, 38, 30, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 40, 2);
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
                     moac.intake.stopIntake();
                     moac.stacker.close();
                 } else {
-                    drive.smoothTimeBasedForward(1.3, .7);
+                    drive.smoothTimeBasedForward(.6, 1);
                     drive.strafeClose(true, true, 38, 25, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 33, 2);
@@ -523,7 +525,7 @@ public class Auton extends LinearOpMode {
         drive.forward(DISTANCE, .8, .5);
         nav.turnTo(90);
 
-        nav.arc(180, 1, .5, -.6);
+        nav.arc(180, 1, .5, -.7);
 
         //drive.moveClose("back", backDistance, 1, 0f);
     }
@@ -576,10 +578,15 @@ public class Auton extends LinearOpMode {
                 nav.IamAt(40 - drive.backDistance.getDistance(DistanceUnit.INCH), 136 - drive.rightDistance.getDistance(DistanceUnit.INCH));
                 //drive.forward(-2,1,.7);
                 sleep(500);
-                while (moac.linearSlide.slideHoriz.getCurrentPosition() > -2000 && moac.linearSlide.slideVertical.getCurrentPosition() < 490) {
-                    moac.linearSlide.lifterPosition(500);
+                while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
+                    moac.linearSlide.lifterPosition(300);
                     moac.linearSlide.horizPosition(-2050);
-                    nav.arc(180, 5, 1, .7);
+                    drive.linearOpMode.telemetry.addData("Vert Slide Pos", moac.linearSlide.slideVertical.getCurrentPosition());
+                    if (count == 0)
+                        nav.arc(255, 1, 1, .5);
+                    drive.forward(3, 1);
+                    nav.arc(180, 1, 1, 1);
+                    count++;
                 }
                 moac.stacker.open();
                 sleep(150);
@@ -591,9 +598,6 @@ public class Auton extends LinearOpMode {
                     drive.libertyDrive(-.6, 0, 0);
                 drive.stopDriving();
                 moac.foundationGrabber.grabFoundation(false);
-
-//                if (!Operations.approximatelyEquals(drive.rightDistance.getDistance(DistanceUnit.INCH), 26, 2))
-//                    drive.moveClose("right", 25, .5, 1f);
 
                 nav.turnTo(180);
 
@@ -665,6 +669,7 @@ public class Auton extends LinearOpMode {
         }
         drive.stopDriving();
     }
+
 
     class Stones {
         public int x, y;

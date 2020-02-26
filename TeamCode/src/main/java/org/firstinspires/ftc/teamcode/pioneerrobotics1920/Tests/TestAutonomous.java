@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Auton;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 @Autonomous(name = "Test Autonomous", group = "Test")
 public class TestAutonomous extends Auton {
@@ -18,9 +17,17 @@ public class TestAutonomous extends Auton {
         nav.currPos(9, 36, 90);
         waitForStart();
 
-        drive.smoothTimeBasedForward(.4, .5);
-
-        drive.strafeClose(true, false, 36, 24, 2);
+        drive.smoothTimeBasedForward(.3, .5);
+        moac.intake.takeIn();
+        moac.stacker.open();
+        drive.strafeClose(true, false, 36, 24, 2, false);
+        drive.timeBasedForward(.4, .5);
+        drive.moveClose("back", 48, .8, 2, false, false);
+        nav.arc(180, 1, .6, .6);
+        moac.stacker.close();
+        moac.intake.stopIntake();
+        drive.stopDriving();
+        /*
         //drive.forward(-20, 1);
         takeStone();
         nav.turnTo(180);
@@ -34,7 +41,7 @@ public class TestAutonomous extends Auton {
         nav.turnTo(270);
         {
             drive.moveClose("front", 31, .5, 0f);
-            //moac.foundationGrabber.grabFoundation(true);
+            moac.foundationGrabber.grabFoundation(true);
             nav.IamAt(drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7, 144 - 7 - drive.getAccurateDistanceSensorReading(drive.rightDistance));
             sleep(500);
             while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
@@ -52,7 +59,7 @@ public class TestAutonomous extends Auton {
                 moac.linearSlide.horizPosition(0);
             }
             moac.stacker.close();
-            //moac.foundationGrabber.grabFoundation(false);
+            moac.foundationGrabber.grabFoundation(false);
             nav.turnTo(180);
             drive.timeBasedForward(.5, -.6);
             if (!Operations.approximatelyEquals(drive.getAccurateDistanceSensorReading(drive.rightDistance), 25, 1))
@@ -67,6 +74,8 @@ public class TestAutonomous extends Auton {
         nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance), drive.getAccurateDistanceSensorReading(drive.frontDistance));
         moac.intake.stopIntake();
         moac.stacker.close();
+
+         */
 
     }
 }

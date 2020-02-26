@@ -166,64 +166,40 @@ public class Driving {
         stopDriving();
     }
 
-    public void moveClose(String direction, double distance, double power, float thresh){
+    public void moveClose(String direction, double distance, double power, float thresh) {
+        moveClose(direction, distance, power, thresh, true, true);
+    }
+
+    public void moveClose(String direction, double distance, double power, float thresh, boolean useEncoder, boolean stop) {
         double diff;
         double initDiff;
-        setAllDrivingPowers(0);
-        /*
-        if (direction.equals("front")) {
-            double diff = frontDistance.getDistance(DistanceUnit.INCH) - distance;
-            while (Math.abs(diff) > 80) {
-                diff = frontDistance.getDistance(DistanceUnit.INCH) - distance;
-            }
-            forward(diff, power, .6);
-        }
-
-        if (direction.equals("back")) {
-            double value = backDistance.cmUltrasonic();
-            double diff = Operations.cmToInch(value) - distance;
-            while (Math.abs(diff) > 80) {
-                diff = Operations.cmToInch(backDistance.cmUltrasonic()) - distance;
-            }
-            forward(-diff, power, .6);
-        }
-        if (direction.equals("left")) {
-            double diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
-            while (Math.abs(diff) > 50)
-                diff = leftDistance.getDistance(DistanceUnit.INCH) - distance;
-            sleep(10);
-            while(Math.abs(diff) > thresh) {
-                linearOpMode.telemetry.addData( "Left Distance: ", leftDistance.getDistance(DistanceUnit.INCH));
-                linearOpMode.telemetry.update();
-                if (diff >= 0)
-                    libertyDrive(0, 0, -power);
-                else
-                    libertyDrive(0, 0, power);
-
-                diff = (Math.abs(((leftDistance.getDistance(DistanceUnit.INCH) - distance)) - diff) > dx) ? diff : (leftDistance.getDistance(DistanceUnit.INCH) - distance);
-            }
-        }
-        if (direction.equals("right")) {
-            double diff = getAccurateDistanceSensorReading(rightDistance) - distance;
-            while (Math.abs(diff) > 50)
-                diff = getAccurateDistanceSensorReading(rightDistance) - distance;
-            while(Math.abs(diff) > thresh) {
-                linearOpMode.telemetry.addData("Right Distance: ", getAccurateDistanceSensorReading(rightDistance));
-                linearOpMode.telemetry.update();
-                if (diff >= 0)
-                    libertyDrive(0, 0, power);
-                else
-                    libertyDrive(0, 0, -power);
-                diff = (Math.abs((getAccurateDistanceSensorReading(rightDistance) - distance) - diff) > dx) ? diff : getAccurateDistanceSensorReading(rightDistance) - distance;
-            }
-        }
-         */
         switch (direction) {
             case "front":
-                forward((getAccurateDistanceSensorReading(frontDistance) - distance), 1, .6);
+                if (useEncoder) {
+                    stopDriving();
+                    forward((getAccurateDistanceSensorReading(frontDistance) - distance), 1, .6);
+                } else {
+                    diff = getAccurateDistanceSensorReading(frontDistance) - distance;
+                    initDiff = diff;
+                    while (Math.abs(diff) > thresh) {
+                        libertyDrive(Range.clip(diff * power / Math.abs(initDiff), -power, power), 0, 0);
+                        diff = getAccurateDistanceSensorReading(frontDistance) - distance;
+                    }
+                }
                 break;
             case "back":
-                forward((getAccurateDistanceSensorReading(backDistance) - distance), 1, .6);
+                if (useEncoder) {
+                    stopDriving();
+                    forward((getAccurateDistanceSensorReading(backDistance) - distance), 1, .6);
+                } else {
+                    diff = getAccurateDistanceSensorReading(backDistance) - distance;
+                    initDiff = diff;
+                    while (Math.abs(diff) > thresh) {
+                        libertyDrive(Range.clip(-diff * power / Math.abs(initDiff), -power, power), 0, 0);
+                        diff = getAccurateDistanceSensorReading(backDistance) - distance;
+                    }
+
+                }
                 break;
             case "right":
                 diff = getAccurateDistanceSensorReading(rightDistance) - distance;
@@ -242,10 +218,15 @@ public class Driving {
                 }
                 break;
         }
-        stopDriving();
+        if (stop)
+            stopDriving();
     }
 
     public void strafeClose(boolean right, boolean front, float x, float y, float thresh) {
+        strafeClose(right, front, x, y, thresh, true);
+    }
+
+    public void strafeClose(boolean right, boolean front, float x, float y, float thresh, boolean stop) {
         int sgnX;
         int sgnY;
 
@@ -287,9 +268,10 @@ public class Driving {
         while (Math.abs(dx) > thresh || Math.abs(dy) > thresh) {
             angleDiff = angle0 - gyro.getValueContinuous();
             if (Math.abs(dx) > thresh)
-                strafePower = Range.clip(2 * dx * sgnX / Math.abs(dxi), -.8, .8);
+                strafePower = Range.clip(2 * dx * sgnX / Math.abs(dxi), -.7, .7);
             else strafePower = 0;
-            if (Math.abs(dy) > thresh) drivePower = Range.clip(dy * sgnY / Math.abs(dyi), -.5, .5);
+            if (Math.abs(dy) > thresh)
+                drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
             libertyDrive(drivePower, turnPower, strafePower);
@@ -299,7 +281,8 @@ public class Driving {
             linearOpMode.telemetry.addData("dy", dy);
             linearOpMode.telemetry.update();
         }
-        stopDriving();
+
+        if (stop) stopDriving();
     }
 
     public void strafeClose(boolean blue, double x, double y) {

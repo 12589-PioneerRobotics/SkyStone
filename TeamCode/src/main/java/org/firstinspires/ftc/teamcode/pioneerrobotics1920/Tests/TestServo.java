@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidOrientation;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name = "TestServo", group = "test")
 public class TestServo extends OpMode {
@@ -14,11 +13,11 @@ public class TestServo extends OpMode {
 
     @Override
     public void init() {
-        servo1 = hardwareMap.servo.get("leftFoundationGrabber");
-        servo2 = hardwareMap.servo.get("rightFoundationGrabber");
-        orientation.setAngleUnit(AngleUnit.DEGREES);
-        orientation.startListening();
-
+        //servo1 = hardwareMap.servo.get("leftFoundationGrabber");
+        //servo2 = hardwareMap.servo.get("rightFoundationGrabber");
+        //orientation.setAngleUnit(AngleUnit.DEGREES);
+        //orientation.startListening();
+        servo1 = hardwareMap.servo.get("grabber");
 //        servo2 = hardwareMap.servo.get("rightFoundationGrabber");   //servo3 = hardwareMap.servo.get("stacker");
         //servo1 = hardwareMap.servo.get("redPivot");
         //servo2 = hardwareMap.servo.get("redInnerGrabber");
@@ -41,7 +40,7 @@ public class TestServo extends OpMode {
             */
 //        servo2.setPosition(servo2.getPosition() + gamepad1.right_stick_x * 0.001);
         servo1.setPosition(servo1.getPosition() + gamepad1.left_stick_x * 0.001);
-        servo2.setPosition(servo2.getPosition() + gamepad1.right_stick_x * 0.001);
+        //servo2.setPosition(servo2.getPosition() + gamepad1.right_stick_x * 0.001);
 /*+
         if(gamepad1.a)
             servo3.setPosition(1);
@@ -52,10 +51,10 @@ public class TestServo extends OpMode {
         if(gamepad1.b)
             servo3.setPosition(0.4);
 */
-        telemetry.addData("orientation.isAvailable()", orientation.isAvailable());
+        //telemetry.addData("orientation.isAvailable()", orientation.isAvailable());
         telemetry.addData("servo1 position", servo1.getPosition());
-        telemetry.addData("servo2 position", servo2.getPosition());
-        telemetry.addData("Orientation angle: ", orientation.getAngle());
+        //telemetry.addData("servo2 position", servo2.getPosition());
+        //telemetry.addData("Orientation angle: ", orientation.getAngle());
 //        telemetry.addData("servo2 position", servo2.getPosition());
         //telemetry.addData("servo3 position", servo3.getPosition());
         telemetry.update();

@@ -20,6 +20,7 @@ public class AutonomousRed extends LinearOpMode implements AutonomousBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        AutonomousRed autoRed = new AutonomousRed(auto.left, auto.startBuilding);
 
 
         stones.add(new Stones(110, 21));
@@ -297,6 +298,15 @@ public class AutonomousRed extends LinearOpMode implements AutonomousBase {
             auto.drive.forward(-12, 1, 1);
             moac.foundationGrabber.grabFoundation(false);
             auto.nav.IamAt(auto.drive.leftDistance.getDistance(DistanceUnit.INCH) + 8, 120);
+        }
+    }
+
+    public class Stones {
+        public int x, y;
+
+        public Stones(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }

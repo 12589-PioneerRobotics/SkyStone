@@ -16,7 +16,6 @@ public class MoacV_2 {
     public FoundationGrabber foundationGrabber;
     //public Stacker stacker;
     public Intake intake;
-    public Driving drive;
     public Stacker stacker;
 
     //public IntakeSensor intakeSensor;
@@ -24,6 +23,7 @@ public class MoacV_2 {
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
         //linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
+
     }
 
     public MoacV_2(HardwareMap hardwareMap, boolean blue) { //TeleOp Constructor
@@ -31,6 +31,7 @@ public class MoacV_2 {
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
         stacker = new Stacker(hardwareMap);
+
         //intakeSensor = new IntakeSensor(hardwareMap, blue);
 
     }
@@ -101,21 +102,21 @@ public class MoacV_2 {
         FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(0.77);
-            rightFoundationGrabber.setPosition(.21);
+            leftFoundationGrabber.setPosition(.05);
+            rightFoundationGrabber.setPosition(.95);
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .25 : .84); //vals .21 .77
-            rightFoundationGrabber.setPosition((grab) ? .71 : .21);
+            leftFoundationGrabber.setPosition((grab) ? .58 : .05); //vals .21 .77
+            rightFoundationGrabber.setPosition((grab) ? .35 : .95);
         }
     }
 
     public class Stacker {
         Servo grabber;
         boolean grabberSwitcher = false;
-        final private double OPEN_POS = .45;
-        final private double CLOSE_POS = .31;
+        final private double OPEN_POS = .225;
+        final private double CLOSE_POS = .34;
 
         Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");

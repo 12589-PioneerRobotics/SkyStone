@@ -56,10 +56,10 @@ public class AutonomousCore {
         nav.arc(180, 3, .6, -.6);
     }
 
-    class Stones {
+    public class Stones {
         public int x, y;
 
-        Stones(int x, int y) {
+        public Stones(int x, int y) {
             this.x = x;
             this.y = y;
         }
