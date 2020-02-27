@@ -154,11 +154,11 @@ public class Driving {
             stopDriving();
     }
 
-    public void strafeClose(boolean right, boolean front, float x, float y, float thresh) {
+    public void strafeClose(boolean right, boolean front, double x, double y, float thresh) {
         strafeClose(right, front, x, y, thresh, true);
     }
 
-    public void strafeClose(boolean right, boolean front, float x, float y, float thresh, boolean stop) {
+    public void strafeClose(boolean right, boolean front, double x, double y, float thresh, boolean stop) {
         int sgnX;
         int sgnY;
 
@@ -206,7 +206,7 @@ public class Driving {
                 drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
-            libertyDrive(Operations.power(drivePower, .2, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
+            libertyDrive(Operations.power(drivePower, .15, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
             dx = getAccurateDistanceSensorReading(sensorX) - x;
             dy = getAccurateDistanceSensorReading(sensorY) - y;
             linearOpMode.telemetry.addData("dx", dx);

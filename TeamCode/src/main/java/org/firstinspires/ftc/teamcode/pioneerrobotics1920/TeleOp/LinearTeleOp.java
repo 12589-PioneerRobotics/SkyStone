@@ -36,6 +36,10 @@ public class LinearTeleOp extends LinearOpMode {
     private final int[] LIFTER_PRESETS = {0, 600, 1300, 2050, 2800, 3550, 4300, 4950};
 
 
+    double xVal;
+    double yVal;
+
+
     /**
      * CONTROLS:
      * <p>
@@ -115,7 +119,11 @@ public class LinearTeleOp extends LinearOpMode {
             if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
             else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
             else {
-                if (vertSlideOneShot.update(gamepad1.a)) moac.linearSlide.lifterPosition(0);
+                if (vertSlideOneShot.update(gamepad1.a)) {
+                    navigation.turnTo(0);
+                    if (blue)
+                        drive.strafeClose(true, false, xVal, yVal, 2);
+                }
             }
 
             if (lifterOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down)))
@@ -123,6 +131,9 @@ public class LinearTeleOp extends LinearOpMode {
                     moac.linearSlide.lifterPower(.1);
                 else
                     moac.linearSlide.lifterPower(0);
+
+            if (gamepad2.right_bumper)
+                recordValues();
 
             if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
             else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.6);
@@ -190,8 +201,6 @@ public class LinearTeleOp extends LinearOpMode {
                 counter++;
             else if (game2DpadDownOneShot.update(gamepad2.dpad_down) && counter > 0)
                 counter--;
-            if (gamepad2.right_bumper)
-                navigation.turnTo(0);
 
             if (gamepad2.a) {
                 drive.resetGyro(this);
@@ -204,6 +213,13 @@ public class LinearTeleOp extends LinearOpMode {
             telemetry.addData("Vertical slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideVertical));
             telemetry.addData("Horizontal slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideHoriz));
             telemetry.update();
+        }
+    }
+
+    public void recordValues() {
+        if (blue) {
+            xVal = drive.getAccurateDistanceSensorReading(drive.rightDistance);
+            yVal = drive.getAccurateDistanceSensorReading(drive.backDistance);
         }
     }
 
