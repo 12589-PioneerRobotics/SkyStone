@@ -109,7 +109,7 @@ public class Driving {
             case "front":
                 if (useEncoder) {
                     stopDriving();
-                    forward(-(getAccurateDistanceSensorReading(frontDistance) - distance), 1, .6);
+                    forward((getAccurateDistanceSensorReading(frontDistance) - distance), power, .4);
                 } else {
                     diff = getAccurateDistanceSensorReading(frontDistance) - distance;
                     initDiff = diff;
@@ -122,7 +122,7 @@ public class Driving {
             case "back":
                 if (useEncoder) {
                     stopDriving();
-                    forward((getAccurateDistanceSensorReading(backDistance) - distance), 1, .6);
+                    forward(-(getAccurateDistanceSensorReading(backDistance) - distance), 1, .6);
                 } else {
                     diff = getAccurateDistanceSensorReading(backDistance) - distance;
                     initDiff = diff;
@@ -206,7 +206,7 @@ public class Driving {
                 drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
-            libertyDrive(drivePower, turnPower, strafePower);
+            libertyDrive(Operations.power(drivePower, .2, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
             dx = getAccurateDistanceSensorReading(sensorX) - x;
             dy = getAccurateDistanceSensorReading(sensorY) - y;
             linearOpMode.telemetry.addData("dx", dx);
@@ -217,37 +217,7 @@ public class Driving {
         if (stop) stopDriving();
     }
 
-    public void strafeClose(boolean blue, double x, double y) {
-        double deltaY;
-        double initDeltaY;
-        double deltaX = x - getAccurateDistanceSensorReading(backDistance);
-        double initDeltaX = x - getAccurateDistanceSensorReading(backDistance);
-        if (blue) {
-            initDeltaY = y -getAccurateDistanceSensorReading(rightDistance);
-            deltaY = y -getAccurateDistanceSensorReading(rightDistance);
 
-            while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                libertyDrive(deltaX / Math.abs(initDeltaX / 2) / 8, 0, -deltaY / Math.abs(initDeltaY));
-                linearOpMode.telemetry.addData("deltaX", deltaX);
-                linearOpMode.telemetry.addData("deltaY", deltaY);
-                linearOpMode.telemetry.update();
-                deltaX = y - getAccurateDistanceSensorReading(backDistance);
-                deltaY = x - getAccurateDistanceSensorReading(rightDistance);
-            }
-
-        } else {
-            initDeltaY = y -getAccurateDistanceSensorReading(leftDistance);
-            deltaY = y -getAccurateDistanceSensorReading(leftDistance);
-
-            while (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                libertyDrive(deltaX / Math.abs(initDeltaX/2), 0, deltaY / Math.abs(initDeltaY));
-                deltaX = x - getAccurateDistanceSensorReading(backDistance);
-                deltaY = y - getAccurateDistanceSensorReading(leftDistance);
-            }
-
-        }
-        stopDriving();
-    }
 
     public void timeBasedForward(double seconds, double power) {
         double curTime = linearOpMode.getRuntime();

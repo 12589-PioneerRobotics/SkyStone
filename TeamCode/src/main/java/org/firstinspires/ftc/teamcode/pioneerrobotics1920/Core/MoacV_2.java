@@ -107,7 +107,7 @@ public class MoacV_2 {
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .58 : .05); //vals .21 .77
+            leftFoundationGrabber.setPosition((grab) ? .55 : .05); //vals .21 .77
             rightFoundationGrabber.setPosition((grab) ? .35 : .95);
         }
     }
@@ -115,7 +115,7 @@ public class MoacV_2 {
     public class Stacker {
         Servo grabber;
         boolean grabberSwitcher = false;
-        final private double OPEN_POS = .225;
+        final private double OPEN_POS = .167;
         final private double CLOSE_POS = .34;
 
         Stacker(HardwareMap hardwareMap) {
