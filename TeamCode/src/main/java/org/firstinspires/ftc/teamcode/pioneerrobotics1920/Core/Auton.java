@@ -112,12 +112,9 @@ public class Auton extends LinearOpMode {
                 moac.intake.stopIntake();
                 moac.stacker.close();
 
-                nav.backToY(115);
-                sleep(300);
-                if (Operations.approximatelyEquals(drive.backDistance.getDistance(DistanceUnit.INCH), 12, 2))
-                    drive.moveClose("back", 14, 1, 0f);
+                nav.backToY(110);
 
-                nav.turnTo(270);
+                nav.arc(270,3,1,-.2);
                 getFoundation(blue, startBuilding);
 
                 getBlueSkystone(skystonePos);
@@ -264,7 +261,7 @@ public class Auton extends LinearOpMode {
         switch (pos) {
             case LEFT:
                 if (round == 0) {
-                    drive.strafeClose(true, false, 36, 24, 1);
+                    drive.strafeClose(true, false, 36, 24, 1,false);
                     takeStone();
 
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, drive.getAccurateDistanceSensorReading(drive.frontDistance) + 7);
@@ -572,12 +569,10 @@ public class Auton extends LinearOpMode {
                 */
             } else {
                 //drive.moveClose("back", -1, 1, 1f);
-
-                drive.moveClose("front", 32, .8, 0f);
+                if (drive.getAccurateDistanceSensorReading(drive.frontDistance)<32)
+                    drive.moveClose("front", 32, .7, 0f);
                 moac.foundationGrabber.grabFoundation(true);
-                nav.IamAt(40 - drive.backDistance.getDistance(DistanceUnit.INCH), 136 - drive.rightDistance.getDistance(DistanceUnit.INCH));
-                //drive.forward(-2,1,.7);
-                sleep(500);
+
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
                     moac.linearSlide.lifterPosition(300);
                     moac.linearSlide.horizPosition(-2050);

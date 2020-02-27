@@ -76,74 +76,6 @@ public class Driving {
         linearOpMode = opMode;
     }
 
-    void setAllDrivingPositions(int clicks) {
-        for (DcMotor motor : drivingMotors) {
-            motor.setTargetPosition(clicks);
-        }
-    }
-
-    public void setDrivingModes(DcMotor.RunMode mode) {
-        for (DcMotor motor : drivingMotors) {
-            motor.setMode(mode);
-        }
-    }
-
-    void setAllDrivingPowers(double power) {
-        for (DcMotor motor : drivingMotors) {
-            motor.setPower(power);
-        }
-    }
-
-    int averageEncoderPositions() {
-        return (frontLeft.getCurrentPosition() + frontRight.getCurrentPosition() +
-                backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
-    }
-
-    public void stopDriving() {
-        setAllDrivingPowers(0);
-        setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearOpMode.idle();
-    }
-
-    void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public Position getPosition() {
-        return gyro.reportPosition();
-    }
-
-    boolean motorsBusy() {
-        return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
-    }
-
-    public double getAccurateDistanceSensorReading(ModernRoboticsI2cRangeSensor distanceSensor) {
-        double result = distanceSensor.getDistance(DistanceUnit.INCH);
-        while (result > 80 || result < 0)
-            result = distanceSensor.getDistance(DistanceUnit.INCH);
-        return result;
-    }
-
-    public void forwardPos(double inches, double power) {
-        int clicks = (int) (inches * CLICKS_PER_INCH);
-
-        /*
-        setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setAllDrivingPositions(clicks);
-        setDrivingModes(DcMotor.RunMode.RUN_TO_POSITION);
-        setAllDrivingPowers(power)
-        */
-
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setTargetPosition(clicks);
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontLeft.setPower(power);
-    }
-
     //move forward method based on inches
     public void forward(double inches, double power) {
         forward(inches, power, 0.25);
@@ -506,6 +438,76 @@ public class Driving {
         stopDriving();
 
         linearOpMode.sleep(100);
+    }
+
+    //General Stuff that won't be changed
+
+    void setAllDrivingPositions(int clicks) {
+        for (DcMotor motor : drivingMotors) {
+            motor.setTargetPosition(clicks);
+        }
+    }
+
+    public void setDrivingModes(DcMotor.RunMode mode) {
+        for (DcMotor motor : drivingMotors) {
+            motor.setMode(mode);
+        }
+    }
+
+    void setAllDrivingPowers(double power) {
+        for (DcMotor motor : drivingMotors) {
+            motor.setPower(power);
+        }
+    }
+
+    int averageEncoderPositions() {
+        return (frontLeft.getCurrentPosition() + frontRight.getCurrentPosition() +
+                backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
+    }
+
+    public void stopDriving() {
+        setAllDrivingPowers(0);
+        setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearOpMode.idle();
+    }
+
+    void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public Position getPosition() {
+        return gyro.reportPosition();
+    }
+
+    boolean motorsBusy() {
+        return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
+    }
+
+    public double getAccurateDistanceSensorReading(ModernRoboticsI2cRangeSensor distanceSensor) {
+        double result = distanceSensor.getDistance(DistanceUnit.INCH);
+        while (result > 80 || result < 0)
+            result = distanceSensor.getDistance(DistanceUnit.INCH);
+        return result;
+    }
+
+    public void forwardPos(double inches, double power) {
+        int clicks = (int) (inches * CLICKS_PER_INCH);
+
+        /*
+        setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setAllDrivingPositions(clicks);
+        setDrivingModes(DcMotor.RunMode.RUN_TO_POSITION);
+        setAllDrivingPowers(power)
+        */
+
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setTargetPosition(clicks);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setPower(power);
     }
 
 }
