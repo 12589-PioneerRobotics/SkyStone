@@ -114,7 +114,7 @@ public class Auton extends LinearOpMode {
 
                 nav.backToY(110);
 
-                nav.arc(270,3,1,-.2);
+                nav.arc(270,3,.5,-.1);
                 getFoundation(blue, startBuilding);
 
                 getBlueSkystone(skystonePos);
@@ -572,7 +572,7 @@ public class Auton extends LinearOpMode {
                 if (drive.getAccurateDistanceSensorReading(drive.frontDistance)<32)
                     drive.moveClose("front", 32, .7, 0f);
                 moac.foundationGrabber.grabFoundation(true);
-
+                sleep(250);
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
                     moac.linearSlide.lifterPosition(300);
                     moac.linearSlide.horizPosition(-2050);
