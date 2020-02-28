@@ -181,8 +181,8 @@ public class Driving {
             sgnY = -1;
         }
 
-        double angle0 = gyro.getValueContinuous();
-        double angleDiff = 0;
+        double angle0 = Operations.roundNearest90(gyro.getValueContinuous());
+        double angleDiff;
         double turnCorrectThresh = 2;
 
         double dx = getAccurateDistanceSensorReading(sensorX) - x;
@@ -191,9 +191,9 @@ public class Driving {
         double dxi = dx;
         double dyi = dy;
 
-        double strafePower = 0;
-        double drivePower = 0;
-        double turnPower = 0;
+        double strafePower;
+        double drivePower;
+        double turnPower;
 
         double correctionPower = 0.02;
 
@@ -227,9 +227,16 @@ public class Driving {
     }
 
     public void smoothTimeBasedForward(double seconds, double power) {
+        double angle0 = Operations.roundNearest90(gyro.getValueContinuous());
+        double angleDiff;
+        double turnCorrectThresh = 2;
+        double turnPower;
         double curTime = linearOpMode.getRuntime();
-        while (linearOpMode.getRuntime() < curTime + seconds)
-            libertyDrive(power, 0, 0);
+        while (linearOpMode.getRuntime() < curTime + seconds) {
+            angleDiff = angle0 - gyro.getValueContinuous();
+            turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * .02 : 0;
+            libertyDrive(power, turnPower, 0);
+        }
     }
 
     public void timeBasedStrafe(double power, double seconds) {
@@ -317,97 +324,6 @@ public class Driving {
             linearOpMode.idle();
         }
         stopDriving();
-    }
-    //Muneeb SSN: 034878341 -- what...
-
-    //TODO: make these methods work!!!**************************************************************
-    public void autoStrafe(double inches, double power) {
-        final double THRESH = 1;
-        double startAngle = gyro.getValueContinuous();
-        int clicks = (int) (inches * CLICKS_PER_INCH);
-
-        frontLeft.setTargetPosition(clicks);
-        frontRight.setTargetPosition(-clicks);
-        backLeft.setTargetPosition(-clicks);
-        backRight.setTargetPosition(clicks);
-
-        setDrivingModes(DcMotor.RunMode.RUN_TO_POSITION);
-
-        final double POWER_CHANGE = power*0.2;
-        while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy()) {
-            linearOpMode.idle();
-
-            if (gyro.getValueContinuous() > startAngle + THRESH) {
-                frontRight.setPower(power+POWER_CHANGE);
-                frontLeft.setPower(power+POWER_CHANGE);
-                backRight.setPower(power-POWER_CHANGE);
-                backLeft.setPower(power-POWER_CHANGE);
-            } else if (gyro.getValueContinuous() < startAngle - THRESH) {
-                frontRight.setPower(power-POWER_CHANGE);
-                frontLeft.setPower(power-POWER_CHANGE);
-                backRight.setPower(power+POWER_CHANGE);
-                backLeft.setPower(power+POWER_CHANGE);
-            } else {
-                setAllDrivingPowers(power);
-            }
-        }
-        stopDriving();
-    }
-
-    public void frontRightStrafe(double inches, double power) {
-        int clicks = (int) (inches * CLICKS_PER_INCH);
-
-        stopDriving();
-
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        frontRight.setTargetPosition(clicks);
-        backLeft.setTargetPosition(clicks);
-
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-
-        while (linearOpMode.opModeIsActive() && frontRight.isBusy() && backLeft.isBusy()) {
-            linearOpMode.idle();
-
-            frontRight.setPower(power);
-            backLeft.setPower(power);
-        }
-        stopDriving();
-
-        linearOpMode.sleep(100);
-    }
-
-    public void frontLeftStrafe(double inches, double power) {
-        int clicks = (int) (inches * CLICKS_PER_INCH);
-
-        stopDriving();
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        frontLeft.setTargetPosition(clicks);
-        backRight.setTargetPosition(clicks);
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        frontLeft.setPower(power);
-        backRight.setPower(power);
-
-        while (linearOpMode.opModeIsActive() && frontLeft.isBusy() && backRight.isBusy()) {
-            linearOpMode.idle();
-
-            frontLeft.setPower(power);
-            backRight.setPower(power);
-        }
-        stopDriving();
-
-        linearOpMode.sleep(100);
     }
 
     //General Stuff that won't be changed

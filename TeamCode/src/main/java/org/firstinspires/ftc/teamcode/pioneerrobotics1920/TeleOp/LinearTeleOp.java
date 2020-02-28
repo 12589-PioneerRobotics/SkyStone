@@ -120,7 +120,6 @@ public class LinearTeleOp extends LinearOpMode {
             else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
             else {
                 if (vertSlideOneShot.update(gamepad1.a)) {
-                    navigation.turnTo(0);
                     if (blue)
                         drive.strafeClose(true, false, xVal, yVal, 2);
                 }

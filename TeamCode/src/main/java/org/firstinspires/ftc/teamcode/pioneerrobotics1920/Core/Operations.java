@@ -72,4 +72,8 @@ public class Operations {
         }
         return 1;
     }
+
+    public static int roundNearest90(float val){
+        return Math.round(val/90)*90;
+    }
 }
