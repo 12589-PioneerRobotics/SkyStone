@@ -109,7 +109,7 @@ public class Driving {
             case "front":
                 if (useEncoder) {
                     stopDriving();
-                    forward((getAccurateDistanceSensorReading(frontDistance) - distance), power, .4);
+                    forward((getAccurateDistanceSensorReading(frontDistance) - distance), power, .3);
                 } else {
                     diff = getAccurateDistanceSensorReading(frontDistance) - distance;
                     initDiff = diff;
@@ -237,13 +237,6 @@ public class Driving {
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * .02 : 0;
             libertyDrive(power, turnPower, 0);
         }
-    }
-
-    public void timeBasedStrafe(double power, double seconds) {
-        double currentTime = linearOpMode.getRuntime();
-        while (linearOpMode.getRuntime() < currentTime + seconds)
-            libertyDrive(0, 0, power);
-        stopDriving();
     }
 
     public void libertyDrive(double drive, double turn, double strafe) {

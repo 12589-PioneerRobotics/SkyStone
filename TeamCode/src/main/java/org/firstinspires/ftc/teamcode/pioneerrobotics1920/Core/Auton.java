@@ -118,6 +118,11 @@ public class Auton extends LinearOpMode {
 
                 getBlueSkystone(skystonePos);
 
+                if(drive.getAccurateDistanceSensorReading(drive.backDistance)<40)
+                    drive.stopDriving();
+                    sleep(30000);
+
+
                 moac.intake.stopIntake();
                 moac.stacker.close();
 
