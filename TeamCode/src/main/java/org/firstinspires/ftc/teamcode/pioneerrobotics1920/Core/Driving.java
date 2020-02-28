@@ -206,7 +206,7 @@ public class Driving {
                 drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
-            libertyDrive(Operations.power(drivePower, .15, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
+            libertyDrive(Operations.power(drivePower, .18, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
             dx = getAccurateDistanceSensorReading(sensorX) - x;
             dy = getAccurateDistanceSensorReading(sensorY) - y;
             linearOpMode.telemetry.addData("dx", dx);

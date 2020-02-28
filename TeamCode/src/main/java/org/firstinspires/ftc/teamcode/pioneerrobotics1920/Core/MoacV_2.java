@@ -115,8 +115,8 @@ public class MoacV_2 {
     public class Stacker {
         Servo grabber;
         boolean grabberSwitcher = false;
-        final private double OPEN_POS = .167;
-        final private double CLOSE_POS = .34;
+        final private double OPEN_POS = .2;
+        final private double CLOSE_POS = .28;
 
         Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");
