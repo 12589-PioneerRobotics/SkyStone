@@ -33,7 +33,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     private final double SCALE = 0.35;
 
-    private final int[] LIFTER_PRESETS = {0, 600, 1300, 2050, 2800, 3550, 4300, 4950};
+    private final int[] LIFTER_PRESETS = {0, 600, 1350, 2050, 2800, 3550, 4300, 4950};
 
 
     double xVal;
@@ -120,8 +120,13 @@ public class LinearTeleOp extends LinearOpMode {
             else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
             else {
                 if (vertSlideOneShot.update(gamepad1.a)) {
-                    if (blue)
-                        drive.strafeClose(true, false, xVal, yVal, 2);
+                    if (blue) {
+                        drive.strafeClose(true, false, xVal, yVal, 1);
+                        moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
+                        counter++;
+                    }
+
+
                 }
             }
 
@@ -131,8 +136,10 @@ public class LinearTeleOp extends LinearOpMode {
                 else
                     moac.linearSlide.lifterPower(0);
 
-            if (gamepad2.right_bumper)
+            if (gamepad2.right_bumper) {
                 recordValues();
+                drive.resetGyro(this);
+            }
 
             if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
             else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.6);
@@ -140,7 +147,10 @@ public class LinearTeleOp extends LinearOpMode {
                 if (horizSlideOneShot.update(gamepad1.b)) moac.linearSlide.horiz();
             }
 
-            if (dpadOneShot.update(!(gamepad1.dpad_right || gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition()>5100) moac.linearSlide.horizSlidePower(0);
+            if (dpadOneShot.update(!(gamepad1.dpad_right || gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition() > 8000) {
+                moac.linearSlide.lifterPower(0);
+                moac.linearSlide.horizSlidePower(0);
+            }
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
             else if (gamepad1.right_trigger > .5) {
@@ -218,7 +228,7 @@ public class LinearTeleOp extends LinearOpMode {
     public void recordValues() {
         if (blue) {
             xVal = drive.getAccurateDistanceSensorReading(drive.rightDistance);
-            yVal = drive.getAccurateDistanceSensorReading(drive.backDistance);
+            yVal = drive.getAccurateDistanceSensorReading(drive.backDistance) + 3;
         }
     }
 

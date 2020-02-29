@@ -105,7 +105,7 @@ public class Navigation {
 
         while ((getDiff(angle1) > thresh || getDiff(angle1) < -thresh) && driving.linearOpMode.opModeIsActive()) {
             diff = getDiff(angle1);
-            driving.libertyDrive(0, Operations.sgn(diff) * .25, 0);
+            driving.libertyDrive(0, Operations.sgn(diff) * .27, 0);
             driving.linearOpMode.idle();
             driving.linearOpMode.telemetry.addData("difference", diff);
 
