@@ -94,10 +94,12 @@ public class Navigation {
         double RAW_THRESH = 5 + Math.abs(diff) / 15;
         double TURN_POWER = turnPower;
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
+            double factor = Math.abs(getDiff(angle1)) / 90;
+            factor = (Math.abs(factor)>0.4)? 1:factor;
             if (diff > 0)
-                driving.libertyDrive(drivePower, TURN_POWER, 0);
+                driving.libertyDrive(drivePower, TURN_POWER*factor, 0);
             else
-                driving.libertyDrive(drivePower, -TURN_POWER, 0);
+                driving.libertyDrive(drivePower, -TURN_POWER*factor, 0);
             driving.linearOpMode.telemetry.addData("difference", diff);
             driving.linearOpMode.telemetry.addData("nav angle: ", getAngle());
             driving.linearOpMode.telemetry.update();

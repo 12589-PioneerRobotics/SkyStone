@@ -189,12 +189,7 @@ public class Auton extends LinearOpMode {
                 detector.disable();
                 drive.smoothTimeBasedForward(.4, .5);
 
-
-
-
                 getRedSkystone(skystonePos);
-
-
 
                 nav.backToY(113);
 
