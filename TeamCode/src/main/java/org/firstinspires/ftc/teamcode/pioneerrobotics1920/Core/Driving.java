@@ -212,10 +212,10 @@ public class Driving {
                 strafePower = Range.clip(1.2 * dx * sgnX / Math.abs(dxi), -.7, .7);
             else strafePower = 0;
             if (Math.abs(dy) > thresh)
-                drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
+                drivePower = Range.clip(dy * sgnY / Math.abs(dyi), -.6, .6);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
-            libertyDrive(Operations.power(drivePower, .18, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
+            libertyDrive(Operations.power(drivePower, .18, -1, 1), turnPower, Operations.power(strafePower, .15, -1, 1));
             dx = getAccurateDistanceSensorReading(sensorX) - x;
             dy = getAccurateDistanceSensorReading(sensorY) - y;
             linearOpMode.telemetry.addData("dx", dx);
