@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 
@@ -17,30 +18,23 @@ public class TestMotor extends OpMode {
     @Override
     public void init() {
         drive = new Driving(this);
-        //slideVertical = hardwareMap.dcMotor.get("slideVertical");
-        //slideHoriz = hardwareMap.dcMotor.get("slideHorizontal");
-        //slideVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //slideVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideVertical = hardwareMap.dcMotor.get("slideVertical");
+        slideHoriz = hardwareMap.dcMotor.get("slideHorizontal");
+        slideVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideVertical.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeLeft = hardwareMap.dcMotor.get("leftIntake");
         intakeRight = hardwareMap.dcMotor.get("rightIntake");
-        //slideHoriz.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //slideHoriz.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //motorPosition(0);
+        slideHoriz.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideHoriz.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorPosition(0);
 
     }
 
     @Override
     public void loop() {
-        if (gamepad1.right_trigger > .5) {
-            intakeLeft.setPower(1);
-            intakeRight.setPower(-1);
-        } else {
-            intakeLeft.setPower(0);
-            intakeRight.setPower(0);
-        }
-        /*if (gamepad1.dpad_up)
+        if (gamepad1.dpad_up)
             motorPower(1, slideVertical);
         else if (gamepad1.dpad_down)
             motorPower(-0.5, slideVertical);
@@ -86,10 +80,11 @@ public class TestMotor extends OpMode {
         telemetry.addData("Back_Left Clicks", drive.backLeft.getCurrentPosition());
         telemetry.addData("Back Right Clicks", drive.backRight.getCurrentPosition());
         telemetry.addData("motor click: ", slideVertical.getCurrentPosition());
-        telemetry.update();*/
+        telemetry.addData("Horiz Position", slideHoriz.getCurrentPosition());
+        telemetry.update();
     }
 
-    /*public void motorPosition(int clicks) {
+    public void motorPosition(int clicks) {
         slideVertical.setTargetPosition(clicks);
         slideVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVertical.setPower(0.5);
@@ -107,6 +102,6 @@ public class TestMotor extends OpMode {
     public void resetEncoder(){
         slideVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }*/
+    }
 }
 

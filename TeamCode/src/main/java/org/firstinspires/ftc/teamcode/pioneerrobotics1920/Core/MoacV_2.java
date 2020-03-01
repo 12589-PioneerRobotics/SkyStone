@@ -47,6 +47,7 @@ public class MoacV_2 {
         public DcMotor slideVertical;
         public DcMotor slideHoriz;
         private boolean horizSwitcher;
+        public final double HORIZ_OPEN = 1150;
 
         LinearSlide(HardwareMap hardwareMap) {
             slideVertical = hardwareMap.dcMotor.get("slideVertical");
@@ -88,7 +89,7 @@ public class MoacV_2 {
         }
 
         public void horiz() {
-            slideHoriz.setTargetPosition((horizSwitcher) ? -2100 : 0);
+            slideHoriz.setTargetPosition((horizSwitcher) ? 1150 : 0);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
             horizSwitcher = !horizSwitcher;

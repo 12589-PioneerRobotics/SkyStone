@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
 public class Driving {
     //instantiations
-    LinearOpMode linearOpMode;
+    public LinearOpMode linearOpMode;
 
     public DcMotor frontLeft;
     public DcMotor frontRight;
@@ -21,6 +21,8 @@ public class Driving {
     public DcMotor backRight;
 
     public GyroWrapper gyro;
+
+    int num;
 
 
     final double CLICKS_PER_INCH = 29.021876534;
@@ -35,6 +37,7 @@ public class Driving {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
+
 
         gyro = new GyroWrapper(hardwareMap.get(BNO055IMU.class, "imu"));
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -98,6 +101,12 @@ public class Driving {
         stopDriving();
     }
 
+    public void indefiniteForward(double power) {
+
+        libertyDrive(power, 0, 0);
+
+    }
+
     public void moveClose(String direction, double distance, double power, float thresh) {
         moveClose(direction, distance, power, thresh, true, true);
     }
@@ -155,7 +164,7 @@ public class Driving {
     }
 
     public void strafeClose(boolean right, boolean front, double x, double y, float thresh) {
-        strafeClose(right, front, x, y, thresh, true);
+        strafeClose(right, front, x, y, thresh, false);
     }
 
     public void strafeClose(boolean right, boolean front, double x, double y, float thresh, boolean stop) {
@@ -197,10 +206,10 @@ public class Driving {
 
         double correctionPower = 0.02;
 
-        while (Math.abs(dx) > thresh || Math.abs(dy) > thresh) {
+        while (Math.abs(dx) > thresh || Math.abs(dy) > thresh && !linearOpMode.gamepad1.left_stick_button) {
             angleDiff = angle0 - gyro.getValueContinuous();
             if (Math.abs(dx) > thresh)
-                strafePower = Range.clip(2 * dx * sgnX / Math.abs(dxi), -.7, .7);
+                strafePower = Range.clip(1.2 * dx * sgnX / Math.abs(dxi), -.7, .7);
             else strafePower = 0;
             if (Math.abs(dy) > thresh)
                 drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
@@ -248,7 +257,6 @@ public class Driving {
         frontLeft.setPower((drive + strafe + turn) / factor);
         backRight.setPower((drive + strafe - turn) / factor);
         frontRight.setPower((drive - strafe - turn) / factor);
-        getPowersTelemetry();
     }
 
     public void correctStrafe(double power, double startAngle){

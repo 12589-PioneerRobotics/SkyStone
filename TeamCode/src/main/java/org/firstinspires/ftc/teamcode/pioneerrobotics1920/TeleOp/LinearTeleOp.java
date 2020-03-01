@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
@@ -33,7 +35,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     private final double SCALE = 0.35;
 
-    private final int[] LIFTER_PRESETS = {0, 600, 1350, 2050, 2800, 3550, 4300, 4950};
+    private final int[] LIFTER_PRESETS = {0, 650, 1400, 2100, 2850, 3600, 4350, 5000};
 
 
     double xVal;
@@ -111,9 +113,9 @@ public class LinearTeleOp extends LinearOpMode {
                     drive.libertyDrive(Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.left_stick_x), -gamepad1.right_stick_x);
             } else {
                 if (gamepad1.left_bumper)
-                    drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
+                    drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.35, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
                 else
-                    drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x), gamepad1.left_stick_x);
+                    drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3), gamepad1.left_stick_x);
             }
 
             if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
@@ -121,9 +123,8 @@ public class LinearTeleOp extends LinearOpMode {
             else {
                 if (vertSlideOneShot.update(gamepad1.a)) {
                     if (blue) {
-                        drive.strafeClose(true, false, xVal, yVal, 1);
+                        drive.strafeClose(true, false, xVal, yVal, 1, false);
                         moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
-                        counter++;
                     }
 
 
@@ -191,9 +192,9 @@ public class LinearTeleOp extends LinearOpMode {
                 int currentHeight = moac.linearSlide.slideVertical.getCurrentPosition();
                 while (moac.linearSlide.slideVertical.getCurrentPosition() < currentHeight + 290)
                     moac.linearSlide.lifterPosition(moac.linearSlide.slideVertical.getCurrentPosition() + 300);
-                while (moac.linearSlide.slideHoriz.getCurrentPosition() < -100) {
+                while (moac.linearSlide.slideHoriz.getCurrentPosition() > 100) {
                     moac.linearSlide.horizPosition(0);
-                    if (moac.linearSlide.slideHoriz.getCurrentPosition() > -1200)
+                    if (moac.linearSlide.slideHoriz.getCurrentPosition() < 400)
                         moac.stacker.close();
                 }
                 moac.linearSlide.lifterPosition(0);
@@ -221,6 +222,7 @@ public class LinearTeleOp extends LinearOpMode {
             telemetry.addData("STONE LEVEL", "" + counter);
             telemetry.addData("Vertical slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideVertical));
             telemetry.addData("Horizontal slide clicks", moac.linearSlide.getPos(moac.linearSlide.slideHoriz));
+            telemetry.addData("xVal", xVal);
             telemetry.update();
         }
     }
@@ -228,8 +230,67 @@ public class LinearTeleOp extends LinearOpMode {
     public void recordValues() {
         if (blue) {
             xVal = drive.getAccurateDistanceSensorReading(drive.rightDistance);
-            yVal = drive.getAccurateDistanceSensorReading(drive.backDistance) + 3;
+            yVal = 2;
         }
+    }
+
+    public void teleStrafeClose(boolean right, boolean front, double x, double y, float thresh, boolean stop) {
+        int sgnX;
+        int sgnY;
+
+        ModernRoboticsI2cRangeSensor sensorX;
+        ModernRoboticsI2cRangeSensor sensorY;
+
+        if (right) {
+            sensorX = drive.rightDistance; //right is positive direction
+            sgnX = 1;
+        } else {
+            sensorX = drive.leftDistance; //left is negative direction
+            sgnX = -1;
+        }
+
+        if (front) {
+            sensorY = drive.frontDistance;
+            sgnY = 1;
+        } else {
+            sensorY = drive.backDistance;
+            sgnY = -1;
+        }
+
+        double angle0 = Operations.roundNearest90(drive.gyro.getValueContinuous());
+        double angleDiff;
+        double turnCorrectThresh = 2;
+
+        double dx = drive.getAccurateDistanceSensorReading(sensorX) - x;
+        double dy = drive.getAccurateDistanceSensorReading(sensorY) - y;
+
+        double dxi = dx;
+        double dyi = dy;
+
+        double strafePower;
+        double drivePower;
+        double turnPower;
+
+        double correctionPower = 0.02;
+
+        while (Math.abs(dx) > thresh || Math.abs(dy) > thresh && !gamepad1.left_stick_button) {
+            angleDiff = angle0 - drive.gyro.getValueContinuous();
+            if (Math.abs(dx) > thresh)
+                strafePower = Range.clip(2 * dx * sgnX / Math.abs(dxi), -.7, .7);
+            else strafePower = 0;
+            if (Math.abs(dy) > thresh)
+                drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
+            else drivePower = 0;
+            turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
+            drive.libertyDrive(Operations.power(drivePower, .18, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
+            dx = drive.getAccurateDistanceSensorReading(sensorX) - x;
+            dy = drive.getAccurateDistanceSensorReading(sensorY) - y;
+            drive.linearOpMode.telemetry.addData("dx", dx);
+            drive.linearOpMode.telemetry.addData("dy", dy);
+            drive.linearOpMode.telemetry.update();
+        }
+
+        if (stop) drive.stopDriving();
     }
 
 }
