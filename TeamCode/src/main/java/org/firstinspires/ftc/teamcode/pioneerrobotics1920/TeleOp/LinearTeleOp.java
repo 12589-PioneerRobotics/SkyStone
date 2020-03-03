@@ -123,8 +123,8 @@ public class LinearTeleOp extends LinearOpMode {
             else {
                 if (vertSlideOneShot.update(gamepad1.a)) {
                     if (blue) {
-                        drive.strafeClose(true, false, xVal, yVal, 1, false);
                         moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
+                        drive.strafeClose(true, false, xVal, yVal, 1, false);
                     }
 
 
@@ -230,7 +230,7 @@ public class LinearTeleOp extends LinearOpMode {
     public void recordValues() {
         if (blue) {
             xVal = drive.getAccurateDistanceSensorReading(drive.rightDistance);
-            yVal = 2;
+            yVal = 5;
         }
     }
 

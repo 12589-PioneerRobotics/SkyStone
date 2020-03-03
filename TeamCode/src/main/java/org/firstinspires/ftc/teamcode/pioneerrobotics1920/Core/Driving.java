@@ -209,10 +209,10 @@ public class Driving {
         while (Math.abs(dx) > thresh || Math.abs(dy) > thresh && !linearOpMode.gamepad1.left_stick_button) {
             angleDiff = angle0 - gyro.getValueContinuous();
             if (Math.abs(dx) > thresh)
-                strafePower = Range.clip(1.2 * dx * sgnX / Math.abs(dxi), -.7, .7);
+                strafePower = Range.clip(1.7 * dx * sgnX / Math.abs(dxi), -.7, .7);
             else strafePower = 0;
             if (Math.abs(dy) > thresh)
-                drivePower = Range.clip(dy * sgnY / Math.abs(dyi), -.6, .6);
+                drivePower = Range.clip(dy * sgnY / Math.abs(dyi), -.5, .5);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
             libertyDrive(Operations.power(drivePower, .18, -1, 1), turnPower, Operations.power(strafePower, .15, -1, 1));

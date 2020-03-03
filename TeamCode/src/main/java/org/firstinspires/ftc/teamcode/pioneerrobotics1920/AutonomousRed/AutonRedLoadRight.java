@@ -2,14 +2,14 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.AutonomousRed;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.AutonomousRed;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Auton;
 
 @Autonomous(name = "Red Autonomous", group = "Red")
-public class AutonRedLoadRight extends AutonomousRed {
+public class AutonRedLoadRight extends Auton {
     public AutonRedLoadRight(){
-        super(false, false);
-        auto.blue = false;
-        auto.startBuilding = false;
-        auto.left = false;
+        super();
+        blue = false;
+        startBuilding = false;
+        left = false;
     }
 }
