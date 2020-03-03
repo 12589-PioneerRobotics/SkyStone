@@ -31,11 +31,12 @@ public class LinearTeleOp extends LinearOpMode {
 
     View relativeLayout;
     private boolean invert;
+    int count;
     private boolean pushbot;
 
     private final double SCALE = 0.35;
 
-    private final int[] LIFTER_PRESETS = {0, 650, 1400, 2100, 2850, 3600, 4350, 5000};
+    private final int[] LIFTER_PRESETS = {0, 700, 1450, 2200, 2950, 3700, 4450, 5200};
 
 
     double xVal;
@@ -124,7 +125,7 @@ public class LinearTeleOp extends LinearOpMode {
                 if (vertSlideOneShot.update(gamepad1.a)) {
                     if (blue) {
                         moac.linearSlide.lifterPosition(LIFTER_PRESETS[counter]);
-                        drive.strafeClose(true, false, xVal, yVal, 1, false);
+                        teleStrafeClose(true, false, xVal, yVal, 1, false);
                     }
 
 
@@ -139,7 +140,10 @@ public class LinearTeleOp extends LinearOpMode {
 
             if (gamepad2.right_bumper) {
                 recordValues();
-                drive.resetGyro(this);
+                if (count == 0) {
+                    drive.resetGyro(this);
+                    count++;
+                }
             }
 
             if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
@@ -198,6 +202,7 @@ public class LinearTeleOp extends LinearOpMode {
                         moac.stacker.close();
                 }
                 moac.linearSlide.lifterPosition(0);
+
             }
 
             if (gamepad1.y)
@@ -233,7 +238,6 @@ public class LinearTeleOp extends LinearOpMode {
             yVal = 5;
         }
     }
-
     public void teleStrafeClose(boolean right, boolean front, double x, double y, float thresh, boolean stop) {
         int sgnX;
         int sgnY;
@@ -258,8 +262,8 @@ public class LinearTeleOp extends LinearOpMode {
         }
 
         double angle0 = Operations.roundNearest90(drive.gyro.getValueContinuous());
-        double angleDiff;
-        double turnCorrectThresh = 2;
+        double angleDiff = angle0 - drive.gyro.getValueContinuous();
+        double turnCorrectThresh = 5;
 
         double dx = drive.getAccurateDistanceSensorReading(sensorX) - x;
         double dy = drive.getAccurateDistanceSensorReading(sensorY) - y;
@@ -273,24 +277,26 @@ public class LinearTeleOp extends LinearOpMode {
 
         double correctionPower = 0.02;
 
-        while (Math.abs(dx) > thresh || Math.abs(dy) > thresh && !gamepad1.left_stick_button) {
+        while ((Math.abs(dx) > thresh || Math.abs(dy) > (thresh) || Math.abs(angleDiff) > turnCorrectThresh) && !gamepad1.left_stick_button) {
             angleDiff = angle0 - drive.gyro.getValueContinuous();
             if (Math.abs(dx) > thresh)
-                strafePower = Range.clip(2 * dx * sgnX / Math.abs(dxi), -.7, .7);
+                strafePower = Range.clip(1.7 * dx * sgnX / Math.abs(dxi), -.7, .7);
             else strafePower = 0;
             if (Math.abs(dy) > thresh)
-                drivePower = Range.clip(dy * sgnY / Math.abs(dyi) * Math.abs(dy * sgnY / dyi), -.6, .6);
+                drivePower = Range.clip(Math.pow(dy / Math.abs(dyi), 1.7) * sgnY, -.5, .5);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
-            drive.libertyDrive(Operations.power(drivePower, .18, -1, 1), turnPower, Operations.power(strafePower, .2, -1, 1));
+            drive.libertyDrive((drivePower != 0) ? Operations.power(drivePower, .15, -1, 1) : 0, turnPower, (strafePower != 0) ? Operations.power(strafePower, .15, -1, 1) : 0);
             dx = drive.getAccurateDistanceSensorReading(sensorX) - x;
             dy = drive.getAccurateDistanceSensorReading(sensorY) - y;
             drive.linearOpMode.telemetry.addData("dx", dx);
             drive.linearOpMode.telemetry.addData("dy", dy);
+            drive.linearOpMode.telemetry.addData("angleDiff", angleDiff);
             drive.linearOpMode.telemetry.update();
         }
 
         if (stop) drive.stopDriving();
     }
+
 
 }

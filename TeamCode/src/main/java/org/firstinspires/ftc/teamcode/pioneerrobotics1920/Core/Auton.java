@@ -243,20 +243,20 @@ public class Auton extends LinearOpMode {
         switch (pos) {
             case LEFT:
                 if (round == 0) {
-                    drive.strafeClose(true, false, 34, 26, 2, false);
+                    drive.strafeClose(true, false, 36, 26, 2, false);
                     takeStone();
 
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 7, 66);
                 } else if (round == 1){
                     drive.smoothTimeBasedForward(1, .8);
-                    drive.strafeClose(true, true, 44, 30, 2, false);
+                    drive.strafeClose(true, true, 40, 30, 2, false);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 40, 2);
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
 
                 } else {
                     drive.smoothTimeBasedForward(1.1, .8);
-                    drive.strafeClose(true, true, 44, 24, 2);
+                    drive.strafeClose(true, true, 40, 24, 2);
                     takeStoneAgainstWall();
                     drive.strafeClose(true, true, 24, 33, 2);
                     nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance)+7, drive.getAccurateDistanceSensorReading(drive.frontDistance)+7);
@@ -417,7 +417,7 @@ public class Auton extends LinearOpMode {
             drive.moveClose("back", 45, 1, 0f);
 
 
-        nav.arc(180, 1, .5, -.7);
+        nav.arc(180, 1, .6, -.7);
 
         //drive.moveClose("back", backDistance, 1, 0f);
     }
@@ -467,7 +467,7 @@ public class Auton extends LinearOpMode {
                         drive.linearOpMode.telemetry.addData("Vert Slide Pos", moac.linearSlide.slideVertical.getCurrentPosition());
 
                         nav.arc(250, 1, 1, -.5);
-                        drive.forward(10, 1);
+                        drive.forward(9, 1);
                         nav.arc(180, 3, 1, .8);
                         count++;
                     }
@@ -485,6 +485,8 @@ public class Auton extends LinearOpMode {
 
                 sleep(250);
                 nav.turnTo(180);
+
+                drive.moveClose("right", 25, .7, 2);
 
                 nav.IamAt(drive.getAccurateDistanceSensorReading(drive.rightDistance) + 8, 117);
             }
@@ -505,7 +507,7 @@ public class Auton extends LinearOpMode {
                         moac.linearSlide.horizPosition(1150);
 
                         nav.arc(110, 1, 1, -.5);
-                        drive.forward(10, 1);
+                        drive.forward(9, 1);
                         nav.arc(180, 3, 1, .8);
                         count++;
                     }

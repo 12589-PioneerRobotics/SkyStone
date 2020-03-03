@@ -26,7 +26,6 @@ public class Driving {
 
 
     final double CLICKS_PER_INCH = 29.021876534;
-
     private DcMotor[] drivingMotors;
 
     public ModernRoboticsI2cRangeSensor frontDistance, backDistance, leftDistance, rightDistance;
@@ -146,7 +145,7 @@ public class Driving {
                 diff = getAccurateDistanceSensorReading(rightDistance) - distance;
                 initDiff = diff;
                 while (Math.abs(diff) > thresh) {
-                    libertyDrive(0, 0, power * diff / Math.abs(initDiff));
+                    libertyDrive(0, 0, Operations.power(power * diff / Math.abs(initDiff), .4, -1, 1));
                     diff = getAccurateDistanceSensorReading(rightDistance) - distance;
                 }
                 break;
@@ -154,7 +153,7 @@ public class Driving {
                 diff = getAccurateDistanceSensorReading(leftDistance) - distance;
                 initDiff = diff;
                 while (Math.abs(diff) > thresh) {
-                    libertyDrive(0, 0, -power * diff / Math.abs(initDiff));
+                    libertyDrive(0, 0, Operations.power(-power * diff / Math.abs(initDiff), .4, -1, 1));
                     diff = getAccurateDistanceSensorReading(leftDistance) - distance;
                 }
                 break;
@@ -164,7 +163,7 @@ public class Driving {
     }
 
     public void strafeClose(boolean right, boolean front, double x, double y, float thresh) {
-        strafeClose(right, front, x, y, thresh, false);
+        strafeClose(right, front, x, y, thresh, true);
     }
 
     public void strafeClose(boolean right, boolean front, double x, double y, float thresh, boolean stop) {
@@ -191,8 +190,8 @@ public class Driving {
         }
 
         double angle0 = Operations.roundNearest90(gyro.getValueContinuous());
-        double angleDiff;
-        double turnCorrectThresh = 2;
+        double angleDiff = angle0 - gyro.getValueContinuous();
+        double turnCorrectThresh = 3;
 
         double dx = getAccurateDistanceSensorReading(sensorX) - x;
         double dy = getAccurateDistanceSensorReading(sensorY) - y;
@@ -206,20 +205,24 @@ public class Driving {
 
         double correctionPower = 0.02;
 
-        while (Math.abs(dx) > thresh || Math.abs(dy) > thresh && !linearOpMode.gamepad1.left_stick_button) {
+        while ((Math.abs(dx) > thresh || Math.abs(dy) > (thresh) || Math.abs(angleDiff) > turnCorrectThresh)) {
             angleDiff = angle0 - gyro.getValueContinuous();
             if (Math.abs(dx) > thresh)
-                strafePower = Range.clip(1.7 * dx * sgnX / Math.abs(dxi), -.7, .7);
+                strafePower = Operations.power(2 * dx * sgnX / Math.abs(dxi), .3, -.7, .7);
             else strafePower = 0;
             if (Math.abs(dy) > thresh)
-                drivePower = Range.clip(dy * sgnY / Math.abs(dyi), -.5, .5);
+                drivePower = Operations.power(Math.pow(dy / Math.abs(dyi), 2) * sgnY * Operations.sgn(dy), .2, -.5, .5);
             else drivePower = 0;
             turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * correctionPower : 0;
-            libertyDrive(Operations.power(drivePower, .18, -1, 1), turnPower, Operations.power(strafePower, .15, -1, 1));
+            libertyDrive(drivePower, turnPower, strafePower);
             dx = getAccurateDistanceSensorReading(sensorX) - x;
             dy = getAccurateDistanceSensorReading(sensorY) - y;
             linearOpMode.telemetry.addData("dx", dx);
             linearOpMode.telemetry.addData("dy", dy);
+            linearOpMode.telemetry.addData("angleDiff", angleDiff);
+            linearOpMode.telemetry.addData("drivePOwer", drivePower);
+            linearOpMode.telemetry.addData("turnPow", turnPower);
+            linearOpMode.telemetry.addData("strafePow", strafePower);
             linearOpMode.telemetry.update();
         }
 
@@ -376,7 +379,7 @@ public class Driving {
 
     public double getAccurateDistanceSensorReading(ModernRoboticsI2cRangeSensor distanceSensor) {
         double result = distanceSensor.getDistance(DistanceUnit.INCH);
-        while (result > 80 || result < 0)
+        while ((result > 80 || result < 0) && !linearOpMode.gamepad1.left_stick_button)
             result = distanceSensor.getDistance(DistanceUnit.INCH);
         return result;
     }
