@@ -203,7 +203,7 @@ public class Driving {
         double drivePower;
         double turnPower;
 
-        double correctionPower = 0.02;
+        double correctionPower = 0.06;
 
         while ((Math.abs(dx) > thresh || Math.abs(dy) > (thresh) || Math.abs(angleDiff) > turnCorrectThresh)) {
             angleDiff = angle0 - gyro.getValueContinuous();

@@ -116,8 +116,8 @@ public class MoacV_2 {
     public class Stacker {
         Servo grabber;
         boolean grabberSwitcher = false;
-        final private double OPEN_POS = .89;
-        final private double CLOSE_POS = 1;
+        final private double OPEN_POS = .86; //used to be .89
+        final private double CLOSE_POS = .97; //used to be 1
 
         Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");
@@ -174,8 +174,8 @@ public class MoacV_2 {
         }
 
         public void takeIn() {
-            leftIntake.setPower(.8);
-            rightIntake.setPower(-.8);
+            leftIntake.setPower(1);
+            rightIntake.setPower(-1);
         }
 
         public boolean getStoneState() {

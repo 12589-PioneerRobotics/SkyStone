@@ -275,7 +275,7 @@ public class LinearTeleOp extends LinearOpMode {
         double drivePower;
         double turnPower;
 
-        double correctionPower = 0.02;
+        double correctionPower = 0.1;
 
         while ((Math.abs(dx) > thresh || Math.abs(dy) > (thresh) || Math.abs(angleDiff) > turnCorrectThresh) && !gamepad1.left_stick_button) {
             angleDiff = angle0 - drive.gyro.getValueContinuous();
