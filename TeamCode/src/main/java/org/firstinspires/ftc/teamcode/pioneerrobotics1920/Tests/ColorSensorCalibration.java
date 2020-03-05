@@ -18,13 +18,15 @@ public class ColorSensorCalibration extends LinearOpMode {
 
     Driving driving;
     MoacV_2 moacV_2;
-    Toggle.OneShot hasStone;
-    Toggle.OneShot startWriting;
-    Toggle.OneShot finish;
+    Toggle.OneShot gamepad1A;
+    Toggle.OneShot gamepad1B;
+    Toggle.OneShot gamepad1X;
+    Toggle.OneShot gamepad1Y;
     final double SCALE = 0.35;
     boolean stone;
     boolean writing;
     boolean finished;
+    boolean calibrated;
     File colorSensorCalibrationValue;
     File emptyValues;
     File stoneValues;
@@ -33,26 +35,42 @@ public class ColorSensorCalibration extends LinearOpMode {
     String stoneOutCollectedRaw;
     String stoneBuffer = "";
     String emptyBuffer = "";
+    double stoneRadius;
     int counter = 0;
+
+    Point[] stoneInPoints;
+    Point[] stoneOutPoints;
+
+    Point emptyCenter = new Point(0, 0, 0);
+    Point stoneCenter = new Point(0, 0, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
         driving = new Driving(this);
         moacV_2 = new MoacV_2(hardwareMap);
-        hasStone = new Toggle.OneShot();
-        startWriting = new Toggle.OneShot();
-        finish = new Toggle.OneShot();
+        gamepad1A = new Toggle.OneShot();
+        gamepad1B = new Toggle.OneShot();
+        gamepad1X = new Toggle.OneShot();
+        gamepad1Y = new Toggle.OneShot();
         stone = false;
         writing = false;
         finished = false;
+        calibrated = false;
         colorSensorCalibrationValue = AppUtil.getInstance().getSettingsFile("colorSensorCalibrationValue.txt");
         emptyValues = AppUtil.getInstance().getSettingsFile("emptyValues.txt");
         stoneValues = AppUtil.getInstance().getSettingsFile("stoneValues.txt");
         colorSensor = hardwareMap.colorSensor.get("brickSensor");
+        colorSensor.enableLed(true);
+
+        telemetry.addData("init finished", null);
+        telemetry.update();
 
         waitForStart();
 
         while (opModeIsActive()) {
+
+            moacV_2.stacker.open();
+
             if (gamepad1.left_bumper)
                 driving.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.35, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
             else
@@ -62,13 +80,16 @@ public class ColorSensorCalibration extends LinearOpMode {
             else if (gamepad1.right_trigger > .5) moacV_2.intake.takeIn();
             else moacV_2.intake.stopIntake();
 
-            if (hasStone.update(gamepad1.a))
+            if (gamepad1A.update(gamepad1.a))
                 stone = !stone;
-            if (startWriting.update(gamepad1.b))
+            if (gamepad1B.update(gamepad1.b))
                 writing = !writing;
-            if (finish.update(gamepad1.x))
+            if (gamepad1X.update(gamepad1.x))
                 finished = true;
 
+            if (gamepad1.left_trigger > .5) moacV_2.intake.spitOut();
+            else if (gamepad1.right_trigger > .5) moacV_2.intake.takeIn();
+            else moacV_2.intake.stopIntake();
 
             if (writing) {
                 if (stone)
@@ -96,8 +117,8 @@ public class ColorSensorCalibration extends LinearOpMode {
                 telemetry.addData("copy to string arrays", null);
                 telemetry.update();
 
-                Point[] stoneInPoints = new Point[valueStringStoneIn.length];
-                Point[] stoneOutPoints = new Point[valueStringStoneOut.length];
+                stoneInPoints = new Point[valueStringStoneIn.length];
+                stoneOutPoints = new Point[valueStringStoneOut.length];
 
                 telemetry.addData("initialized point arrays", null);
                 telemetry.update();
@@ -121,12 +142,63 @@ public class ColorSensorCalibration extends LinearOpMode {
                 telemetry.addData("write in to calibratioin files", null);
                 telemetry.update();
 
+                setcalibratedPoints();
+                setStoneRadius();
+
+                calibrated = true;
+
                 counter++;
             }
-            telemetry.addData("hasStone", stone);
-            telemetry.addData("writing", writing);
+
+
+            if (calibrated) {
+                telemetry.addData("we have a stone", stoneIsIn());
+                telemetry.addData("radius", stoneRadius);
+                telemetry.addData("Current distance between stoneCenter", distance(currentColor(), stoneCenter));
+                telemetry.addData("Current distance between empty stone", distance(currentColor(), emptyCenter));
+            } else {
+                telemetry.addData("stone", stone);
+                telemetry.addData("writing", writing);
+                telemetry.addData("finished", finished);
+                telemetry.addData("calibrated", calibrated);
+            }
+            if (distance(emptyCenter, stoneCenter) < stoneRadius)
+                telemetry.addData("Empty center is in stone sphere", null);
             telemetry.update();
         }
+    }
+
+    public Point currentColor() {
+        return new Point(colorSensor.red(), colorSensor.green(), colorSensor.blue());
+    }
+
+
+    public boolean stoneIsIn() {
+        Point colorPoint = new Point(colorSensor.red(), colorSensor.green(), colorSensor.blue());
+        double diff = distance(colorPoint, stoneCenter);
+        if ((diff < distance(colorPoint, emptyCenter)) && diff <= stoneRadius)
+            return true;
+        return false;
+    }
+
+    private double longestDistance(Point[] points, Point center) {
+        double result = 0;
+        for (Point point : points)
+            result = Math.max(result, distance(point, center));
+        return result;
+    }
+
+    private void setStoneRadius() {
+        stoneRadius = Math.max(longestDistance(stoneInPoints, stoneCenter), 1.5);
+    }
+
+    private void setcalibratedPoints() {
+        String s = ReadWriteFile.readFile(colorSensorCalibrationValue);
+        String[] twoPoints = s.split("\n");
+        String[] stonePoint = twoPoints[0].split(",");
+        String[] emptyPoint = twoPoints[1].split(",");
+        stoneCenter = new Point(Integer.parseInt(stonePoint[0]), Integer.parseInt(stonePoint[1]), Integer.parseInt(stonePoint[2]));
+        emptyCenter = new Point(Integer.parseInt(emptyPoint[0]), Integer.parseInt(emptyPoint[1]), Integer.parseInt(emptyPoint[2]));
     }
 
     private String getColorValues() {
@@ -141,6 +213,10 @@ public class ColorSensorCalibration extends LinearOpMode {
             sumZ += p.z;
         }
         return new Point(sumX / points.length, sumY / points.length, sumZ / points.length);
+    }
+
+    public double distance(Point p1, Point p2) {
+        return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
     }
 
     class Point {
