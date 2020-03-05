@@ -111,7 +111,6 @@ public class ColorSensorCalibration extends LinearOpMode {
                 for (int i = 0; i < stoneOutPoints.length; i++) {
                     rgbValues = valueStringStoneOut[i].split(",");
                     stoneOutPoints[i] = new Point(Integer.parseInt(rgbValues[0]), Integer.parseInt(rgbValues[1]), Integer.parseInt(rgbValues[2]));
-
                 }
 
                 telemetry.addData("copy data into point arrays", null);

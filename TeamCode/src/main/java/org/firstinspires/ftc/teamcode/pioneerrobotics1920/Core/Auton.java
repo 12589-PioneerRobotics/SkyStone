@@ -427,7 +427,7 @@ public class Auton extends LinearOpMode {
             drive.moveClose("back", 44, 1, 0f);
 
 
-        nav.arc(180, 1, .65, -.8);
+        nav.arc(180, 1, .6, -.8);
 
         //drive.moveClose("back", backDistance, 1, 0f);
     }
@@ -477,7 +477,7 @@ public class Auton extends LinearOpMode {
                         drive.linearOpMode.telemetry.addData("Vert Slide Pos", moac.linearSlide.slideVertical.getCurrentPosition());
 
                         nav.arc(250, 1, 1, -.5);
-                        drive.forward(7, 1);
+                        drive.forward(8, 1);
                         nav.arc(180, 3, 1, .8);
                         count++;
                     }
@@ -488,7 +488,7 @@ public class Auton extends LinearOpMode {
                 moac.linearSlide.lifterPosition(0);
                 moac.linearSlide.horizPosition(0);
                 double curTime = getRuntime();
-                while (getRuntime() < curTime + .6)
+                while (getRuntime() < curTime + .65)
                     drive.libertyDrive(-.6, 0, 0);
                 drive.stopDriving();
                 moac.foundationGrabber.grabFoundation(false);
