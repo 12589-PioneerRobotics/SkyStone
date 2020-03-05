@@ -246,7 +246,7 @@ public class Driving {
         double curTime = linearOpMode.getRuntime();
         while (linearOpMode.getRuntime() < curTime + seconds) {
             angleDiff = angle0 - gyro.getValueContinuous();
-            turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * .02 : 0;
+            turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * .05 : 0;
             libertyDrive(power, turnPower, 0);
         }
     }

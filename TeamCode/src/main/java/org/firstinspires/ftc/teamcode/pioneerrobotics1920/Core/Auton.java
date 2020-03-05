@@ -349,6 +349,7 @@ public class Auton extends LinearOpMode {
                     moac.intake.stopIntake();
                     moac.stacker.close();
                 }
+                break;
 
             case CENTER:
                 if (round == 0) {
@@ -407,17 +408,18 @@ public class Auton extends LinearOpMode {
     public void takeStone(double backDistance, boolean blue) {
         moac.stacker.open();
         moac.intake.takeIn();
-        while (!moac.intake.getStoneState()) {
+        double nowTime = getRuntime();
+        while (!moac.intake.getStoneState() && (getRuntime() < nowTime + 3)) {
             drive.indefiniteForward(.3);
         }
         drive.stopDriving();
 
 
-        if (!Operations.approximatelyEquals(drive.getAccurateDistanceSensorReading(drive.backDistance), 45, 2))
-            drive.moveClose("back", 45, 1, 0f);
+        if (!Operations.approximatelyEquals(drive.getAccurateDistanceSensorReading(drive.backDistance), 40, 2))
+            drive.moveClose("back", 40, 1, 0f);
 
 
-        nav.arc(180, 1, .6, -.7);
+        nav.arc(180, 1, .65, -.75);
 
         //drive.moveClose("back", backDistance, 1, 0f);
     }
@@ -457,12 +459,12 @@ public class Auton extends LinearOpMode {
 
             } else {
                 //drive.moveClose("back", -1, 1, 1f);
-                drive.moveClose("front", 34, .25, 0f);
+                drive.moveClose("front", 34, .2, 0f);
                 moac.foundationGrabber.grabFoundation(true);
                 sleep(250);
                 while (moac.linearSlide.slideHoriz.getCurrentPosition() < 900) {
                     if (count == 0) {
-                        moac.linearSlide.lifterPosition(300);
+                        //moac.linearSlide.lifterPosition(300);
                         moac.linearSlide.horizPosition(1150);
                         drive.linearOpMode.telemetry.addData("Vert Slide Pos", moac.linearSlide.slideVertical.getCurrentPosition());
 
