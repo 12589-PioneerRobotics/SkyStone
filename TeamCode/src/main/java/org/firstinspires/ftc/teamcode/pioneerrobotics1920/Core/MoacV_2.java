@@ -195,12 +195,6 @@ public class MoacV_2 {
                 return false;
         }
 
-
-        public boolean detectStone() {
-            return false;
-        }
-
-
         public void spitOut() {
             leftIntake.setPower(-1);
             rightIntake.setPower(1);

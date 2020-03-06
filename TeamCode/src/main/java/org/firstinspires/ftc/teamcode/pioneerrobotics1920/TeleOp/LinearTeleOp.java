@@ -119,8 +119,8 @@ public class LinearTeleOp extends LinearOpMode {
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3), gamepad1.left_stick_x);
             }
 
-            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
-            else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
+            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(.5); //max height 5100
+            else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-.3);
             else {
                 if (vertSlideOneShot.update(gamepad1.a)) {
                     if (blue) {
@@ -134,7 +134,7 @@ public class LinearTeleOp extends LinearOpMode {
 
             if (lifterOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down)))
                 if (moac.linearSlide.slideVertical.getCurrentPosition() > 500)
-                    moac.linearSlide.lifterPower(.1);
+                    moac.linearSlide.lifterPower(.05);
                 else
                     moac.linearSlide.lifterPower(0);
 
@@ -146,8 +146,8 @@ public class LinearTeleOp extends LinearOpMode {
                 }
             }
 
-            if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
-            else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.6);
+            if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.4);
+            else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.4);
             else {
                 if (horizSlideOneShot.update(gamepad1.b)) moac.linearSlide.horiz();
             }
