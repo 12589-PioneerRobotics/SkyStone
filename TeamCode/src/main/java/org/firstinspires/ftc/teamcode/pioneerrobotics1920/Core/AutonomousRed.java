@@ -11,11 +11,18 @@ import java.util.ArrayList;
 public class AutonomousRed extends LinearOpMode implements AutonomousBase {
     public AutonomousCore auto;
 
+    public AutonomousRed(boolean left, boolean startBuilding) {
+        auto = new AutonomousCore(this, false, left, startBuilding);
+    }
+
     private ArrayList<Stones> stones = new ArrayList<>();
     private MoacV_2 moac;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        AutonomousRed autoRed = new AutonomousRed(auto.left, auto.startBuilding);
+
+
         stones.add(new Stones(110, 21));
         stones.add(new Stones(110, 12));
         stones.add(new Stones(110, 8));
@@ -291,6 +298,15 @@ public class AutonomousRed extends LinearOpMode implements AutonomousBase {
             auto.drive.forward(-12, 1, 1);
             moac.foundationGrabber.grabFoundation(false);
             auto.nav.IamAt(auto.drive.leftDistance.getDistance(DistanceUnit.INCH) + 8, 120);
+        }
+    }
+
+    public class Stones {
+        public int x, y;
+
+        public Stones(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }

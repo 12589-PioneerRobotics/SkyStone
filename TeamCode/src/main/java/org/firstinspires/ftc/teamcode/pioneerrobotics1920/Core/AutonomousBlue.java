@@ -1,18 +1,25 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 import java.util.ArrayList;
 
 public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
+    public AutonomousCore auto;
+    public HardwareMap hardwareMap;
 
-    public AutonomousBase.AutonomousCore auto;
+    public AutonomousBlue(boolean left, boolean startBuilding) {
+        auto = new AutonomousCore(this, true, left, startBuilding);
+    }
+
+    int count = 0;
 
     private ArrayList<Stones> stones = new ArrayList<>();
+
 
     @Override
     public void park() {
@@ -30,132 +37,82 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
 
     @Override
     public void getSkystone(SkystoneCVTest.Position pos) {
-        int facingBlue = 90;
         switch (pos) {
             case LEFT:
                 if (auto.round == 0) {
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("right", 36, .6, 2f);//move parallel to the block
-                    } else auto.nav.moveToY(36);
-                    auto.nav.turnTo(facingBlue);
-
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("back", 24, .6, 3.5f);//move up to the block.
-                    } else {
-                        auto.nav.moveToX(28);
-                        auto.nav.turnTo(facingBlue);
-                    }
-                    auto.nav.turnTo(facingBlue);
+                    auto.drive.strafeClose(true, false, 36, 24, 1);
                     auto.takeStone();
 
-                    auto.nav.currPos(auto.drive.backDistance.getDistance(DistanceUnit.INCH) + 7, auto.drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
-
-                    stones.remove(5);
-                    auto.round++;
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.backDistance) + 7, auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance) + 7);
+                } else if (auto.round == 1){
+                    auto.drive.smoothTimeBasedForward(2, .5);
+                    auto.drive.strafeClose(true, true, 38, 32, 2);
+                    auto.takeStoneAgainstWall();
+                    auto.drive.strafeClose(true, true, 24, 40, 2);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), auto.drive.getAccurateDistanceSensorReading(auto.drive.frontDistance));
+                    auto.moac.intake.stopIntake();
+                    auto.moac.stacker.close();
                 } else {
-                    auto.nav.moveToY(stones.get(2).y);
-
-                    auto.nav.turnTo(facingBlue);
-
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("right", 14, .6, 2f);
-                        auto.nav.turnTo(facingBlue);
-                        auto.drive.moveClose("back", 26, .6, 3.5f);
-                    } else {
-                        auto.nav.moveToY(15);
-                        auto.nav.moveToX(30);
-                    }
-
-                    auto.nav.turnTo(facingBlue);
-
-                    auto.takeStone();
-                    auto.nav.currPos(auto.drive.backDistance.getDistance(DistanceUnit.INCH) + 7, auto.drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
-                    stones.remove(2);
+                    auto.drive.smoothTimeBasedForward(2.2, .6);
+                    auto.drive.strafeClose(true, true, 38, 25, 2);
+                    auto.takeStoneAgainstWall();
+                    auto.drive.strafeClose(true, true, 24, 33, 2);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), auto.drive.getAccurateDistanceSensorReading(auto.drive.frontDistance));
+                    auto.moac.intake.stopIntake();
+                    auto.moac.stacker.close();
                 }
                 break;
 
             case CENTER:
                 if (auto.round == 0) {
-                    auto.nav.moveToX(12);
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("right", 30, .6, 2f);//move this far away from the right wall
-                        auto.nav.turnTo(facingBlue);
-                        auto.drive.moveClose("back", 26, .6, 3.5f);//move forward
-                    } else {
-                        auto.nav.moveToY(28);
-                        auto.nav.moveToX(26);
-                    }
-
-                    auto.nav.turnTo(facingBlue);//added to straighten out
+                    auto.drive.strafeClose(true, false, 30, 24, 1);
                     auto.takeStone();
 
-                    auto.nav.currPos(auto.drive.backDistance.getDistance(DistanceUnit.INCH) + 7, auto.drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.backDistance) + 7, auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance) + 7);
 
-                    stones.remove(4);
-                    auto.round++;
-                } else {
-                    auto.nav.moveToY(stones.get(1).y + 3);
-
-                    auto.nav.turnTo(facingBlue);
-
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("right", 6, .6, 2f);//moves to within 6 inches from the right wall
-                        auto.nav.turnTo(facingBlue);
-                        auto.drive.moveClose("back", 26, .6, 3.5f);//moves to 28 inches forward
-                    } else {
-                        auto.nav.moveToY(8.5);
-                        auto.nav.moveToX(26);
-                        auto.nav.moveTo(8.5, 26);
-                    }
-                    auto.nav.turnTo(facingBlue);//added to straighten out
-
-                    auto.takeStone();
-
-                    auto.nav.currPos(auto.drive.backDistance.getDistance(DistanceUnit.INCH) + 7, auto.drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
-
-                    stones.remove(1);
+                } else if (auto.round ==1){
+                    auto.drive.smoothTimeBasedForward(2.2, .6);
+                    auto.drive.strafeClose(true, true, 38, 25, 2);
+                    auto.takeStoneAgainstWall();
+                    auto.drive.strafeClose(true, true, 24, 33, 2);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), auto.drive.getAccurateDistanceSensorReading(auto.drive.frontDistance));
+                    auto.moac.intake.stopIntake();
+                    auto.moac.stacker.close();
+                } else{
+                    auto.drive.smoothTimeBasedForward(2.3, .6);
+                    auto.drive.strafeClose(true, true, 38, 14, 2);
+                    auto.takeStoneAgainstWall();
+                    auto.drive.strafeClose(true, true, 24, 28, 2);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), auto.drive.getAccurateDistanceSensorReading(auto.drive.frontDistance));
+                    auto.moac.intake.stopIntake();
+                    auto.moac.stacker.close();
                 }
                 break;
 
             case RIGHT:
                 if (auto.round == 0) {
-                    auto.drive.forward(6, 1, .6);
-                    if (auto.useDistanceSensors) {
-                        auto.drive.moveClose("right", 20, .6, 1.5f);
-                        auto.nav.turnTo(facingBlue);
-                        auto.drive.moveClose("back", 25, .5, 1.5f);
-                    } else {
-                        auto.nav.moveToY(22.5);
-                        auto.nav.moveToX(26);
-                    }
-                    auto.nav.turnTo(facingBlue);//added to straighten out. May or may not be necessary
-
+                    auto.drive.strafeClose(true, false, 20, 24, 1);
                     auto.takeStone();
 
-                    auto.nav.currPos(auto.drive.backDistance.getDistance(DistanceUnit.INCH) + 7, auto.drive.rightDistance.getDistance(DistanceUnit.INCH) + 7, facingBlue);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.backDistance) + 7, auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance) + 7);
 
-
-                    stones.remove(3);
-                    auto.round++;
-                } else {
-                    auto.nav.moveTo(auto.nav.getX(), stones.get(0).y + 25);
-
-                    auto.nav.turnTo(180);
-                    sleep(350);
-
-                    auto.drive.moveClose("front", 14, .4, 1f);//moves to within 6 inches from the right wall
-
-                    auto.drive.moveClose("right", 38, .6, 2f);
-                    auto.nav.turnTo(180);
+                } else if (auto.round == 1){
+                    auto.drive.smoothTimeBasedForward(2, .6);
+                    auto.drive.strafeClose(true, true, 38, 14, 2);
                     auto.takeStoneAgainstWall();
-
-                    auto.drive.moveClose("right", 25, .6, 1.5f);
-
-                    auto.nav.turnTo(180);
-
-                    auto.nav.IamAt(auto.drive.rightDistance.getDistance(DistanceUnit.INCH), auto.drive.frontDistance.getDistance(DistanceUnit.INCH) + 6);
-
-                    stones.remove(1);
+                    auto.drive.strafeClose(true, true, 24, 28, 2);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), auto.drive.getAccurateDistanceSensorReading(auto.drive.frontDistance));
+                    auto.moac.intake.stopIntake();
+                    auto.moac.stacker.close();
+                }
+                else {
+                    auto.drive.smoothTimeBasedForward(1.5, .6);
+                    auto.drive.strafeClose(true, true, 38, 48, 2);
+                    auto.takeStoneAgainstWall();
+                    auto.drive.strafeClose(true, true, 24, 48, 2);
+                    auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), auto.drive.getAccurateDistanceSensorReading(auto.drive.frontDistance));
+                    auto.moac.intake.stopIntake();
+                    auto.moac.stacker.close();
                 }
                 break;
             default:
@@ -176,30 +133,36 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
             auto.nav.moveToX(16);
             auto.moac.foundationGrabber.grabFoundation(true);
         } else {
-            auto.drive.moveClose("back", 1, 0.3, 1f);
-            auto.moac.foundationGrabber.grabFoundation(true);
-            auto.nav.IamAt(40 - auto.drive.backDistance.getDistance(DistanceUnit.INCH), 136 - auto.drive.rightDistance.getDistance(DistanceUnit.INCH));
-            //auto.drive.forward(-2,1,.7);
+            auto.drive.moveClose("front", 31, .5, 0f);
+            //moac.foundationGrabber.grabFoundation(true);
+            auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.frontDistance) + 7, 144 - 7 - auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance));
             sleep(500);
-            while (auto.moac.linearSlide.slideHoriz.getCurrentPosition() > -2000 && auto.moac.linearSlide.slideVertical.getCurrentPosition() < 490) {
-                auto.moac.linearSlide.lifterPosition(500);
+            while (auto.moac.linearSlide.slideHoriz.getCurrentPosition() > -1950) {
+                auto.moac.linearSlide.lifterPosition(300);
                 auto.moac.linearSlide.horizPosition(-2050);
-                auto.nav.arc(180, 5, 1, .6);
+                if (count == 0)
+                    auto.nav.arc(225, 1, .8, .5);
+                auto.drive.forward(5, 1);
+                auto.nav.arc(180, 1, 1, 1);
+                count++;
             }
             auto.moac.stacker.open();
-            sleep(100);
+            while (auto.moac.linearSlide.slideHoriz.getCurrentPosition() < -1400) {
+                auto.moac.linearSlide.lifterPosition(0);
+                auto.moac.linearSlide.horizPosition(0);
+            }
             auto.moac.stacker.close();
-            auto.moac.linearSlide.lifterPosition(0);
-            auto.moac.linearSlide.horizPosition(0);
-            auto.drive.forward(-12, 1, 1);
-            auto.moac.foundationGrabber.grabFoundation(false);
-            auto.nav.IamAt(auto.drive.rightDistance.getDistance(DistanceUnit.INCH) + 8, 120);
+            //auto.moac.foundationGrabber.grabFoundation(false);
+            auto.nav.turnTo(180);
+            auto.drive.timeBasedForward(.5, -.6);
+            if (!Operations.approximatelyEquals(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), 25, 1))
+                auto.drive.moveClose("right", 25, .6, 1f);
+            auto.nav.IamAt(auto.drive.getAccurateDistanceSensorReading(auto.drive.rightDistance), 115);
         }
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        auto = new AutonomousCore(this);
 
         stones.add(new Stones(37, 8));
         stones.add(new Stones(37, 15));
@@ -251,20 +214,16 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
             telemetry.addData("skystone Pos", auto.detector.getPosition());
             telemetry.update();
 
-            //first movement
-            //auto.nav.moveToX(14);
-            //detect skystone, includes all movements for getting stones
+            auto.drive.smoothTimeBasedForward(.4, .5);
             getSkystone(auto.skystonePos);
 
             //next movement
             auto.nav.turnTo(180);
             auto.moac.intake.stopIntake();
             auto.moac.stacker.close();
-            auto.nav.backToY(124);
-            sleep(300);
-            auto.drive.moveClose("back", 12, .5, 1.5f);
+            auto.nav.backToY(110);
 
-            auto.nav.turnTo(270);
+            auto.nav.arc(270,1,1,.2);
             getFoundation();
 
             getSkystone(auto.skystonePos);
@@ -280,6 +239,15 @@ public class AutonomousBlue extends LinearOpMode implements AutonomousBase {
             auto.moac.linearSlide.horizPosition(0);
             auto.moac.linearSlide.lifterPosition(0);
             park();
+        }
+    }
+
+    public class Stones {
+        public int x, y;
+
+        public Stones(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }

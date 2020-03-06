@@ -50,6 +50,15 @@ public class Operations {
         return Math.abs(value - target) < thresh;
     }
 
+    public static double power(double powerValue, double floor, double min, double max) {
+        if (powerValue > max)
+            return max;
+        if (powerValue < min)
+            return min;
+        if (Math.abs(powerValue) < Math.abs(floor))
+            return sgn(powerValue) * floor;
+        return powerValue;
+    }
     public static double powerScale(double power){
         return powerScale(power, 1);
     }
@@ -62,5 +71,9 @@ public class Operations {
                 return scale * power * power;
         }
         return 1;
+    }
+
+    public static int roundNearest90(float val){
+        return Math.round(val/90)*90;
     }
 }

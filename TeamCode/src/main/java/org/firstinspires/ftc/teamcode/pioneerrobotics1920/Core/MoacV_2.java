@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.ArrayList;
 
 public class MoacV_2 {
     //TODO: Add these back once hardware map is complete
@@ -13,13 +16,14 @@ public class MoacV_2 {
     public FoundationGrabber foundationGrabber;
     //public Stacker stacker;
     public Intake intake;
-    public Driving drive;
     public Stacker stacker;
+
     //public IntakeSensor intakeSensor;
 
     public MoacV_2(Boolean blue, HardwareMap hardwareMap) { //Autonomous Constructor
         //linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
+
     }
 
     public MoacV_2(HardwareMap hardwareMap, boolean blue) { //TeleOp Constructor
@@ -27,6 +31,7 @@ public class MoacV_2 {
         linearSlide = new LinearSlide(hardwareMap);
         foundationGrabber = new FoundationGrabber(hardwareMap);
         stacker = new Stacker(hardwareMap);
+
         //intakeSensor = new IntakeSensor(hardwareMap, blue);
 
     }
@@ -42,6 +47,7 @@ public class MoacV_2 {
         public DcMotor slideVertical;
         public DcMotor slideHoriz;
         private boolean horizSwitcher;
+        public final double HORIZ_OPEN = 1150;
 
         LinearSlide(HardwareMap hardwareMap) {
             slideVertical = hardwareMap.dcMotor.get("slideVertical");
@@ -83,7 +89,7 @@ public class MoacV_2 {
         }
 
         public void horiz() {
-            slideHoriz.setTargetPosition((horizSwitcher) ? -2100 : 0);
+            slideHoriz.setTargetPosition((horizSwitcher) ? 1150 : 0);
             slideHoriz.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideHoriz.setPower(1);
             horizSwitcher = !horizSwitcher;
@@ -97,21 +103,21 @@ public class MoacV_2 {
         FoundationGrabber(HardwareMap hardwareMap) {
             leftFoundationGrabber = hardwareMap.servo.get("leftFoundationGrabber"); //from the back pov, looking from front to back
             rightFoundationGrabber = hardwareMap.servo.get("rightFoundationGrabber");
-            leftFoundationGrabber.setPosition(0.77);
-            rightFoundationGrabber.setPosition(.21);
+            leftFoundationGrabber.setPosition(.05);
+            rightFoundationGrabber.setPosition(.95);
         }
 
         public void grabFoundation(boolean grab) {
-            leftFoundationGrabber.setPosition((grab) ? .21 : .77); //vals .21 .77
-            rightFoundationGrabber.setPosition((grab) ? .77 : .21);
+            leftFoundationGrabber.setPosition((grab) ? .55 : .05); //vals .21 .77
+            rightFoundationGrabber.setPosition((grab) ? .35 : .95);
         }
     }
 
     public class Stacker {
         Servo grabber;
         boolean grabberSwitcher = false;
-        final private double OPEN_POS = .45;
-        final private double CLOSE_POS = .31;
+        final private double OPEN_POS = .86; //used to be .89
+        final private double CLOSE_POS = .97; //used to be 1
 
         Stacker(HardwareMap hardwareMap) {
             grabber = hardwareMap.servo.get("grabber");
@@ -136,21 +142,57 @@ public class MoacV_2 {
     public class Intake {
         DcMotor leftIntake;
         DcMotor rightIntake;
+        public ColorSensor brickSensor;
+
+        final Point emptyCenter = new Point(0, 0, 0);
+        final Point stoneCenter = new Point(0, 0, 0);
+        final double stoneRadius = 0;
+
+        boolean hasStone;
+
+        final double THRESH = 20;
+
+        ArrayList<Double> differences = new ArrayList<>();
 
         Intake(HardwareMap hardwareMap) {
             leftIntake = hardwareMap.dcMotor.get("leftIntake");
             rightIntake = hardwareMap.dcMotor.get("rightIntake");
-
+            brickSensor = hardwareMap.get(ColorSensor.class, "brickSensor");
             leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
             rightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
             leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            hasStone = false;
+        }
+
+        public Point currentColor() {
+            return new Point(brickSensor.red(), brickSensor.green(), brickSensor.blue());
+        }
+
+        public double distance(Point p1, Point p2) {
+            return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
+        }
+
+        private boolean stoneIsIn() {
+            Point colorPoint = currentColor();
+            double diff = distance(colorPoint, stoneCenter);
+            if ((diff < distance(colorPoint, emptyCenter)) && diff <= stoneRadius)
+                return true;
+            return false;
         }
 
         public void takeIn() {
-            leftIntake.setPower(.8);
-            rightIntake.setPower(-.8);
+            leftIntake.setPower(1);
+            rightIntake.setPower(-1);
+        }
+
+        public boolean getStoneState() {
+            if (brickSensor.alpha() < 10 || brickSensor.blue() < 2)
+                return true;
+            else
+                return false;
         }
 
         public void spitOut() {
@@ -162,6 +204,20 @@ public class MoacV_2 {
         public void stopIntake() {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
+        }
+    }
+
+    class Point {
+        int x, y, z;
+
+        public Point(int x, int y, int z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public String toString() {
+            return "" + x + "," + y + "," + z;
         }
     }
 

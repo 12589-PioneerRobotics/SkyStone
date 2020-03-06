@@ -91,18 +91,21 @@ public class Navigation {
 
     public void arc(double angle1, double thresh, double turnPower, double drivePower) {
         double diff = getDiff(angle1);
-        double RAW_THRESH = thresh;
+        double initDiff = getDiff(angle1);
+        double RAW_THRESH = 5 + Math.abs(diff) / 15;
         double TURN_POWER = turnPower;
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
+            double factor = Math.abs(getDiff(angle1)) / initDiff;
+            factor = (Math.abs(factor) > 0.2) ? 1 : factor;
             if (diff > 0)
-                driving.libertyDrive(drivePower, TURN_POWER, 0);
+                driving.libertyDrive(drivePower, TURN_POWER*factor, 0);
             else
-                driving.libertyDrive(drivePower, -TURN_POWER, 0);
+                driving.libertyDrive(drivePower, -TURN_POWER*factor, 0);
+            diff = getDiff(angle1);
             driving.linearOpMode.telemetry.addData("difference", diff);
             driving.linearOpMode.telemetry.addData("nav angle: ", getAngle());
             driving.linearOpMode.telemetry.update();
         }
-        driving.stopDriving();
 
         while ((getDiff(angle1) > thresh || getDiff(angle1) < -thresh) && driving.linearOpMode.opModeIsActive()) {
             diff = getDiff(angle1);
@@ -124,7 +127,7 @@ public class Navigation {
     }
 
     public void turnTo(double angle1) {
-        turnTo(angle1, 1, .25);
+        turnTo(angle1, 2, .25);
     }
 
     public void turnTo(double angle1, double thresh, double correctPower) {
