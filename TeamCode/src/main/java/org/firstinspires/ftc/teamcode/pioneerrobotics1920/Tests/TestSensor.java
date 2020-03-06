@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -10,10 +11,10 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 @TeleOp(name = "Test Sensor", group = "test")
 public class TestSensor extends LinearOpMode {
-    /*private ModernRoboticsI2cRangeSensor frontDistance;
+    private ModernRoboticsI2cRangeSensor frontDistance;
     private ModernRoboticsI2cRangeSensor backDistance;
     private ModernRoboticsI2cRangeSensor rightDistance;
-    private ModernRoboticsI2cRangeSensor leftDistance;*/
+    private ModernRoboticsI2cRangeSensor leftDistance;
 
     private ColorSensor brickSensor;
     private Toggle.OneShot oneShotLight;
@@ -34,10 +35,10 @@ public class TestSensor extends LinearOpMode {
 
         brickSensor = this.hardwareMap.get(ColorSensor.class, "brickSensor");
 
-        /*frontDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
+        frontDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
         backDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "backDistance");
         rightDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
-        leftDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");*/
+        leftDistance = this.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");
         waitForStart();
 //        test.enableLed(true);
 //        light = hardwareMap.get(RevBlinkinLedDriver.class, "led");
@@ -74,15 +75,19 @@ public class TestSensor extends LinearOpMode {
             telemetry.addData("Red", brickSensor.red());
             telemetry.addData("Green", brickSensor.green());
 
-            //telemetry.addData("right distance", driving.getAccurateDistanceSensorReading(driving.rightDistance));
-            //telemetry.addData("back distance", driving.getAccurateDistanceSensorReading(driving.backDistance));
-            /*telemetry.addData("back distance cmUltrasonic", backDistance.cmUltrasonic());
-            telemetry.addData("back distance cmOptical", backDistance.cmOptical());
-            telemetry.addData("right distance",rightDistance.getDistance(DistanceUnit.INCH));
-            telemetry.addData("right distance cmUltrasonic", rightDistance.cmUltrasonic());
-            telemetry.addData("right distance cmOptical", rightDistance.cmOptical());
-            telemetry.addData("left distance", leftDistance.getDistance(DistanceUnit.INCH));
-*/
+            telemetry.addData("right distance", driving.getAccurateDistanceSensorReading(driving.rightDistance));
+            telemetry.addData("back distance", driving.getAccurateDistanceSensorReading(driving.backDistance));
+//            telemetry.addData("back distance cmUltrasonic", backDistance.cmUltrasonic());
+//            telemetry.addData("back distance cmOptical", backDistance.cmOptical());
+//            telemetry.addData("right distance",rightDistance.getDistance(DistanceUnit.INCH));
+            /*telemetry.addData("right distance cmUltrasonic", rightDistance.cmUltrasonic());
+            telemetry.addData("right distance cmOptical", rightDistance.cmOptical());*/
+            telemetry.addData("left distance", driving.getAccurateDistanceSensorReading(driving.leftDistance));
+            telemetry.addData("right distance status", rightDistance.status());
+            telemetry.addData("left distance status", leftDistance.status());
+            telemetry.addData("back distance status", backDistance.status());
+            telemetry.addData("front distance status", frontDistance.status());
+
             telemetry.update();
         }
     }
