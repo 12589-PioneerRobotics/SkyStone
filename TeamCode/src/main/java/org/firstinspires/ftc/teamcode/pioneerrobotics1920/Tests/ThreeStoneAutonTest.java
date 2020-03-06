@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Auton;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous(name = "three stone auton test", group = "test")
 public class ThreeStoneAutonTest extends Auton {
 

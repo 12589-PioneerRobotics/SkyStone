@@ -16,7 +16,10 @@ public class TestAutonomous extends Auton {
         int count = 0;
         nav.currPos(9, 36, 90);
         waitForStart();
-
+        double nowTIme = getRuntime();
+        while (getRuntime() < nowTIme + 5)
+            drive.libertyDrive(.3, 0, 0);
+/*
         drive.smoothTimeBasedForward(.3, .5);
         moac.intake.takeIn();
         moac.stacker.open();
@@ -27,7 +30,7 @@ public class TestAutonomous extends Auton {
         moac.stacker.close();
         moac.intake.stopIntake();
         drive.stopDriving();
-        /*
+
         //drive.forward(-20, 1);
         takeStone();
         nav.turnTo(180);

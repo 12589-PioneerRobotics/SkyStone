@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
+@Disabled
 @Autonomous(name = "SkystoneCVTestDemo", group = "Test")
 public class SkystoneCVTestDemo extends LinearOpMode {
     @Override

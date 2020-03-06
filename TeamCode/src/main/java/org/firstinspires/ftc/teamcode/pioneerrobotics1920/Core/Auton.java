@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SkystoneCVTest;
 
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous(name = "Autonomous")
 //@Disabled
 public class Auton extends LinearOpMode {
@@ -414,13 +416,13 @@ public class Auton extends LinearOpMode {
         moac.intake.takeIn();
         double nowTime = getRuntime();
         while (!moac.intake.getStoneState() && (getRuntime() < nowTime + 3)) {
-            drive.indefiniteForward(.3);
+            drive.libertyDrive(.3, 0, 0);
         }
         drive.stopDriving();
         if (blue)
-            //drive.moveClose("right",drive.getAccurateDistanceSensorReading(drive.rightDistance)+2,.4,0f);
+            drive.moveClose("right", drive.getAccurateDistanceSensorReading(drive.rightDistance) + 2, .4, 1f);
 
-            drive.moveClose("back", 39, 1, 0f);
+        drive.moveClose("back", 40, 1, 0f);
 
 
         nav.arc(180, 1, .7, -.75);
@@ -525,7 +527,7 @@ public class Auton extends LinearOpMode {
                 moac.linearSlide.horizPosition(0);
 
                 double curTime = getRuntime();
-                while (getRuntime() < curTime + .5)
+                while (getRuntime() < curTime + .6)
                     drive.libertyDrive(-.6, 0, 0);
                 drive.stopDriving();
 

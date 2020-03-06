@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
+@Disabled
 @TeleOp (name = "Linear TeleOp")
 public class LinearTeleOp extends LinearOpMode {
     private Driving drive;
@@ -119,8 +121,8 @@ public class LinearTeleOp extends LinearOpMode {
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3), gamepad1.left_stick_x);
             }
 
-            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
-            else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.6);
+            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(.7); //max height 5100
+            else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.4);
             else {
                 if (vertSlideOneShot.update(gamepad1.a)) {
                     if (blue) {
@@ -154,7 +156,10 @@ public class LinearTeleOp extends LinearOpMode {
 
             if (dpadOneShot.update(!(gamepad1.dpad_right || gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition() > 8000) {
                 moac.linearSlide.lifterPower(0);
-                moac.linearSlide.horizSlidePower(0);
+                if (moac.linearSlide.slideHoriz.getCurrentPosition() > 400)
+                    moac.linearSlide.horizSlidePower(0.05);
+                else
+                    moac.linearSlide.horizSlidePower(0);
             }
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
@@ -242,8 +247,8 @@ public class LinearTeleOp extends LinearOpMode {
         int sgnX;
         int sgnY;
 
-        ModernRoboticsI2cRangeSensor sensorX;
-        ModernRoboticsI2cRangeSensor sensorY;
+        DistanceSensor sensorX;
+        DistanceSensor sensorY;
 
         if (right) {
             sensorX = drive.rightDistance; //right is positive direction

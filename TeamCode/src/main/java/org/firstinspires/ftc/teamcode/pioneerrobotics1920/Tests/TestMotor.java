@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 
+@Disabled
 @TeleOp(name = "Test motor", group = "test")
 public class TestMotor extends OpMode {
     DcMotor slideVertical;

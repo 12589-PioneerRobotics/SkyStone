@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.CV.SamplingCV;
 
+@Disabled
 @Autonomous(name = "TestOpenCV", group = "Test")
 
 public class TestOpenCV extends LinearOpMode {

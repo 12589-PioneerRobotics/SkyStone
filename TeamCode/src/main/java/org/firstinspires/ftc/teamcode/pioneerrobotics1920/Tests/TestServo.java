@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidOrientation;
 
+@Disabled
 @TeleOp(name = "TestServo", group = "test")
 public class TestServo extends OpMode {
     private Servo servo1, servo2, servo3;

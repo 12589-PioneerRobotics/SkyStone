@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -28,7 +28,7 @@ public class Driving {
     final double CLICKS_PER_INCH = 29.021876534;
     private DcMotor[] drivingMotors;
 
-    public ModernRoboticsI2cRangeSensor frontDistance, backDistance, leftDistance, rightDistance;
+    public DistanceSensor frontDistance, backDistance, leftDistance, rightDistance;
 
     private void initHardware(HardwareMap hardwareMap) {
 
@@ -62,10 +62,10 @@ public class Driving {
 
     //if distance sensors are going to be used
     private void initDistanceSensors(HardwareMap hardwareMap) {
-        frontDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontDistance");
-        backDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "backDistance");
-        leftDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "leftDistance");
-        rightDistance = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rightDistance");
+        frontDistance = hardwareMap.get(DistanceSensor.class, "frontDistance");
+        backDistance = hardwareMap.get(DistanceSensor.class, "backDistance");
+        leftDistance = hardwareMap.get(DistanceSensor.class, "leftDistance");
+        rightDistance = hardwareMap.get(DistanceSensor.class, "rightDistance");
     }
 
     public Driving(OpMode opMode) {
@@ -170,8 +170,8 @@ public class Driving {
         int sgnX;
         int sgnY;
 
-        ModernRoboticsI2cRangeSensor sensorX;
-        ModernRoboticsI2cRangeSensor sensorY;
+        DistanceSensor sensorX;
+        DistanceSensor sensorY;
 
         if (right) {
             sensorX = rightDistance; //right is positive direction
@@ -377,9 +377,9 @@ public class Driving {
         return frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy();
     }
 
-    public double getAccurateDistanceSensorReading(ModernRoboticsI2cRangeSensor distanceSensor) {
+    public double getAccurateDistanceSensorReading(DistanceSensor distanceSensor) {
         double result = distanceSensor.getDistance(DistanceUnit.INCH);
-        while ((result > 80 || result < 0) && !linearOpMode.gamepad1.left_stick_button)
+        while ((result > 50 || result < 4) && !linearOpMode.gamepad1.left_stick_button)
             result = distanceSensor.getDistance(DistanceUnit.INCH);
         return result;
     }
