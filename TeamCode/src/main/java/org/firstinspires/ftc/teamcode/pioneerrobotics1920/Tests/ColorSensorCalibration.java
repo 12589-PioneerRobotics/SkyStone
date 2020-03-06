@@ -135,13 +135,13 @@ public class ColorSensorCalibration extends LinearOpMode {
                 telemetry.addData("copy data into point arrays", null);
                 telemetry.update();
 
-                ReadWriteFile.writeFile(colorSensorCalibrationValue, getCenter(stoneInPoints).toString() + "\n" + getCenter(stoneOutPoints).toString());
+                setcalibratedPoints();
+                setStoneRadius();
+
+                ReadWriteFile.writeFile(colorSensorCalibrationValue, getCenter(stoneInPoints).toString() + "\n" + getCenter(stoneOutPoints).toString() + "\n" + stoneRadius);
 
                 telemetry.addData("write in to calibratioin files", null);
                 telemetry.update();
-
-                setcalibratedPoints();
-                setStoneRadius();
 
                 calibrated = true;
 

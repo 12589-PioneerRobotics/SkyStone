@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests.ColorSensorCalibration;
-
 import java.util.ArrayList;
 
 public class MoacV_2 {
@@ -146,9 +144,9 @@ public class MoacV_2 {
         DcMotor rightIntake;
         public ColorSensor brickSensor;
 
-        int red;
-        int green;
-        int blue;
+        final Point emptyCenter = new Point(0, 0, 0);
+        final Point stoneCenter = new Point(0, 0, 0);
+        final double stoneRadius = 0;
 
         boolean hasStone;
 
@@ -166,11 +164,23 @@ public class MoacV_2 {
             leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            red = brickSensor.red();
-            green = brickSensor.green();
-            blue = brickSensor.blue();
-
             hasStone = false;
+        }
+
+        public Point currentColor() {
+            return new Point(brickSensor.red(), brickSensor.green(), brickSensor.blue());
+        }
+
+        public double distance(Point p1, Point p2) {
+            return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
+        }
+
+        private boolean stoneIsIn() {
+            Point colorPoint = currentColor();
+            double diff = distance(colorPoint, stoneCenter);
+            if ((diff < distance(colorPoint, emptyCenter)) && diff <= stoneRadius)
+                return true;
+            return false;
         }
 
         public void takeIn() {
@@ -185,18 +195,9 @@ public class MoacV_2 {
                 return false;
         }
 
-        public boolean detectStone() {
-            ColorSensorCalibration calibration = new ColorSensorCalibration();
-            /*double difference = Math.sqrt(Math.pow(brickSensor.red() - red, 2) + Math.pow(brickSensor.green() - green, 2) + Math.pow(brickSensor.blue() - blue, 2));
-            if (difference > THRESH)
-                hasStone = !hasStone;
-            this.red = brickSensor.red();
-            this.green = brickSensor.green();
-            this.blue = brickSensor.blue();
-            differences.add(difference);
-            return hasStone;*/
-            return calibration.stoneIsIn();
 
+        public boolean detectStone() {
+            return false;
         }
 
 
@@ -209,6 +210,20 @@ public class MoacV_2 {
         public void stopIntake() {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
+        }
+    }
+
+    class Point {
+        int x, y, z;
+
+        public Point(int x, int y, int z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public String toString() {
+            return "" + x + "," + y + "," + z;
         }
     }
 
