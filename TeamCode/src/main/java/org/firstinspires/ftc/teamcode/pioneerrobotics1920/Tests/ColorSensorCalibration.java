@@ -21,7 +21,6 @@ public class ColorSensorCalibration extends LinearOpMode {
     Toggle.OneShot gamepad1A;
     Toggle.OneShot gamepad1B;
     Toggle.OneShot gamepad1X;
-    Toggle.OneShot gamepad1Y;
     final double SCALE = 0.35;
     boolean stone;
     boolean writing;
@@ -51,7 +50,6 @@ public class ColorSensorCalibration extends LinearOpMode {
         gamepad1A = new Toggle.OneShot();
         gamepad1B = new Toggle.OneShot();
         gamepad1X = new Toggle.OneShot();
-        gamepad1Y = new Toggle.OneShot();
         stone = false;
         writing = false;
         finished = false;
@@ -150,9 +148,12 @@ public class ColorSensorCalibration extends LinearOpMode {
                 counter++;
             }
 
-
+            telemetry.addData("calibrated", calibrated);
             if (calibrated) {
                 telemetry.addData("we have a stone", stoneIsIn());
+                telemetry.addData("color sensor value", "" + colorSensor.red() + "," + colorSensor.green() + "," + colorSensor.blue());
+                telemetry.addData("stone center", stoneCenter);
+                telemetry.addData("empty center", emptyCenter);
                 telemetry.addData("radius", stoneRadius);
                 telemetry.addData("Current distance between stoneCenter", distance(currentColor(), stoneCenter));
                 telemetry.addData("Current distance between empty stone", distance(currentColor(), emptyCenter));
@@ -160,7 +161,6 @@ public class ColorSensorCalibration extends LinearOpMode {
                 telemetry.addData("stone", stone);
                 telemetry.addData("writing", writing);
                 telemetry.addData("finished", finished);
-                telemetry.addData("calibrated", calibrated);
             }
             if (distance(emptyCenter, stoneCenter) < stoneRadius)
                 telemetry.addData("Empty center is in stone sphere", null);
@@ -173,8 +173,19 @@ public class ColorSensorCalibration extends LinearOpMode {
     }
 
 
-    public boolean stoneIsIn() {
-        Point colorPoint = new Point(colorSensor.red(), colorSensor.green(), colorSensor.blue());
+    private boolean stoneIsIn() {
+        Point colorPoint = currentColor();
+        double diff = distance(colorPoint, stoneCenter);
+        if ((diff < distance(colorPoint, emptyCenter)) && diff <= stoneRadius)
+            return true;
+        return false;
+    }
+
+    public boolean checkStone() {
+        colorSensorCalibrationValue = AppUtil.getInstance().getSettingsFile("colorSensorCalibrationValue.txt");
+        Point colorPoint = currentColor();
+        setcalibratedPoints();
+        setStoneRadius();
         double diff = distance(colorPoint, stoneCenter);
         if ((diff < distance(colorPoint, emptyCenter)) && diff <= stoneRadius)
             return true;

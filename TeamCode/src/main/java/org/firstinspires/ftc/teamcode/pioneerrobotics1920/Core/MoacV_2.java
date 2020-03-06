@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests.ColorSensorCalibration;
+
 import java.util.ArrayList;
 
 public class MoacV_2 {
@@ -154,8 +156,6 @@ public class MoacV_2 {
 
         ArrayList<Double> differences = new ArrayList<>();
 
-        /*File file = new File("org/firstinspires/ftc/teamcode/pioneerrobotics1920/Tests/Color_Values.txt");
-        FileStr*/
         Intake(HardwareMap hardwareMap) {
             leftIntake = hardwareMap.dcMotor.get("leftIntake");
             rightIntake = hardwareMap.dcMotor.get("rightIntake");
@@ -186,15 +186,19 @@ public class MoacV_2 {
         }
 
         public boolean detectStone() {
-            double difference = Math.sqrt(Math.pow(brickSensor.red() - red, 2) + Math.pow(brickSensor.green() - green, 2) + Math.pow(brickSensor.blue() - blue, 2));
+            ColorSensorCalibration calibration = new ColorSensorCalibration();
+            /*double difference = Math.sqrt(Math.pow(brickSensor.red() - red, 2) + Math.pow(brickSensor.green() - green, 2) + Math.pow(brickSensor.blue() - blue, 2));
             if (difference > THRESH)
                 hasStone = !hasStone;
             this.red = brickSensor.red();
             this.green = brickSensor.green();
             this.blue = brickSensor.blue();
             differences.add(difference);
-            return hasStone;
+            return hasStone;*/
+            return calibration.stoneIsIn();
+
         }
+
 
         public void spitOut() {
             leftIntake.setPower(-1);
@@ -205,10 +209,6 @@ public class MoacV_2 {
         public void stopIntake() {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
-        }
-
-        public void calibrition() {
-
         }
     }
 
