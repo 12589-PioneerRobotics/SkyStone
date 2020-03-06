@@ -203,7 +203,7 @@ public class Driving {
         double drivePower;
         double turnPower;
 
-        double correctionPower = 0.06;
+        double correctionPower = 0.04;
 
         while ((Math.abs(dx) > thresh || Math.abs(dy) > (thresh) || Math.abs(angleDiff) > turnCorrectThresh)) {
             angleDiff = angle0 - gyro.getValueContinuous();
@@ -247,7 +247,7 @@ public class Driving {
         double curTime = linearOpMode.getRuntime();
         while (linearOpMode.getRuntime() < curTime + seconds) {
             angleDiff = angle0 - gyro.getValueContinuous();
-            turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * .02 : 0;
+            turnPower = (Math.abs(angleDiff) > turnCorrectThresh) ? angleDiff * .05 : 0;
             libertyDrive(power, turnPower, 0);
         }
     }

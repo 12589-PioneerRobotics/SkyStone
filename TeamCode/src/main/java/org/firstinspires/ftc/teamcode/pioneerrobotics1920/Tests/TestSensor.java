@@ -82,7 +82,7 @@ public class TestSensor extends LinearOpMode {
 //            telemetry.addData("right distance",rightDistance.getDistance(DistanceUnit.INCH));
             /*telemetry.addData("right distance cmUltrasonic", rightDistance.cmUltrasonic());
             telemetry.addData("right distance cmOptical", rightDistance.cmOptical());*/
-//            telemetry.addData("left distance", leftDistance.getDistance(DistanceUnit.INCH));
+            telemetry.addData("left distance", driving.getAccurateDistanceSensorReading(driving.leftDistance));
             telemetry.addData("right distance status", rightDistance.status());
             telemetry.addData("left distance status", leftDistance.status());
             telemetry.addData("back distance status", backDistance.status());
