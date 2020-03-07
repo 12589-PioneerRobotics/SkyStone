@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -10,7 +9,6 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
-@Disabled
 @TeleOp(name = "Test Sensor", group = "test")
 public class TestSensor extends LinearOpMode {
     private ModernRoboticsI2cRangeSensor frontDistance;

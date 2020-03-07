@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -14,7 +13,7 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 import java.io.File;
 
-@Disabled
+
 @TeleOp(name = "ColorSensorCalibration")
 public class ColorSensorCalibration extends LinearOpMode {
 
@@ -23,7 +22,6 @@ public class ColorSensorCalibration extends LinearOpMode {
     Toggle.OneShot gamepad1A;
     Toggle.OneShot gamepad1B;
     Toggle.OneShot gamepad1X;
-    Toggle.OneShot gamepad1Y;
     final double SCALE = 0.35;
     boolean stone;
     boolean writing;
@@ -40,6 +38,8 @@ public class ColorSensorCalibration extends LinearOpMode {
     double stoneRadius;
     int counter = 0;
 
+    double timer = 0;
+
     Point[] stoneInPoints;
     Point[] stoneOutPoints;
 
@@ -53,7 +53,6 @@ public class ColorSensorCalibration extends LinearOpMode {
         gamepad1A = new Toggle.OneShot();
         gamepad1B = new Toggle.OneShot();
         gamepad1X = new Toggle.OneShot();
-        gamepad1Y = new Toggle.OneShot();
         stone = false;
         writing = false;
         finished = false;
@@ -93,11 +92,13 @@ public class ColorSensorCalibration extends LinearOpMode {
             else if (gamepad1.right_trigger > .5) moacV_2.intake.takeIn();
             else moacV_2.intake.stopIntake();
 
-            if (writing) {
+
+            if (writing && getRuntime() > timer + .2) {
                 if (stone)
                     stoneBuffer += getColorValues();
                 else
                     emptyBuffer += getColorValues();
+                timer = getRuntime();
             }
 
             if (finished && counter == 0) {
@@ -152,9 +153,12 @@ public class ColorSensorCalibration extends LinearOpMode {
                 counter++;
             }
 
-
+            telemetry.addData("calibrated", calibrated);
             if (calibrated) {
                 telemetry.addData("we have a stone", stoneIsIn());
+                telemetry.addData("color sensor value", "" + colorSensor.red() + "," + colorSensor.green() + "," + colorSensor.blue());
+                telemetry.addData("stone center", stoneCenter);
+                telemetry.addData("empty center", emptyCenter);
                 telemetry.addData("radius", stoneRadius);
                 telemetry.addData("Current distance between stoneCenter", distance(currentColor(), stoneCenter));
                 telemetry.addData("Current distance between empty stone", distance(currentColor(), emptyCenter));
@@ -162,7 +166,6 @@ public class ColorSensorCalibration extends LinearOpMode {
                 telemetry.addData("stone", stone);
                 telemetry.addData("writing", writing);
                 telemetry.addData("finished", finished);
-                telemetry.addData("calibrated", calibrated);
             }
             if (distance(emptyCenter, stoneCenter) < stoneRadius)
                 telemetry.addData("Empty center is in stone sphere", null);
@@ -175,8 +178,19 @@ public class ColorSensorCalibration extends LinearOpMode {
     }
 
 
-    public boolean stoneIsIn() {
-        Point colorPoint = new Point(colorSensor.red(), colorSensor.green(), colorSensor.blue());
+    private boolean stoneIsIn() {
+        Point colorPoint = currentColor();
+        double diff = distance(colorPoint, stoneCenter);
+        if ((diff < distance(colorPoint, emptyCenter)) && diff <= stoneRadius)
+            return true;
+        return false;
+    }
+
+    public boolean checkStone() {
+        colorSensorCalibrationValue = AppUtil.getInstance().getSettingsFile("colorSensorCalibrationValue.txt");
+        Point colorPoint = currentColor();
+        setcalibratedPoints();
+        setStoneRadius();
         double diff = distance(colorPoint, stoneCenter);
         if ((diff < distance(colorPoint, emptyCenter)) && diff <= stoneRadius)
             return true;

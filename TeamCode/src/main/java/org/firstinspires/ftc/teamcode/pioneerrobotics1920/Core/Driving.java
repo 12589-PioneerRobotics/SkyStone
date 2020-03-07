@@ -236,6 +236,7 @@ public class Driving {
         while (linearOpMode.getRuntime() < curTime + seconds)
             libertyDrive(power, 0, 0);
         stopDriving();
+
     }
 
     public void smoothTimeBasedForward(double seconds, double power) {
@@ -379,7 +380,7 @@ public class Driving {
 
     public double getAccurateDistanceSensorReading(DistanceSensor distanceSensor) {
         double result = distanceSensor.getDistance(DistanceUnit.INCH);
-        while ((result > 50 || result < 4) && !linearOpMode.gamepad1.left_stick_button)
+        while ((result > 80 || result < 0) && !linearOpMode.gamepad1.left_stick_button)
             result = distanceSensor.getDistance(DistanceUnit.INCH);
         return result;
     }

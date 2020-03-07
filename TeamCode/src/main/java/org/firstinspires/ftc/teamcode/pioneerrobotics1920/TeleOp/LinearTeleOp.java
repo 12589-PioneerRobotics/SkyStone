@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -15,7 +14,6 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.MoacV_2;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Navigation;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
-@Disabled
 @TeleOp (name = "Linear TeleOp")
 public class LinearTeleOp extends LinearOpMode {
     private Driving drive;
@@ -121,8 +119,8 @@ public class LinearTeleOp extends LinearOpMode {
                     drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3), gamepad1.left_stick_x);
             }
 
-            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(.7); //max height 5100
-            else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-0.4);
+            if (gamepad1.dpad_up) moac.linearSlide.lifterPower(1); //max height 5100
+            else if (gamepad1.dpad_down) moac.linearSlide.lifterPower(-.7);
             else {
                 if (vertSlideOneShot.update(gamepad1.a)) {
                     if (blue) {
@@ -136,7 +134,7 @@ public class LinearTeleOp extends LinearOpMode {
 
             if (lifterOneShot.update(!(gamepad1.dpad_up || gamepad1.dpad_down)))
                 if (moac.linearSlide.slideVertical.getCurrentPosition() > 500)
-                    moac.linearSlide.lifterPower(.1);
+                    moac.linearSlide.lifterPower(.05);
                 else
                     moac.linearSlide.lifterPower(0);
 
@@ -148,23 +146,22 @@ public class LinearTeleOp extends LinearOpMode {
                 }
             }
 
-            if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.6);
-            else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.6);
+            if (gamepad1.dpad_right) moac.linearSlide.horizSlidePower(-.4);
+            else if (gamepad1.dpad_left) moac.linearSlide.horizSlidePower(.4);
             else {
                 if (horizSlideOneShot.update(gamepad1.b)) moac.linearSlide.horiz();
             }
 
             if (dpadOneShot.update(!(gamepad1.dpad_right || gamepad1.dpad_left)) || moac.linearSlide.slideVertical.getCurrentPosition() > 8000) {
                 moac.linearSlide.lifterPower(0);
-                if (moac.linearSlide.slideHoriz.getCurrentPosition() > 400)
+                if (moac.linearSlide.slideHoriz.getCurrentPosition() > 500)
                     moac.linearSlide.horizSlidePower(0.05);
-                else
-                    moac.linearSlide.horizSlidePower(0);
+                else moac.linearSlide.horizSlidePower(0);
             }
 
             if(gamepad1.left_trigger > .5) moac.intake.spitOut();
             else if (gamepad1.right_trigger > .5) {
-                if (pushbot && moac.intake.getStoneState()) {
+                if (pushbot && moac.intake.getStoneState()) {//getStoneState()) {
                     moac.intake.stopIntake();
                     relativeLayout.post(new Runnable() {
                         public void run() {
