@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
+@TeleOp(name = "MecanumDriveOdometry")
 public class MecanumDriveOdometry extends LinearOpMode {
     private Driving drive;
     double verticalRightEncoderWheelPosition = 0, verticalLeftEncoderWheelPosition = 0, normalEncoderWheelPosition = 0, changeInRobotOrientation = 0, gyroVal;
@@ -18,7 +19,7 @@ public class MecanumDriveOdometry extends LinearOpMode {
         drive = new Driving(this);
         telemetry.addData("init finished", null);
         telemetry.update();
-
+        waitForStart();
 //        ----------------------------------------------------------------------
 
         while (this.opModeIsActive()){
@@ -31,18 +32,19 @@ public class MecanumDriveOdometry extends LinearOpMode {
             coordinateUpdate();
             telemetry.addData("globalX", robotGlobalXCoordinatePosition);
             telemetry.addData("globalY", robotGlobalYCoordinatePosition);
+            telemetry.update();
             }
 
     }
 
     private void coordinateUpdate(){
-        verticalLeftEncoderWheelPosition = (drive.frontLeft.getCurrentPosition() + drive.backLeft.getCurrentPosition())/2;
-        verticalRightEncoderWheelPosition = (drive.frontRight.getCurrentPosition() + drive.backRight.getCurrentPosition())/2;
+        verticalLeftEncoderWheelPosition = ((double) drive.frontLeft.getCurrentPosition() / 30 + (double) drive.backLeft.getCurrentPosition() / 30) / 2;
+        verticalRightEncoderWheelPosition = ((double) drive.frontRight.getCurrentPosition() / 30 + (double) drive.backRight.getCurrentPosition() / 30) / 2;
 
         gyroVal = drive.gyro.getValueContinuous();
 
         double leftChange = verticalLeftEncoderWheelPosition - previousVerticalLeftEncoderWheelPosition;
-        double rightChange = verticalRightEncoderWheelPosition = previousVerticalRightEncoderWheelPosition;
+        double rightChange = verticalRightEncoderWheelPosition - previousVerticalRightEncoderWheelPosition;
 
 
         double p = ((rightChange + leftChange) / 2);
@@ -54,7 +56,8 @@ public class MecanumDriveOdometry extends LinearOpMode {
 
         robotOrientationRadians = Math.toRadians(gyroVal);
 
-
+        previousVerticalLeftEncoderWheelPosition = ((double) drive.frontLeft.getCurrentPosition() / 30 + (double) drive.backLeft.getCurrentPosition() / 30) / 2;
+        previousVerticalRightEncoderWheelPosition = ((double) drive.frontRight.getCurrentPosition() / 30 + (double) drive.backRight.getCurrentPosition() / 30) / 2;
 
     }
 }

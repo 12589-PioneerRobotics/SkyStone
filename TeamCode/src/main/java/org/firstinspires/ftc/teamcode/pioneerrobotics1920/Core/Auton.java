@@ -424,16 +424,12 @@ public class Auton extends LinearOpMode {
         }
         drive.stopDriving();
 
-        drive.moveClose("back", 44, 1, 0f);
-        drive.moveClose("back", 44, .6, 0f);
+        drive.moveClose("back", 40, 1, 0f);
+        drive.moveClose("back", 40, .6, 0f);
 
 
         nav.arc(180, 1, .7, -.75);
 
-        if (blue)
-            drive.moveClose("right", 23, .6, 2f);
-        else
-            drive.moveClose("left", 23, .6, 2f);
 
         //drive.moveClose("back", backDistance, 1, 0f);
     }
