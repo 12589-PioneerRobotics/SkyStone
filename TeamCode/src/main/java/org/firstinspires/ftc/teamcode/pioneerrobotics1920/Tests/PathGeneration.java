@@ -1,41 +1,33 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ReadWriteFile;
 
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.TeleOp.Toggle;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
-@Disabled
+//@Disabled
 public class PathGeneration extends OpMode {
     DcMotor rf, rb, lf, lb;
     final double SCALE = 0.35;
     final String fileName = "pathGeneration";
     BufferedWriter bw;
+    File pathMotor;
+    Toggle.OneShot writeOneShot;
+    int count = 0;
 
     @Override
     public void init() {
 
-        try {
-//            String content = "Separe here integers by semi-colon";
-            File file = new File(fileName + ".csv");
-            // if file doesnt exists, then create it
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+        pathMotor = AppUtil.getInstance().getSettingsFile(fileName);
 
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        writeOneShot = new Toggle.OneShot();
 
-            bw = new BufferedWriter(fw);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         lf = hardwareMap.dcMotor.get("frontLeft");
         rf = hardwareMap.dcMotor.get("frontRight");
         lb = hardwareMap.dcMotor.get("backLeft");
@@ -79,11 +71,20 @@ public class PathGeneration extends OpMode {
         else
             libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3), gamepad1.left_stick_x);
 
-        try {
-            bw.write("hello");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (writeOneShot.update(gamepad1.a)) {
+            ReadWriteFile.writeFile(pathMotor, -Operations.powerScale(gamepad1.right_stick_y) + "," + Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3) + "," + lb.getPower() + "," + rb.getPower() + "\n");
+            count++;
         }
 
+        if (gamepad1.b) {
+            int go = 0;
+            String[] values = ReadWriteFile.readFile(pathMotor).split("\n");
+            while (go < count) {
+                String[] parameters = values[go].split(",");
+                libertyDrive(Double.parseDouble(parameters[0]), Double.parseDouble(parameters[1]), Double.parseDouble(parameters[2]));
+                go++;
+            }
+        }
     }
+
 }

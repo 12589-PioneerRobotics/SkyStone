@@ -131,7 +131,7 @@ public class Auton extends LinearOpMode {
                 moac.stacker.open();
                 sleep(500);
                 moac.stacker.close();
-                /*
+
                 moac.linearSlide.horizPosition(0);
                 moac.linearSlide.lifterPosition(0);
                 getBlueSkystone(skystonePos);
@@ -146,7 +146,7 @@ public class Auton extends LinearOpMode {
 
                 moac.stacker.open();
                 sleep(500);
-                moac.stacker.close();*/
+                moac.stacker.close();
 
                 moac.linearSlide.horizPosition(0);
                 moac.linearSlide.lifterPosition(0);

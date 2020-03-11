@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
-import android.net.MacAddress;
-
 import org.opencv.core.Point;
 
 import java.util.ArrayList;
 
-import java.awt.*;
-
-import static java.lang.Math.*;
+import static java.lang.Math.PI;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public class Operations {
 
@@ -138,7 +136,6 @@ public class Operations {
             angle += 2 * PI;
         while(angle > PI)
             angle -= 2 * PI;
-
         return angle;
 
     }

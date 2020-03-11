@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Driving;
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
@@ -19,10 +20,12 @@ public class MecanumDriveOdometry extends LinearOpMode {
         drive = new Driving(this);
         telemetry.addData("init finished", null);
         telemetry.update();
+        drive.setDrivingModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
 //        ----------------------------------------------------------------------
 
         while (this.opModeIsActive()){
+
 
             if (gamepad1.left_bumper)
                 drive.libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.35, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
