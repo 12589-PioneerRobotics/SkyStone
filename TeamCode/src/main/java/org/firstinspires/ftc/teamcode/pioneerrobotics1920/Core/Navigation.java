@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests.MecanumDriveOdometry;
+import org.opencv.core.Point;
+
+import java.util.ArrayList;
+
 public class Navigation {
     private double x, y, angleDiff;
     private Driving driving;
@@ -87,6 +92,35 @@ public class Navigation {
             driving.libertyDrive(0,turn,0);
         }
         driving.stopDriving();
+    }
+    public static void followCurve (ArrayList<CurvePoint> allPoints, double followAngle){
+        CurvePoint followMe = getFollowPointPath(allPoints, new Point(MecanumDriveOdometry.robotGlobalXCoordinatePosition,MecanumDriveOdometry.robotGlobalYCoordinatePosition),allPoints.get(0).followDistance);
+
+        // Need to figure out how to get robot to follow the generated points
+    }
+
+    public static CurvePoint getFollowPointPath (ArrayList<CurvePoint> pathPoints, Point robotLocation, double followRadius){
+        CurvePoint followMe = new CurvePoint((pathPoints.get(0)));
+
+        for(int i= 0; i < pathPoints.size() - 1; i++){
+            CurvePoint startLine = pathPoints.get(i);
+            CurvePoint endline = pathPoints.get(i+1);
+
+            ArrayList<Point> intersections = Operations.lineCircleIntersection(robotLocation, followRadius, startLine.toPoint(),
+                    endline.toPoint());
+
+            double closestAngle = 1000000000;
+            for (Point thisIntersection : intersections) {
+                double angle = Math.atan2(thisIntersection.y - MecanumDriveOdometry.robotGlobalYCoordinatePosition, thisIntersection.x - MecanumDriveOdometry.robotGlobalXCoordinatePosition);
+                double deltaAngle = Math.abs(Operations.AngleWrap(angle - MecanumDriveOdometry.robotOrientationRadians));
+
+                if (deltaAngle < closestAngle) {
+                    closestAngle = deltaAngle;
+                    followMe.setPoint(thisIntersection);
+                }
+            }
+        }
+        return followMe;
     }
 
     public void arc(double angle1, double thresh, double turnPower, double drivePower) {

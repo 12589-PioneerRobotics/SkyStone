@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 public class MecanumDriveOdometry extends LinearOpMode {
     private Driving drive;
     double verticalRightEncoderWheelPosition = 0, verticalLeftEncoderWheelPosition = 0, normalEncoderWheelPosition = 0, changeInRobotOrientation = 0, gyroVal;
-    private double robotGlobalXCoordinatePosition = 0, robotGlobalYCoordinatePosition = 0, robotOrientationRadians = 0;
-    private double previousVerticalRightEncoderWheelPosition = 0, previousVerticalLeftEncoderWheelPosition = 0, prevNormalEncoderWheelPosition = 0, previousGyroValue = 0;
+    public static double robotGlobalXCoordinatePosition = 0, robotGlobalYCoordinatePosition = 0, robotOrientationRadians = 0;
+    public static double previousVerticalRightEncoderWheelPosition = 0, previousVerticalLeftEncoderWheelPosition = 0, prevNormalEncoderWheelPosition = 0, previousGyroValue = 0;
 
     private double SCALE = .35;
     @Override
@@ -38,8 +38,8 @@ public class MecanumDriveOdometry extends LinearOpMode {
     }
 
     private void coordinateUpdate(){
-        verticalLeftEncoderWheelPosition = ((double) drive.frontLeft.getCurrentPosition() / 30 + (double) drive.backLeft.getCurrentPosition() / 30) / 2;
-        verticalRightEncoderWheelPosition = ((double) drive.frontRight.getCurrentPosition() / 30 + (double) drive.backRight.getCurrentPosition() / 30) / 2;
+        verticalLeftEncoderWheelPosition = (((double) drive.frontLeft.getCurrentPosition()  + (double) drive.backLeft.getCurrentPosition())/ drive.CLICKS_PER_INCH ) / 2;
+        verticalRightEncoderWheelPosition = (((double) drive.frontRight.getCurrentPosition() + (double) drive.backRight.getCurrentPosition()) / drive.CLICKS_PER_INCH) / 2;
 
         gyroVal = drive.gyro.getValueContinuous();
 
@@ -53,11 +53,10 @@ public class MecanumDriveOdometry extends LinearOpMode {
         robotGlobalYCoordinatePosition = robotGlobalYCoordinatePosition + (p * Math.cos(robotOrientationRadians));
 
 
-
         robotOrientationRadians = Math.toRadians(gyroVal);
 
-        previousVerticalLeftEncoderWheelPosition = ((double) drive.frontLeft.getCurrentPosition() / 30 + (double) drive.backLeft.getCurrentPosition() / 30) / 2;
-        previousVerticalRightEncoderWheelPosition = ((double) drive.frontRight.getCurrentPosition() / 30 + (double) drive.backRight.getCurrentPosition() / 30) / 2;
+        previousVerticalLeftEncoderWheelPosition = verticalLeftEncoderWheelPosition;
+        previousVerticalRightEncoderWheelPosition = verticalRightEncoderWheelPosition;
 
     }
 }

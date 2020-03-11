@@ -25,7 +25,7 @@ public class Driving {
     int num;
 
 
-    final double CLICKS_PER_INCH = 29.021876534;
+    public static final double CLICKS_PER_INCH = 29.021876534;
     private DcMotor[] drivingMotors;
 
     public DistanceSensor frontDistance, backDistance, leftDistance, rightDistance;
