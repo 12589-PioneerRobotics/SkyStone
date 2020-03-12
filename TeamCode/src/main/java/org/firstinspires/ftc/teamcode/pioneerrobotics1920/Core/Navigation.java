@@ -97,6 +97,8 @@ public class Navigation {
         CurvePoint followMe = getFollowPointPath(allPoints, new Point(MecanumDriveOdometry.robotGlobalXCoordinatePosition,MecanumDriveOdometry.robotGlobalYCoordinatePosition),allPoints.get(0).followDistance);
 
         // Need to figure out how to get robot to follow the generated points
+
+
     }
 
     public static CurvePoint getFollowPointPath (ArrayList<CurvePoint> pathPoints, Point robotLocation, double followRadius){

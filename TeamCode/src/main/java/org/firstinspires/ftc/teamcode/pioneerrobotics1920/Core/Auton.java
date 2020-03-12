@@ -137,7 +137,7 @@ public class Auton extends LinearOpMode {
                 getBlueSkystone(skystonePos);
 
                 x = 0;
-                while (moac.linearSlide.slideHoriz.getCurrentPosition() < -1100) {
+                while (moac.linearSlide.slideHoriz.getCurrentPosition() < 1100) {
                     if (x == 0)
                         customizedForward(-(113 - nav.getY()), 1, .25, 48);
                     x++;
