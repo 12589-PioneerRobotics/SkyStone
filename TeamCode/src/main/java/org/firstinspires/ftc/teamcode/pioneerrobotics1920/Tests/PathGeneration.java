@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
@@ -12,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 
 //@Disabled
+@TeleOp(name = "Path Generation")
 public class PathGeneration extends OpMode {
     DcMotor rf, rb, lf, lb;
     final double SCALE = 0.35;
@@ -19,7 +21,10 @@ public class PathGeneration extends OpMode {
     BufferedWriter bw;
     File pathMotor;
     Toggle.OneShot writeOneShot;
+    boolean recording = false;
     int count = 0;
+    String bufferValues = "";
+    String powerString = "";
 
     @Override
     public void init() {
@@ -66,25 +71,35 @@ public class PathGeneration extends OpMode {
 
     @Override
     public void loop() {
+        powerString = -Operations.powerScale(gamepad1.right_stick_y) + "," + Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3) + "," + lb.getPower() + "," + rb.getPower() + "\n";
+
         if (gamepad1.left_bumper)
             libertyDrive(-Operations.powerScale(gamepad1.right_stick_y, SCALE), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.35, SCALE), Operations.powerScale(gamepad1.left_stick_x, SCALE + 0.25));
         else
             libertyDrive(-Operations.powerScale(gamepad1.right_stick_y), Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3), gamepad1.left_stick_x);
 
         if (writeOneShot.update(gamepad1.a)) {
-            ReadWriteFile.writeFile(pathMotor, -Operations.powerScale(gamepad1.right_stick_y) + "," + Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3) + "," + lb.getPower() + "," + rb.getPower() + "\n");
+            recording = true;
+            bufferValues += powerString;
             count++;
         }
 
+
         if (gamepad1.b) {
+
+            ReadWriteFile.writeFile(pathMotor, -Operations.powerScale(gamepad1.right_stick_y) + "," + Operations.powerScale(gamepad1.right_stick_x + gamepad1.left_stick_x * -.3) + "," + lb.getPower() + "," + rb.getPower() + "\n");
             int go = 0;
-            String[] values = ReadWriteFile.readFile(pathMotor).split("\n");
-            while (go < count) {
+            String raw = ReadWriteFile.readFile(pathMotor);
+            String[] values = raw.split("\n");
+            while (go < values.length - 1) {
                 String[] parameters = values[go].split(",");
                 libertyDrive(Double.parseDouble(parameters[0]), Double.parseDouble(parameters[1]), Double.parseDouble(parameters[2]));
                 go++;
             }
         }
+        telemetry.addData("Press b to play", null);
+        telemetry.addData("Press a to record", recording);
+        telemetry.update();
     }
-
 }
+

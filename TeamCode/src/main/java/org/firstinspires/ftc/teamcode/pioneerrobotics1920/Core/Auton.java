@@ -458,7 +458,7 @@ public class Auton extends LinearOpMode {
         moac.stacker.open();
         drive.stopDriving();
         while (!moac.intake.getStoneState()) {
-            drive.indefiniteForward(.2);
+            drive.indefiniteForward(.3);
         }
 
     }
