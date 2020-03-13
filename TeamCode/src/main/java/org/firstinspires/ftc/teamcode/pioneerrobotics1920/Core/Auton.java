@@ -114,7 +114,7 @@ public class Auton extends LinearOpMode {
 
                 moac.intake.stopIntake();
                 moac.stacker.close();
-                nav.turnTo(270, .5);
+                nav.arc(270,.5,1,.2);
                 getFoundation(blue, startBuilding);
 
                 getBlueSkystone(skystonePos);

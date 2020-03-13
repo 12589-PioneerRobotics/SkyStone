@@ -132,7 +132,7 @@ public class Navigation {
         double TURN_POWER = turnPower;
         while (driving.linearOpMode.opModeIsActive() && Math.abs(getDiff(angle1)) > RAW_THRESH) {
             double factor = Math.abs(getDiff(angle1)) / initDiff;
-            factor = (Math.abs(factor) > 0.2) ? 1 : factor;
+            factor = (Math.abs(factor) > 0.25) ? 1 : factor;
             if (diff > 0)
                 driving.libertyDrive(drivePower, TURN_POWER*factor, 0);
             else
