@@ -481,7 +481,7 @@ public class Auton extends LinearOpMode {
 
                         nav.arc(250, 1, 1, -.5);
                         drive.forward(7, 1);
-                        nav.arc(180, 3, 1, .8);
+                        nav.arc(180, 3, 1, 1);
                         count++;
                     }
                 }
