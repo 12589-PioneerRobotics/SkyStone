@@ -1,11 +1,18 @@
 package org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests.MecanumDriveOdometry;
 import org.opencv.core.Point;
 
 import java.util.ArrayList;
+
+import static org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests.MecanumDriveOdometry.robotGlobalXCoordinatePosition;
+import static org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests.MecanumDriveOdometry.robotGlobalYCoordinatePosition;
+import static org.firstinspires.ftc.teamcode.pioneerrobotics1920.Tests.MecanumDriveOdometry.robotOrientationRadians;
+
+import org.firstinspires.ftc.teamcode.pioneerrobotics1920.Core.Operations;
 
 public class Navigation {
     private double x, y, angleDiff;
@@ -93,12 +100,38 @@ public class Navigation {
         }
         driving.stopDriving();
     }
-    public static void followCurve (ArrayList<CurvePoint> allPoints, double followAngle){
-        CurvePoint followMe = getFollowPointPath(allPoints, new Point(MecanumDriveOdometry.robotGlobalXCoordinatePosition,MecanumDriveOdometry.robotGlobalYCoordinatePosition),allPoints.get(0).followDistance);
+    public void followCurve (ArrayList<CurvePoint> allPoints, double followAngle){
+        CurvePoint followMe = getFollowPointPath(allPoints, new Point(robotGlobalXCoordinatePosition, robotGlobalYCoordinatePosition),allPoints.get(0).followDistance);
 
         // Need to figure out how to get robot to follow the generated points
+        goToPosition(followMe.x, followMe.y, followMe.moveSpeed, followAngle, followMe.turnSpeed);
 
+    }
 
+    public void goToPosition(double x, double y , double movementSpeed, double preferredAngle, double turnSpeed){
+        double distanceToTarget = Math.hypot(x-robotGlobalXCoordinatePosition,y-robotGlobalYCoordinatePosition);
+
+        double absoluteAngleToTarget = Math.atan2(y-robotGlobalYCoordinatePosition, x-robotGlobalXCoordinatePosition);
+
+        double relativeAngleToPoint = Operations.AngleWrap(absoluteAngleToTarget-(robotOrientationRadians-Math.toRadians(90)));
+
+        double relativeXToPoint = Math.cos(relativeAngleToPoint) * distanceToTarget;
+        double relativeYToPoint = Math.sin(relativeAngleToPoint) * distanceToTarget;
+
+        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
+        double movementYPower = relativeYToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
+
+        double movement_x = movementXPower * movementSpeed;
+        double movement_y = movementYPower * movementSpeed;
+
+        double relativeTurnAngle = relativeAngleToPoint - Math.toRadians(180) + preferredAngle;
+        double movement_turn = Range.clip(relativeTurnAngle/Math.toRadians(30),-1,1) * turnSpeed;
+
+        if (distanceToTarget < 4){
+            movement_turn = 0;
+        }
+
+        driving.libertyDrive(movementSpeed, movement_turn, 0);
     }
 
     public static CurvePoint getFollowPointPath (ArrayList<CurvePoint> pathPoints, Point robotLocation, double followRadius){
@@ -113,7 +146,7 @@ public class Navigation {
 
             double closestAngle = 1000000000;
             for (Point thisIntersection : intersections) {
-                double angle = Math.atan2(thisIntersection.y - MecanumDriveOdometry.robotGlobalYCoordinatePosition, thisIntersection.x - MecanumDriveOdometry.robotGlobalXCoordinatePosition);
+                double angle = Math.atan2(thisIntersection.y - robotGlobalYCoordinatePosition, thisIntersection.x - robotGlobalXCoordinatePosition);
                 double deltaAngle = Math.abs(Operations.AngleWrap(angle - MecanumDriveOdometry.robotOrientationRadians));
 
                 if (deltaAngle < closestAngle) {
