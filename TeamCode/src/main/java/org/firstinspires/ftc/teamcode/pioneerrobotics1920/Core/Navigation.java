@@ -129,6 +129,7 @@ public class Navigation {
 
         if (distanceToTarget < 4){
             movement_turn = 0;
+            driving.stopDriving();
         }
 
         driving.libertyDrive(movementSpeed, movement_turn, 0);
