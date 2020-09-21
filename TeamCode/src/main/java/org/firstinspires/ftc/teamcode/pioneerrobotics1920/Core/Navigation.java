@@ -104,35 +104,48 @@ public class Navigation {
         CurvePoint followMe = getFollowPointPath(allPoints, new Point(robotGlobalXCoordinatePosition, robotGlobalYCoordinatePosition),allPoints.get(0).followDistance);
 
         // Need to figure out how to get robot to follow the generated points
-        goToPosition(followMe.x, followMe.y, followMe.moveSpeed, followAngle, followMe.turnSpeed);
+        if (followMe.x == 0.0 && followMe.y == 0.0) {
+            driving.linearOpMode.telemetry.addData("StopCase", "STOPPP");
+            driving.linearOpMode.telemetry.update();
+            driving.setAllDrivingPowers(0);
+        } else{
+            goToPosition(followMe.x, followMe.y, followMe.moveSpeed, followAngle, followMe.turnSpeed);
+            driving.linearOpMode.telemetry.addData("goToPosition", String.valueOf(followMe.x) + " | " + String.valueOf(followMe.y));
+        }
+
 
     }
 
+    public double distanceToTarget;
+    public double relativeAngleToPoint;
+    public double relativeTurnAngle;
+
     public void goToPosition(double x, double y , double movementSpeed, double preferredAngle, double turnSpeed){
-        double distanceToTarget = Math.hypot(x-robotGlobalXCoordinatePosition,y-robotGlobalYCoordinatePosition);
+        distanceToTarget = Math.hypot(x-robotGlobalXCoordinatePosition,y-robotGlobalYCoordinatePosition);
 
-        double absoluteAngleToTarget = Math.atan2(y-robotGlobalYCoordinatePosition, x-robotGlobalXCoordinatePosition);
+        double absoluteAngleToTarget = Operations.AngleWrap(Math.toRadians(90)-Math.atan2(y-robotGlobalYCoordinatePosition, x-robotGlobalXCoordinatePosition));
 
-        double relativeAngleToPoint = Operations.AngleWrap(absoluteAngleToTarget-(robotOrientationRadians-Math.toRadians(90)));
+        relativeAngleToPoint = absoluteAngleToTarget-robotOrientationRadians;
 
         double relativeXToPoint = Math.cos(relativeAngleToPoint) * distanceToTarget;
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * distanceToTarget;
 
-        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
-        double movementYPower = relativeYToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
+        //double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
+        //double movementYPower = relativeYToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
 
-        double movement_x = movementXPower * movementSpeed;
-        double movement_y = movementYPower * movementSpeed;
+        //double movement_x = movementXPower * movementSpeed;
+        //double movement_y = movementYPower * movementSpeed;
 
-        double relativeTurnAngle = relativeAngleToPoint - Math.toRadians(180) + preferredAngle;
+        relativeTurnAngle = relativeAngleToPoint - Math.toRadians(0)+ preferredAngle;
         double movement_turn = Range.clip(relativeTurnAngle/Math.toRadians(30),-1,1) * turnSpeed;
 
-        if (distanceToTarget < 4){
+        if (false){
             movement_turn = 0;
-            driving.stopDriving();
+            driving.setAllDrivingPowers(0);
+        }else {
+            driving.libertyDrive(movementSpeed, movement_turn, 0);
         }
 
-        driving.libertyDrive(movementSpeed, movement_turn, 0);
     }
 
     public static CurvePoint getFollowPointPath (ArrayList<CurvePoint> pathPoints, Point robotLocation, double followRadius){

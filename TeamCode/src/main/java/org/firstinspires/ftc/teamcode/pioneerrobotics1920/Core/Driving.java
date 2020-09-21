@@ -347,7 +347,7 @@ public class Driving {
         }
     }
 
-    void setAllDrivingPowers(double power) {
+    public void setAllDrivingPowers(double power) {
         for (DcMotor motor : drivingMotors) {
             motor.setPower(power);
         }

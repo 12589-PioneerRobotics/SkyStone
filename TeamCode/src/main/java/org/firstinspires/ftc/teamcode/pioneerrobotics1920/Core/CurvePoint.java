@@ -13,7 +13,7 @@ public class CurvePoint {
 
     public double slowDownTurnRadians;
 
-    public CurvePoint(double x, double y, double moveSpeed, double turnSpeed, double followDistance, double pointLength, double slowDownTurnAmount, double slowDownTurnRadians) {
+    public CurvePoint(double x, double y, double moveSpeed, double turnSpeed, double followDistance, double slowDownTurnRadians, double slowDownTurnAmount) {
         this.x = x;
         this.y = y;
         this.moveSpeed = moveSpeed;
